@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Minesweeper.exe" version="1.0.0.0" publicKeyToken="000cf46e49f180c9" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="minesweeper_icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Minesweeper" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Minesweeper.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          Параметры манифеста UAC
+          При необходимости изменить уровень управления учетными записями Windows замените 
+          узел requestedExecutionLevel одним из следующих значений.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+        Если вы хотите использовать виртуализацию файлов и реестра для обратной
+             совместимости, удалите узел requestedExecutionLevel.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Minesweeper.exe" size="978928">
+      <assemblyIdentity name="Minesweeper" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>3yMn2ZCuhZJ2vsC7Phsi9JpUp0YDHme7q40r5paSZIk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="icon.ico" size="95518">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>cxEx6bpJPlDB+2K0CpcC21Uuxa91m8I9JpydhNIIzB8=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Minesweeper.exe.config" size="189">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>6N7MliNbVJSIAIPrecIshMbZ7zEoKLr5SQvud4LDUOw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="minesweeper_icon.ico" size="22437">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>30bdiH2Tr6fTbutKiKoFg2DdzlZnS9EC2DdACUO8OU4=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=DESKTOP-H6C3HNG\Mr.Admin" issuerKeyHash="1dc2c7ac314dd0e5485151660de854aa6c6b2dca" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>7T6tTi9cJg1Tma6notYJCGw0H+bicou5uqRhdrmei7M=</DigestValue></Reference></SignedInfo><SignatureValue>gT/3NXCFp8hJB4pHPjQyqPolLIkw7ap19eoNaG+6x9YSnlqUSSD009av0U36TAozzv/zk4h6P2WOqP27SaZTzJnC8FXHeSKWyMv9V6a7vLuJ9fLEugNYpV+kRuHLNzaE42e4CdKC22VddQGtXW4C7pa3GlhigGEzez97ub90xGY=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>trDrIcBM/KfiEbXQF23htcDequ2WZBrsIUZzRUFSGCW0Ayt7+OfmRN6B0Q4JkyoFBTpVg/IMxFkS7gKzD8+qmSREvC62PYF4fDKLp2KtwWVrx3YSTJCN4hP9ju7Gditx7X9tuiN8pNg/TLBSenRREZRJd0DQY9sj2qJtM7rTu80=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="b38b9eb97661a4bab98b72e2e61f346c0809d6a2a7ae99530d265c2f4ead3eed" Description="" Url=""><as:assemblyIdentity name="Minesweeper.exe" version="1.0.0.0" publicKeyToken="000cf46e49f180c9" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=DESKTOP-H6C3HNG\Mr.Admin</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>ixRkjNcvvV3BYXWEyge0mRLRlp7l4yFpulcoe2e8H4E=</DigestValue></Reference></SignedInfo><SignatureValue>SuNyo6Oz5DRiUS2IiLZ9Uq2t8TmqNhM5NvWyLj7w6dTbdbHNaY0PfRzRswQIOiA7ReMmg5VS2Xoi+eVrPGVYVL7JbdNOgCjnoyqeByOjvJtfp3I6fn6p8weEcf8qSKpvkrXBn/BjUgRl4uLDyPI8VepUZnBm290K4gr/GUZeCr8=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>trDrIcBM/KfiEbXQF23htcDequ2WZBrsIUZzRUFSGCW0Ayt7+OfmRN6B0Q4JkyoFBTpVg/IMxFkS7gKzD8+qmSREvC62PYF4fDKLp2KtwWVrx3YSTJCN4hP9ju7Gditx7X9tuiN8pNg/TLBSenRREZRJd0DQY9sj2qJtM7rTu80=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB+TCCAWKgAwIBAgIQVqR0pDX+uplPoE+jy5PcpTANBgkqhkiG9w0BAQsFADA7MTkwNwYDVQQDHjAARABFAFMASwBUAE8AUAAtAEgANgBDADMASABOAEcAXABNAHIALgBBAGQAbQBpAG4wHhcNMTYwODI1MjEzMjMxWhcNMTcwODI2MDMzMjMxWjA7MTkwNwYDVQQDHjAARABFAFMASwBUAE8AUAAtAEgANgBDADMASABOAEcAXABNAHIALgBBAGQAbQBpAG4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALaw6yHATPyn4hG10Bdt4bXA3qrtlmQa7CFGc0VBUhgltAMre/jn5kTegdEOCZMqBQU6VYPyDMRZEu4Csw/PqpkkRLwutj2BeHwyi6dircFla8d2EkyQjeIT/Y7uxnYrce1/bbojfKTYP0ywUnp0URGUSXdA0GPbI9qibTO607vNAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAdroq4dZUB4qbk9LJPb9ycU84mn7aAc68YG3jsCIUhY6RZUpbUQ8jV/Ev0+8ZTuNCHsG5VUJrIbyvd5IUJJJaOJjYtEoM9/53HRL7ffCR3o2BJpgqv5DS3IIDYgjf7eqU8CuPnBgnlk3Sn80/a29Km95bVFvvEzzshpAykqS4v1o=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
