@@ -13,11 +13,11 @@ namespace Ball_Breaker
 
             this.mainForm = mainForm;
 
-            setGameMode();
-            setDelay();
+            SetGameMode();
+            SetDelay();
         }
 
-        private void setGameMode()
+        private void SetGameMode()
         {
             var i = 0;
 
@@ -28,15 +28,13 @@ namespace Ball_Breaker
 
             while (i < cB_mode.Items.Count && cB_mode.Items[i].ToString() != mainForm.Mode.ToString()) ++i;
 
-            cB_mode.SelectedIndex = i; 
-                  
+            cB_mode.SelectedIndex = i;                 
             cB_mode.Refresh();
         }
 
-        private void setDelay()
+        private void SetDelay()
         {
             tB_Delay.Value = mainForm.Delay;
-
             tB_Delay.Refresh();
         }
 

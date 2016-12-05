@@ -13,7 +13,7 @@ namespace Ball_Breaker
         private const int maxSize = 12;
         private int ballSize;
         private int counterScore;
-        private Dictionary<int, Brush> map_color;
+        private Dictionary<int, Brush> mapColor;
         private List<Point> shadedCells;
         private Point curCell;
 
@@ -52,25 +52,21 @@ namespace Ball_Breaker
 
         private int score_prev;
 
-        private bool flag_to_return;
-        private bool Flag_to_return
+        private bool flagToReturn;
+        private bool FlagToReturn
         {
-            get { return flag_to_return; }
+            get { return flagToReturn; }
             set
             {
-                flag_to_return = value;
-
-                if (flag_to_return)
-                    lbl_return.BackColor = Color.LightGreen;
-                else
-                    lbl_return.BackColor = Color.Red;
+                flagToReturn = value;
+                lbl_return.BackColor = flagToReturn ? Color.LightGreen : Color.Red;
             }
         }
 
-        int[,] board;
-        int[,] board_prev;
+        private int[,] board;
+        private int[,] board_prev;
 
-        bool[,] used;
+        private bool[,] used;
 
         public Game()
         {
@@ -79,13 +75,13 @@ namespace Ball_Breaker
             Delay = 500;
             Mode = GameMode.standart;
 
-            setLabelCounterScore();
-            start();
+            SetLabelCounterScore();
+            Start();
         }
 
         // Start
 
-        private void setLabelCounterScore()
+        private void SetLabelCounterScore()
         {
             pB_Game.Controls.Add(lbl_counterScore);
 
@@ -99,44 +95,45 @@ namespace Ball_Breaker
             GPath.Dispose();
         }
 
-        private void start()
+        private void Start()
         {
-            setDefaultValues();
-            createBoard();
+            SetDefaultValues();
+            CreateBoard();
 
             pB_Game.Refresh();
         }
 
-        private void setDefaultValues()
+        private void SetDefaultValues()
         {
             curCell = new Point(0, 0);
             shadedCells = new List<Point>();
             counterScore = 0;
             score_prev = 0;
             Score = 0;
-            Flag_to_return = false;
+            FlagToReturn = false;
 
             board = new int[maxSize, maxSize];
             board_prev = new int[maxSize, maxSize];
             used = new bool[maxSize, maxSize];
 
-            map_color = new Dictionary<int, Brush>();
-
-            map_color.Add(1, Brushes.Red);
-            map_color.Add(2, Brushes.Blue);
-            map_color.Add(3, Brushes.Green);
-            map_color.Add(4, Brushes.Yellow);
-            map_color.Add(5, Brushes.DarkViolet);
+            mapColor = new Dictionary<int, Brush>
+            {
+                {1, Brushes.Red},
+                {2, Brushes.Blue},
+                {3, Brushes.Green},
+                {4, Brushes.Yellow},
+                {5, Brushes.DarkViolet}
+            };
 
             ballSize = pB_Game.Width / maxSize;
 
             lbl_score_best.Text = "BEST: " + Properties.Settings.Default.score_best.ToString();
         }
 
-        private void createBoard()
+        private void CreateBoard()
         {
             var rnd = new Random();
-            var colorCount = map_color.Count;
+            var colorCount = mapColor.Count;
 
             for (int i = 0; i < maxSize; ++i)
                 for (int j = 0; j < maxSize; ++j)
@@ -153,11 +150,10 @@ namespace Ball_Breaker
             var X = e.Y / ballSize;
             var Y = e.X / ballSize;
 
-            if (X >= 0 && X < maxSize && Y >= 0 && Y < maxSize)
-            {
-                curCell.X = X;
-                curCell.Y = Y;
-            }
+            if (X < 0 || X >= maxSize || Y < 0 || Y >= maxSize) return;
+
+            curCell.X = X;
+            curCell.Y = Y;
         }
 
         private void pB_Game_Click(object sender, EventArgs e)
@@ -166,11 +162,11 @@ namespace Ball_Breaker
             {
                 if (shadedCells.Count > 1)
                 {
-                    Flag_to_return = true;
+                    FlagToReturn = true;
                     score_prev = score;
                     Score += counterScore;
 
-                    save_load_board(true);
+                    SaveOrLoadBoard(true);
 
                     shiftfBoard_down();
                     pB_Game.Refresh();
@@ -188,6 +184,7 @@ namespace Ball_Breaker
 
                             break;
                         }
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
                     checkEndGame();
@@ -236,32 +233,26 @@ namespace Ball_Breaker
             for (int i = 0; i < maxSize; ++i)
                 for (int j = 0; j < maxSize; ++j)
                 {
-                    if (board[i, j] != 0)
-                    {
-                        if ((i + 1 < maxSize && board[i, j] == board[i + 1, j]) || (j + 1 < maxSize && board[i, j] == board[i, j + 1]))
-                        {
-                            return;
-                        }
-                    }
+                    if (board[i, j] == 0) continue;
+                    if ((i + 1 < maxSize && board[i, j] == board[i + 1, j]) || (j + 1 < maxSize && board[i, j] == board[i, j + 1])) return;
                 }
 
             pB_Game.Refresh();
 
             MessageBox.Show("Final score: " + Score.ToString(), "Game over");
             checkBestScore();
-            start();
+            Start();
         }
 
         private void checkBestScore()
         {
-            if (Properties.Settings.Default.score_best < Score)
-            {
-                Properties.Settings.Default.score_best = Score;
-                Properties.Settings.Default.Save();
-            }
+            if (Properties.Settings.Default.score_best >= Score) return;
+
+            Properties.Settings.Default.score_best = Score;
+            Properties.Settings.Default.Save();
         }
 
-        private void save_load_board(bool save)
+        private void SaveOrLoadBoard(bool save)
         {
             for (int i = 0; i < maxSize; ++i)
                 for (int j = 0; j < maxSize; ++j)
@@ -275,23 +266,15 @@ namespace Ball_Breaker
 
         private void shiftfBoard_down()
         {
-            var columns = new List<int>();
-            int i, k;
+            var columnsUnique = shadedCells.Select(elem => elem.Y).ToList().Distinct();
 
-            foreach (var elem in shadedCells)
+            foreach (var j in columnsUnique)
             {
-                columns.Add(elem.Y);
-            }
-
-            var columns_unique = columns.Distinct();
-
-            foreach (var j in columns_unique)
-            {
-                i = maxSize - 1;
+                var i = maxSize - 1;
 
                 while (used[i, j] == false) --i;
 
-                k = i;
+                var k = i;
 
                 while (k >= 0)
                 {
@@ -312,15 +295,13 @@ namespace Ball_Breaker
 
         private void shiftBoard_right()
         {
-            int j, k;
-
             for (int i = 0; i < maxSize; ++i)
             {
-                j = maxSize - 1;
+                var j = maxSize - 1;
 
                 while (j >= 0 && board[i, j] != 0) --j;
 
-                k = j;
+                var k = j;
 
                 while (k >= 0)
                 {
@@ -340,11 +321,10 @@ namespace Ball_Breaker
         private void shiftColumns()
         {
             var j = maxSize - 1;
-            int k;
 
             while (j >= 0 && board[maxSize - 1, j] != 0) --j;
 
-            k = j;
+            var k = j;
 
             while (k >= 0)
             {
@@ -365,7 +345,7 @@ namespace Ball_Breaker
 
         private void addNewColumns()
         {
-            var colorCount = map_color.Count;
+            var colorCount = mapColor.Count;
             var addedNewColumn = false;
             var rnd = new Random();
 
@@ -378,18 +358,16 @@ namespace Ball_Breaker
                     addedNewColumn = true;
                 }
 
-            if (addedNewColumn)
-            {
-                pB_Game.Refresh();
-                Thread.Sleep(Delay);
+            if (!addedNewColumn) return;
 
-                shiftBoard_right();
-            }
+            pB_Game.Refresh();
+            Thread.Sleep(Delay);
+            shiftBoard_right();
         }
 
         private void addNewLines()
         {
-            var colorCount = map_color.Count;
+            var colorCount = mapColor.Count;
             var addedNewLines = false;
             var rnd = new Random();
 
@@ -410,24 +388,22 @@ namespace Ball_Breaker
                 else break;
             }
 
-            if (addedNewLines)
-            {
-                pB_Game.Refresh();
-                Thread.Sleep(Delay);
+            if (!addedNewLines) return;
 
-                for (int i = 0; i < maxSize; ++i)
-                    for (int j = 0; j < maxSize; ++j)
-                        if (board[i, j] == 0)
-                        {
-                            shadedCells.Add(new Point(i, j));
-                            used[i, j] = true;
-                        }
+            pB_Game.Refresh();
+            Thread.Sleep(Delay);
 
-                shiftfBoard_down();
+            for (int i = 0; i < maxSize; ++i)
+                for (int j = 0; j < maxSize; ++j)
+                    if (board[i, j] == 0)
+                    {
+                        shadedCells.Add(new Point(i, j));
+                        used[i, j] = true;
+                    }
 
-                pB_Game.Refresh();
-                Thread.Sleep(Delay);
-            }
+            shiftfBoard_down();
+            pB_Game.Refresh();
+            Thread.Sleep(Delay);
         }
 
         // Paint
@@ -442,10 +418,7 @@ namespace Ball_Breaker
 
             drawBalls(e);
 
-            if (shadedCells.Count > 1)
-            {
-                drawShadedCells(e);
-            }
+            if (shadedCells.Count > 1) drawShadedCells(e);
         }
 
         private void drawBalls(PaintEventArgs e)
@@ -454,7 +427,7 @@ namespace Ball_Breaker
                 for (int j = 0; j < maxSize; ++j)
                 {
                     if (board[i, j] != 0)
-                        e.Graphics.FillEllipse(map_color[board[i, j]], j * ballSize, i * ballSize, ballSize, ballSize);
+                        e.Graphics.FillEllipse(mapColor[board[i, j]], j * ballSize, i * ballSize, ballSize, ballSize);
                 }
         }
 
@@ -463,12 +436,10 @@ namespace Ball_Breaker
             var pen = new Pen(Color.Black, 1);
             var i_min = maxSize + 1;
 
-            int i, j;
-
             foreach (var point in shadedCells)
             {
-                i = point.X;
-                j = point.Y;
+                var i = point.X;
+                var j = point.Y;
 
                 if (i + 1 < maxSize && used[i + 1, j] == false)
                 {
@@ -515,12 +486,11 @@ namespace Ball_Breaker
 
             int[] di = { -1, -1, 0, 0 };
             int[] dj = { -1, 0, -1, 0 };
-            int i, j;
 
             for (int k = 0; k < di.Length; ++k)
             {
-                i = point.X + di[k];
-                j = point.Y + dj[k];
+                var i = point.X + di[k];
+                var j = point.Y + dj[k];
 
                 if (i >= 0 && i < maxSize && j >= 0 && j < maxSize)
                 {
@@ -552,19 +522,19 @@ namespace Ball_Breaker
 
         private void lbl_return_Click(object sender, EventArgs e)
         {
-            if (flag_to_return == false) return;
+            if (FlagToReturn == false) return;
 
             shadedCells_Clear();
-            save_load_board(false);
+            SaveOrLoadBoard(false);
             Score = score_prev;
-            Flag_to_return = false;
+            FlagToReturn = false;
 
             pB_Game.Refresh();
         }
 
         private void lbl_newGame_Click(object sender, EventArgs e)
         {
-            start();
+            Start();
         }
 
         private void lbl_settings_Click(object sender, EventArgs e)
