@@ -57,11 +57,7 @@ namespace Breaking_locks
         {
             set
             {
-                if (value == 0)
-                    passkeys = passkeys_default;
-                else
-                    passkeys = value;
-
+                passkeys = value == 0 ? passkeys_default : value;
                 lbl_Passkeys.Text = "Passkeys: " + passkeys.ToString();
             }
 
@@ -164,7 +160,7 @@ namespace Breaking_locks
                     break;
                 }
 
-                default: break;
+                case Status.Sleep: break;
             }
         }
 
@@ -197,19 +193,13 @@ namespace Breaking_locks
         private double get_new_ratio(double angle)
         {
             if (sector_angle_1 < angle && angle < sector_angle_2)
-            {
                 return (angle - sector_angle_1) / (sector_length / 3);
-            }
 
             if (sector_angle_3 < angle && angle < sector_angle_4)
-            {
                 return (sector_angle_4 - angle) / (sector_length / 3);
-            }
 
             if (sector_angle_2 <= angle && angle <= sector_angle_3)
-            {
                 return 1;
-            }
 
             return 0;
         }
@@ -234,10 +224,7 @@ namespace Breaking_locks
                 e.Graphics.FillPie(Brushes.Green, 0, 0, pB_Game.Height, pB_Game.Height, sector_angle_2, 15);
             }
 
-            if (lowStick_breaking)
-                pen_lowStick.Brush = Brushes.Red;
-            else
-                pen_lowStick.Brush = Brushes.Green;
+            pen_lowStick.Brush = lowStick_breaking ? Brushes.Red : Brushes.Green;
 
             e.Graphics.DrawLine(pen_topStrick, topStick.P0, topStick.P1);
             e.Graphics.DrawLine(pen_lowStick, lowStick.P0, lowStick.P1);
