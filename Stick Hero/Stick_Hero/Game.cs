@@ -7,11 +7,11 @@ namespace Stick_Hero
 {
     public partial class Game : Form
     {
-        private const int shift = 10,
-                          label_MinIndent = 10,
-                          label_MaxIndent = 30,
-                          rect_maxWidth = 70,
-                          rect_maxHeight = 350;
+        private const int shift = 10;
+        private const int label_MinIndent = 10;
+        private const int label_MaxIndent = 30;
+        private const int rect_maxWidth = 70;
+        private const int rect_maxHeight = 350;
 
         private RectangleF rectPrev, rectMain, rectNext, rectHero;
         private Line stickPrev, stickMain, stickBonus;
@@ -30,14 +30,12 @@ namespace Stick_Hero
         private GameState status;
 
         private LinearGradientBrush brush_gradient;
-        private Brush brush_rect = Brushes.Black;
         private Pen pen_stick, pen_bonus, pen_score;
 
-        private Font fontString = new Font("Tahoma", 20, FontStyle.Regular);
-
-        private Image im_Hero = Properties.Resources.im_Hero;
-
-        private Random rnd = new Random();
+        private readonly Brush brush_rect = Brushes.Black;
+        private readonly Font fontString = new Font("Tahoma", 20, FontStyle.Regular);
+        private readonly Image im_Hero = Properties.Resources.im_Hero;
+        private readonly Random rnd = new Random();
 
         //=========== Main Part ===========//
 
@@ -68,8 +66,7 @@ namespace Stick_Hero
 
         private void setParametersBrushes()
         {
-            pen_score = new Pen(Color.FromArgb(40, 0, 0, 0), 20);
-            pen_score.LineJoin = LineJoin.Round;
+            pen_score = new Pen(Color.FromArgb(40, 0, 0, 0), 20) {LineJoin = LineJoin.Round};
             pen_score.MiterLimit = pen_score.Width;
 
             pen_stick = new Pen(Color.Black, 3);
@@ -80,7 +77,8 @@ namespace Stick_Hero
 
         private void setLabelPlay()
         {
-            GraphicsPath GPath = new GraphicsPath();
+            var GPath = new GraphicsPath();
+
             GPath.AddEllipse(0, 0, labelPlay.Width, labelPlay.Height);
             labelPlay.Region = new Region(GPath);
             GPath.Dispose();
@@ -206,7 +204,7 @@ namespace Stick_Hero
 
         private void drawFinalPanel(PaintEventArgs e)
         {
-            string text_over = "GAME OVER!";
+            const string text_over = "GAME OVER!";
 
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, 0, 0, 0)), ClientRectangle);
 
@@ -275,16 +273,15 @@ namespace Stick_Hero
 
         private void printStartMessage(PaintEventArgs e)
         {
-            if (score == 0 && stickMain_height == 0)
-            {
-                string message = "Hold the space to stretch out the stick";
+            if (score != 0 || stickMain_height != 0) return;
 
-                e.Graphics.DrawString(message,
-                                      new Font("Tahoma", fontString.Size / 2, FontStyle.Bold),
-                                      Brushes.Black,
-                                      (ClientSize.Width - message.Length * fontString.Height / 5) / 2,
-                                      4 * label_MaxIndent);
-            }               
+            string message = "Hold the space to stretch out the stick";
+
+            e.Graphics.DrawString( message,
+                                   new Font("Tahoma", fontString.Size / 2, FontStyle.Bold),
+                                   Brushes.Black,
+                                   (ClientSize.Width - message.Length * fontString.Height / 5) / 2,
+                                   4 * label_MaxIndent);
         }
 
         //========== Clicks ==========//
@@ -306,13 +303,12 @@ namespace Stick_Hero
 
         private void Game_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space && status == GameState.stickUp)
-            {
-                stickMain_height = stickMain.Y0 - stickMain.Y;
-                status = GameState.stickDrop;
+            if (e.KeyCode != Keys.Space || status != GameState.stickUp) return;
 
-                System.Threading.Thread.Sleep(300);
-            }
+            stickMain_height = stickMain.Y0 - stickMain.Y;
+            status = GameState.stickDrop;
+
+            System.Threading.Thread.Sleep(300);
         }
 
 
@@ -389,14 +385,13 @@ namespace Stick_Hero
 
         private void shiftStick(ref Line stick, float border)
         {
-            if (stick.X > border)
-            {
-                stick.X -= shift;
-                if (stick.X < border) stick.X = border;
+            if (!(stick.X > border)) return;
 
-                stick.X0 -= shift;
-                if (stick.X0 < 0) stick.X0 = 0;
-            }
+            stick.X -= shift;
+            if (stick.X < border) stick.X = border;
+
+            stick.X0 -= shift;
+            if (stick.X0 < 0) stick.X0 = 0;
         }
 
         private void shiftStickBonus()
@@ -407,13 +402,12 @@ namespace Stick_Hero
 
         private void checkWaitingClick()
         {
-            if (rectMain.X == rectMain_border && rectNext.X == rectNext_border)
-            {
-                stickPrev = stickMain;
-                stickMain = new Line(rectMain.X + rectMain.Width, rectMain.Y, rectMain.X + rectMain.Width, rectMain.Y);
+            if (rectMain.X != rectMain_border || rectNext.X != rectNext_border) return;
 
-                status = GameState.waitingClick;
-            }
+            stickPrev = stickMain;
+            stickMain = new Line(rectMain.X + rectMain.Width, rectMain.Y, rectMain.X + rectMain.Width, rectMain.Y);
+
+            status = GameState.waitingClick;
         }
 
 
@@ -435,16 +429,14 @@ namespace Stick_Hero
 
         private void stickDropToAbyss()
         {
-            if (rectHero.Y == ClientSize.Height)
-            {
-                stickDrop(0, stickMain_height);
+            if (rectHero.Y != ClientSize.Height) return;
 
-                if (stickMain.X == stickMain.X0 && stickMain.Y == stickMain.Y0 + stickMain_height)
-                {
-                    checkBestScore();
-                    status = GameState.finalScreen;
-                }
-            }
+            stickDrop(0, stickMain_height);
+
+            if (stickMain.X != stickMain.X0 || stickMain.Y != stickMain.Y0 + stickMain_height) return;
+
+            checkBestScore();
+            status = GameState.finalScreen;
         }
 
         private void stickDrop(float finalShift_X0, float finalShift_Y0)
@@ -494,29 +486,28 @@ namespace Stick_Hero
 
             rectHero.X = newCoordinate(5, rectHero.X, rectHero_borderX);
 
-            if (rectHero.X == rectHero_borderX)
-            {
-                rectPrev = rectMain;
+            if (rectHero.X != rectHero_borderX) return;
 
-                rectMain = rectNext;
-                rectMain_border = (rect_maxWidth - rectMain.Width)/2;
-                stickMain_border = rectMain_border + stickMain.X - rectMain.X;
+            rectPrev = rectMain;
 
-                generateRectNext();
+            rectMain = rectNext;
+            rectMain_border = (rect_maxWidth - rectMain.Width)/2;
+            stickMain_border = rectMain_border + stickMain.X - rectMain.X;
 
-                alpha = 0;
-                score++;
+            generateRectNext();
 
-                status = GameState.start;
-            }
+            alpha = 0;
+            score++;
+
+            status = GameState.start;
         }
 
         private float newCoordinate(int SHIFT, float coordinate, float border)
         {
             if (coordinate + SHIFT <= border)
                 return coordinate + SHIFT;
-            else
-                return border;
+
+            return border;
         }
 
 
@@ -546,11 +537,10 @@ namespace Stick_Hero
 
         private void checkBestScore()
         {
-            if (Properties.Settings.Default.score_best < score)
-            {
-                Properties.Settings.Default.score_best = score;
-                Properties.Settings.Default.Save();
-            }
+            if (Properties.Settings.Default.score_best >= score) return;
+
+            Properties.Settings.Default.score_best = score;
+            Properties.Settings.Default.Save();
         }
 
 
