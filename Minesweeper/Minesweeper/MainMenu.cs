@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Minesweeper
@@ -11,8 +12,7 @@ namespace Minesweeper
                     interval = 20,
                     level = 1;
 
-        string[] namesLabelsInLeftColumn = { "level :", "music :" };
-        private Color color = Color.Black;
+        private string[] namesLabelsInLeftColumn = { "level :", "music :" };
         private Font font = new Font("Segoe Script", 10, FontStyle.Regular);
 
         public MainMenu()
@@ -56,7 +56,7 @@ namespace Minesweeper
 
         private void settingPanelSettings()
         {
-            int startPosX = 50, startPosY = 20;
+            const int startPosX = 50, startPosY = 20;
 
             // pictureBoxSetting
             pictureBoxSetting.Location = new Point(labelSetting.Location.X + labelSetting.Width + 25, labelStart.Location.Y);
@@ -93,8 +93,7 @@ namespace Minesweeper
 
             string[] namesLabelsInRightColumn = { labelLevel.Name, labelMusic.Name };
 
-            foreach (string name in namesLabelsInRightColumn)
-                if (label.Name == name) return;
+            if (namesLabelsInRightColumn.Any(name => label.Name == name)) return;
 
             label.Visible = false;
         }
@@ -141,16 +140,14 @@ namespace Minesweeper
         private void labelStart_MouseClick(object sender, MouseEventArgs e)
         {
             MinesweeperForm game = new MinesweeperForm(level, this);
+
             game.Show();
             Hide();
         }
 
         private void labelSetting_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!pictureBoxSetting.Visible)
-                pictureBoxSetting.Visible = true;
-            else
-                pictureBoxSetting.Visible = false;
+            pictureBoxSetting.Visible = !pictureBoxSetting.Visible;
         }
 
         private void labelExit_MouseClick(object sender, MouseEventArgs e)
@@ -178,22 +175,16 @@ namespace Minesweeper
             labelsMusicVisible(false);
 
             // открытие|скрытие текущей
-            if (!labelEazy.Visible)
-                labelsLevelVisible(true);
-            else
-                labelsLevelVisible(false);
+            labelsLevelVisible(!labelEazy.Visible);
         }
 
         private void labelMusic_MouseClick(object sender, MouseEventArgs e)
-        {   
+        {
             // скрытие остальных меток
             labelsLevelVisible(false);
 
             // открытие|скрытие текущей
-            if (!labelMusicOff.Visible)
-                labelsMusicVisible(true);
-            else
-                labelsMusicVisible(false);
+            labelsMusicVisible(!labelMusicOff.Visible);
         }
 
             //labelSettingsMenuItem
