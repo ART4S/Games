@@ -6,7 +6,10 @@ namespace Tetris
 {
     public partial class Game : Form
     {
-        static private float plW = 1, plW_div2 = plW / 2;
+        private const float plW = 1;
+        private const float plW_div2 = plW/2;
+        private static Random random;
+
         public int color_opacity;
         private Pen penLines;
 
@@ -28,8 +31,6 @@ namespace Tetris
         private bool flag_to_create_NewFigure;
 
         private Point middleCell_default, middleCell_nextF, middleCell;
-
-        static private Random random;
 
         public Game()
         {
@@ -178,6 +179,8 @@ namespace Tetris
                 case Keys.F1: start(); return;
 
                 case Keys.F2: menuItemInfo_Click(sender, e); return;
+
+                default: return;
             }
         }
 
@@ -221,27 +224,26 @@ namespace Tetris
         {
             moveFigure(1, 0);
 
-            if (flag_to_create_NewFigure)
+            if (!flag_to_create_NewFigure) return;
+
+            addNewColorToBoard();
+            checkFilledRows();
+
+            if (checkLose())
             {
-                addNewColorToBoard();
-                checkFilledRows();
+                checkBestScore();
+                timer.Stop();
 
-                if (checkLose())
-                {
-                    checkBestScore();
-                    timer.Stop();
-
-                    return;
-                }
-
-                mainFigure = nextFigure;
-                nextFigure = new Figure((FigureType)random.Next(Enum.GetValues(typeof(FigureType)).Length));
-                middleCell = middleCell_default;
-                flag_to_create_NewFigure = false;
-                timer.Interval = speed;
-
-                Refresh();
+                return;
             }
+
+            mainFigure = nextFigure;
+            nextFigure = new Figure((FigureType)random.Next(Enum.GetValues(typeof(FigureType)).Length));
+            middleCell = middleCell_default;
+            flag_to_create_NewFigure = false;
+            timer.Interval = speed;
+
+            Refresh();
         }
 
         private void moveFigure(int dx, int dy)
@@ -346,7 +348,7 @@ namespace Tetris
                 newC = new Point(newCm.X + mainFigure.cells[i].X, newCm.Y + mainFigure.cells[i].Y);
 
                 if (newC.Y < 0 || newC.Y >= maxj || newC.X >= maxi) return false;
-                else if (Board[newC.X, newC.Y].closed) return false;
+                if (Board[newC.X, newC.Y].closed) return false;
             }
 
             return true;
@@ -362,18 +364,17 @@ namespace Tetris
 
         private void checkBestScore()
         {
-            if (Properties.Settings.Default.score_best < score)
-            {
-                Properties.Settings.Default.score_best = score;
-                Properties.Settings.Default.Save();
-            }
+            if (Properties.Settings.Default.score_best >= score) return;
+
+            Properties.Settings.Default.score_best = score;
+            Properties.Settings.Default.Save();
         }
 
         private struct Figure
         {
-            public FigureType figureType { get; private set; }
-            public Brush color { get; private set; }
-            public Point[] cells { get; private set; }
+            private FigureType figureType { get; }
+            public Brush color { get; }
+            public Point[] cells { get; }
             public int pointer;
 
             public Figure(FigureType figure)
