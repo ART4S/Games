@@ -133,7 +133,7 @@ namespace Ball_Breaker
         private void CreateBoard()
         {
             var rnd = new Random();
-            var colorCount = mapColor.Count;
+            int colorCount = mapColor.Count;
 
             for (int i = 0; i < maxSize; ++i)
                 for (int j = 0; j < maxSize; ++j)
@@ -147,8 +147,8 @@ namespace Ball_Breaker
 
         private void pB_Game_MouseMove(object sender, MouseEventArgs e)
         {
-            var X = e.Y / ballSize;
-            var Y = e.X / ballSize;
+            int X = e.Y / ballSize;
+            int Y = e.X / ballSize;
 
             if (X < 0 || X >= maxSize || Y < 0 || Y >= maxSize) return;
 
@@ -239,7 +239,7 @@ namespace Ball_Breaker
 
             pB_Game.Refresh();
 
-            MessageBox.Show("Final score: " + Score.ToString(), "Game over");
+            MessageBox.Show("Final score: " + Score, "Game over");
             checkBestScore();
             Start();
         }
@@ -270,11 +270,11 @@ namespace Ball_Breaker
 
             foreach (var j in columnsUnique)
             {
-                var i = maxSize - 1;
+                int i = maxSize - 1;
 
                 while (used[i, j] == false) --i;
 
-                var k = i;
+                int k = i;
 
                 while (k >= 0)
                 {
@@ -297,11 +297,11 @@ namespace Ball_Breaker
         {
             for (int i = 0; i < maxSize; ++i)
             {
-                var j = maxSize - 1;
+                int j = maxSize - 1;
 
                 while (j >= 0 && board[i, j] != 0) --j;
 
-                var k = j;
+                int k = j;
 
                 while (k >= 0)
                 {
@@ -320,11 +320,11 @@ namespace Ball_Breaker
 
         private void shiftColumns()
         {
-            var j = maxSize - 1;
+            int j = maxSize - 1;
 
             while (j >= 0 && board[maxSize - 1, j] != 0) --j;
 
-            var k = j;
+            int k = j;
 
             while (k >= 0)
             {
@@ -345,7 +345,7 @@ namespace Ball_Breaker
 
         private void addNewColumns()
         {
-            var colorCount = mapColor.Count;
+            int colorCount = mapColor.Count;
             var addedNewColumn = false;
             var rnd = new Random();
 
@@ -367,13 +367,13 @@ namespace Ball_Breaker
 
         private void addNewLines()
         {
-            var colorCount = mapColor.Count;
+            int colorCount = mapColor.Count;
             var addedNewLines = false;
             var rnd = new Random();
 
             for (int i = 0; i < maxSize; ++i)
             {
-                var countEmptyCells = 0;
+                int countEmptyCells = 0;
 
                 for (int j = 0; j < maxSize; ++j)
                     if (board[i, j] == 0) countEmptyCells++;
@@ -434,12 +434,12 @@ namespace Ball_Breaker
         private void drawShadedCells(PaintEventArgs e)
         {
             var pen = new Pen(Color.Black, 1);
-            var i_min = maxSize + 1;
+            int i_min = maxSize + 1;
 
             foreach (var point in shadedCells)
             {
-                var i = point.X;
-                var j = point.Y;
+                int i = point.X;
+                int j = point.Y;
 
                 if (i + 1 < maxSize && used[i + 1, j] == false)
                 {
@@ -482,15 +482,15 @@ namespace Ball_Breaker
 
         private void counterScore_Paint(Point point, PaintEventArgs e)
         {
-            var shift = ballSize / 3;
+            int shift = ballSize / 3;
 
             int[] di = { -1, -1, 0, 0 };
             int[] dj = { -1, 0, -1, 0 };
 
             for (int k = 0; k < di.Length; ++k)
             {
-                var i = point.X + di[k];
-                var j = point.Y + dj[k];
+                int i = point.X + di[k];
+                int j = point.Y + dj[k];
 
                 if (i >= 0 && i < maxSize && j >= 0 && j < maxSize)
                 {
@@ -539,7 +539,7 @@ namespace Ball_Breaker
 
         private void lbl_settings_Click(object sender, EventArgs e)
         {
-            Form_settings settings = new Form_settings(this);
+            var settings = new Form_settings(this);
 
             settings.ShowDialog();
             //restart();

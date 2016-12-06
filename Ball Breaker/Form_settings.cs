@@ -5,7 +5,7 @@ namespace Ball_Breaker
 {
     public partial class Form_settings : Form
     {
-        private Game mainForm;
+        private readonly Game mainForm;
 
         public Form_settings(Game mainForm)
         {
