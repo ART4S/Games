@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -16,6 +17,7 @@ namespace Minesweeper
         private const int CellSize = 30;
 
         private GameStatus status;
+        private Dictionary<int, Brush> mapColor;
 
         private readonly Cell[,] Board = new Cell[maxI, maxJ];
         private readonly int level;
@@ -24,8 +26,9 @@ namespace Minesweeper
 
         private int maxi, maxj, mines, minesLeft, amountClosedCells, time;
         private Point shadedСell;
-        private bool flagToExit = true;
-                
+        private bool flagToExit;
+        private bool isPressCtrl;        
+
         public MinesweeperForm(int level, MainMenu menu)
         {
             this.level = level;
@@ -77,14 +80,15 @@ namespace Minesweeper
 
         private void pictureBoxBoard_Paint(object sender, PaintEventArgs e)
         {
-            var Width = pictureBoxBoard.Width;
-            var Height = pictureBoxBoard.Height;
+            int Width = pictureBoxBoard.Width;
+            int Height = pictureBoxBoard.Height;
 
             Pen pen = new Pen(Color.Black, 2),
                 penShadedCell = new Pen(Color.Black, pen.Width + 2);
 
             // labelMinesLeft
-            if(status == GameStatus.game) labelMinesLeft.Text = minesLeft.ToString();
+            if (status == GameStatus.game && minesLeft >= 0)
+                labelMinesLeft.Text = minesLeft.ToString();
 
             // рамка
             e.Graphics.DrawRectangle(pen, pen.Width/2, pen.Width/2, Width - pen.Width, Height - pen.Width);
@@ -132,7 +136,7 @@ namespace Minesweeper
                                     e.Graphics.DrawImage(im_Krest, j * CellSize + pen.Width / 2, i * CellSize + pen.Width / 2, CellSize - pen.Width, CellSize - pen.Width);
                                 }
                                 else if (Board[i, j].SumMines != 0)
-                                        e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, Brushes.Black, j * CellSize + 9, i * CellSize + 6);
+                                        e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, mapColor[Board[i, j].SumMines], j * CellSize + 9, i * CellSize + 6);
                             }
                             else
                                 e.Graphics.DrawImage(im_Flag, j * CellSize, i * CellSize, CellSize, CellSize);
@@ -144,7 +148,7 @@ namespace Minesweeper
                         case CellStatus.open:
                         {
                             if (Board[i, j].SumMines != 0)
-                                e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, Brushes.Black, j * CellSize + 9, i * CellSize + 6);
+                                e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, mapColor[Board[i, j].SumMines], j * CellSize + 9, i * CellSize + 6);
 
                             break;
                         }
@@ -162,7 +166,7 @@ namespace Minesweeper
                                         e.Graphics.DrawImage(im_Krest, j * CellSize + pen.Width / 2, i * CellSize + pen.Width / 2, CellSize - pen.Width, CellSize - pen.Width);
                                 }
                                 else if (Board[i, j].SumMines != 0)
-                                    e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, Brushes.Black, j * CellSize + 9, i * CellSize + 6);
+                                    e.Graphics.DrawString(Board[i, j].SumMines.ToString(), font, mapColor[Board[i, j].SumMines], j * CellSize + 9, i * CellSize + 6);
                             }
                             else
                                 e.Graphics.FillRectangle(Brushes.LightSeaGreen, j * CellSize + pen.Width / 2, i * CellSize + pen.Width / 2, CellSize - pen.Width, CellSize - pen.Width);
@@ -191,64 +195,60 @@ namespace Minesweeper
 
             if (status != GameStatus.game) return;
 
-            switch (e.Button)
+            if (e.Button == MouseButtons.Left && isPressCtrl == false)
             {
-                case MouseButtons.Left:
+                if (Board[shadedСell.X, shadedСell.Y].Status == CellStatus.close)
                 {
-                    if (Board[shadedСell.X, shadedСell.Y].Status == CellStatus.close)
-                    {
-                        if (checkLose(shadedСell.X, shadedСell.Y)) return;
+                    if (checkLose(shadedСell.X, shadedСell.Y)) return;
 
-                        openingCell(shadedСell.X, shadedСell.Y);
-                        checkVictory();
-                    }
-
-                    return;
+                    openingCell(shadedСell.X, shadedСell.Y);
+                    checkVictory();
                 }
 
-                case MouseButtons.Right:
+                return;
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                switch (Board[shadedСell.X, shadedСell.Y].Status)
                 {
-                    switch (Board[shadedСell.X, shadedСell.Y].Status)
-                    {
-                        case CellStatus.flag:
+                    case CellStatus.flag:
                         {
                             Board[shadedСell.X, shadedСell.Y].Status = CellStatus.close;
                             minesLeft++;
 
                             return;
                         }
-                        case CellStatus.close:
+                    case CellStatus.close:
                         {
                             Board[shadedСell.X, shadedСell.Y].Status = CellStatus.flag;
                             minesLeft--;
 
                             return;
                         }
-                    }
-
-                    return;
                 }
 
-                case MouseButtons.Middle:
-                {
-                    if (Board[shadedСell.X, shadedСell.Y].Status != CellStatus.open || Board[shadedСell.X, shadedСell.Y].SumMines != amountFlags()) return;
+                return;
+            }
 
-                    for (int dx = -1; dx <= 1; ++dx)
-                        for (int dy = -1; dy <= 1; ++dy)
-                            if ((shadedСell.X + dx) < maxi && (shadedСell.Y + dy) < maxj && (shadedСell.X + dx) >= 0 && (shadedСell.Y + dy) >= 0)
-                                if (Board[shadedСell.X + dx, shadedСell.Y + dy].Status == CellStatus.close)
-                                {
-                                    if (checkLose(shadedСell.X + dx, shadedСell.Y + dy)) return;
+            if (e.Button == MouseButtons.Middle || (isPressCtrl && e.Button == MouseButtons.Left))
+            {
+                if (Board[shadedСell.X, shadedСell.Y].Status != CellStatus.open || Board[shadedСell.X, shadedСell.Y].SumMines != amountFlags()) return;
 
-                                    openingCell(shadedСell.X + dx, shadedСell.Y + dy);
-                                    checkVictory();
-                                }
-                    return;
-                }
+                for (int dx = -1; dx <= 1; ++dx)
+                    for (int dy = -1; dy <= 1; ++dy)
+                        if ((shadedСell.X + dx) < maxi && (shadedСell.Y + dy) < maxj && (shadedСell.X + dx) >= 0 && (shadedСell.Y + dy) >= 0)
+                            if (Board[shadedСell.X + dx, shadedСell.Y + dy].Status == CellStatus.close)
+                            {
+                                if (checkLose(shadedСell.X + dx, shadedСell.Y + dy)) return;
+
+                                openingCell(shadedСell.X + dx, shadedСell.Y + dy);
+                                checkVictory();
+                            }
             }
         }
 
-            // вспомогательные функции
+             // вспомогательные функции
 
         private int amountFlags()
         {
@@ -286,7 +286,17 @@ namespace Minesweeper
             if (level < 3) pictureBoxBoard.Image = im_Victory;
         }
 
-            // StartGame, MainMenu
+        private void MinesweeperForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            isPressCtrl = true;
+        }
+
+        private void MinesweeperForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            isPressCtrl = false;
+        }
+
+        // StartGame, MainMenu
 
         private void labelStartGame_MouseClick(object sender, MouseEventArgs e)
         {
@@ -312,7 +322,6 @@ namespace Minesweeper
             label.Font = new Font(label.Font.Name, label.Font.Size, FontStyle.Regular);
         }
 
-
         // логическая структура
 
         private void setDifficultyLevel()
@@ -323,7 +332,7 @@ namespace Minesweeper
                 case 2: maxi = 16; maxj = 16; mines = 40; break;
                 case 3: maxi = 16; maxj = 30; mines = 99; break;
             }
-        }  // настройка уровня сложности
+        }      // настройка уровня сложности
 
         private void restart()
         {
@@ -339,10 +348,24 @@ namespace Minesweeper
             labelTime.Text = "00:00:00";
             pictureBoxBoard.Image = null;
 
+            flagToExit = true;
+            isPressCtrl = false;
+
             status = GameStatus.game;
             minesLeft = mines;
-            amountClosedCells = maxi * maxj;
+            amountClosedCells = maxi*maxj;
             shadedСell = new Point(0, 0);
+            mapColor = new Dictionary<int, Brush>
+            {
+                {1, Brushes.Blue},
+                {2, Brushes.Green},
+                {3, Brushes.Red},
+                {4, Brushes.DarkRed},
+                {5, Brushes.DarkBlue},
+                {6, Brushes.DarkMagenta},
+                {7, Brushes.DarkMagenta},
+                {8, Brushes.DarkMagenta}
+            };
         }    // инициализация параметров (максимум, количество закрытых клеток)
 
         private void initializeCell()

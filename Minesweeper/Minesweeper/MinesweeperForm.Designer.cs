@@ -136,6 +136,8 @@
             this.Name = "MinesweeperForm";
             this.Text = "Minesweeper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MinesweeperForm_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MinesweeperForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MinesweeperForm_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBoard)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
