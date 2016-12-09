@@ -13,24 +13,35 @@ namespace Stick_Hero
         private const int rect_maxWidth = 70;
         private const int rect_maxHeight = 350;
 
-        private RectangleF rectPrev, rectMain, rectNext, rectHero;
-        private Line stickPrev, stickMain, stickBonus;
+        private RectangleF rectPrev;
+        private RectangleF rectMain;
+        private RectangleF rectNext;
+        private RectangleF rectHero;
 
-        private float rectMain_border,
-                      rectNext_border,
-                      stickMain_border,
-                      stickMain_height,
-                      labelPlay_upperBorder,
-                      labelPlay_lowerBorder;
+        private Line stickPrev;
+        private Line stickMain;
+        private Line stickBonus;
 
-        private bool labelPlay_moveUp, printInfoDevelopers;
+        private float rectMain_border;
+        private float rectNext_border;
+        private float stickMain_border;
+        private float stickMain_height;
+        private float labelPlay_upperBorder;
+        private float labelPlay_lowerBorder;
+
+        private bool isMoveUpLabelPlay;
+        private bool isPrintInfoDevelopers;
+
         private double alpha;
         private short score;
 
         private GameState status;
 
         private LinearGradientBrush brush_gradient;
-        private Pen pen_stick, pen_bonus, pen_score;
+
+        private Pen pen_stick;
+        private Pen pen_bonus;
+        private Pen pen_score;
 
         private readonly Brush brush_rect = Brushes.Black;
         private readonly Font fontString = new Font("Tahoma", 20, FontStyle.Regular);
@@ -46,13 +57,13 @@ namespace Stick_Hero
 
         private void Game_Load(object sender, EventArgs e)
         {
-            setLocations();
-            setParametersBrushes();
-            setLabelPlay();
-            start();
+            SetLocations();
+            SetParametersBrushes();
+            SetLabelPlay();
+            Start();
         }
 
-        private void setLocations()
+        private void SetLocations()
         {
             labelName.Location = new Point((ClientSize.Width - labelName.Width) / 2, label_MaxIndent);
             labelPlay.Location = new Point((ClientSize.Width - labelPlay.Width) / 2, (ClientSize.Height - labelPlay.Height) / 2);
@@ -64,7 +75,7 @@ namespace Stick_Hero
             labelRestart.Location = new Point(labelSite.Location.X + labelSite.Width + label_MinIndent, 8 * label_MaxIndent);
         }
 
-        private void setParametersBrushes()
+        private void SetParametersBrushes()
         {
             pen_score = new Pen(Color.FromArgb(40, 0, 0, 0), 20) {LineJoin = LineJoin.Round};
             pen_score.MiterLimit = pen_score.Width;
@@ -75,7 +86,7 @@ namespace Stick_Hero
             brush_gradient = new LinearGradientBrush(new Point(ClientSize.Width / 2, 0), new Point(ClientSize.Width / 2, ClientSize.Height), Color.LightSeaGreen, Color.SeaGreen);
         }
 
-        private void setLabelPlay()
+        private void SetLabelPlay()
         {
             var GPath = new GraphicsPath();
 
@@ -93,41 +104,41 @@ namespace Stick_Hero
         {
             switch (status)
             {
-                case GameState.startScreen: moveLabelPlay(); break;
+                case GameState.startScreen: MoveLabelPlay(); break;
 
                 case GameState.start:
                 {
-                    shiftRect(ref rectPrev, 0);
-                    shiftRect(ref rectMain, rectMain_border);
-                    shiftRect(ref rectNext, rectNext_border);
+                    ShiftRect(ref rectPrev, 0);
+                    ShiftRect(ref rectMain, rectMain_border);
+                    ShiftRect(ref rectNext, rectNext_border);
 
-                    shiftStick(ref stickPrev, 0);
-                    shiftStick(ref stickMain, stickMain_border);
+                    ShiftStick(ref stickPrev, 0);
+                    ShiftStick(ref stickMain, stickMain_border);
 
-                    shiftRectHero();
-                    shiftStickBonus();
-                    checkWaitingClick();
+                    ShiftRectHero();
+                    ShiftStickBonus();
+                    CheckWaitingClick();
 
                     break;
                 }
 
-                case GameState.stickUp: stickUp(); break;
+                case GameState.stickUp: StickUp(); break;
 
-                case GameState.stickDrop: stickDropToHorizon(); break;
+                case GameState.stickDrop: StickDropToHorizon(); break;
 
-                case GameState.nextLevel: heroMoveToNextRect(); break;
+                case GameState.nextLevel: HeroMoveToNextRect(); break;
 
                 case GameState.lose:
                 {
-                    heroMoveToAbyss();
-                    stickDropToAbyss();
+                    HeroMoveToAbyss();
+                    StickDropToAbyss();
 
                     break;
                 }
 
                 case GameState.finalScreen:
                 {
-                    finalScreenLabelVisible(true);
+                    FinalScreenLabelVisible(true);
                     timer.Stop();
 
                     break;
@@ -154,20 +165,20 @@ namespace Stick_Hero
 
                 case GameState.finalScreen:
                 {
-                    drawFinalPanel(e);
+                    DrawFinalPanel(e);
 
-                    if (printInfoDevelopers)
+                    if (isPrintInfoDevelopers)
                     {
-                        printInfoItem("ART4S", "DEVELOPER", 3, e);
-                        printInfoItem("2016", "YEAR", 5, e);
+                        PrintInfoItem("ART4S", "DEVELOPER", 3, e);
+                        PrintInfoItem("2016", "YEAR", 5, e);
                     }
                     else
                     {
-                        printInfoItem(score.ToString(), "SCORE", 3, e);
-                        printInfoItem(Properties.Settings.Default.score_best.ToString(), "BEST", 5, e);
+                        PrintInfoItem(score.ToString(), "SCORE", 3, e);
+                        PrintInfoItem(Properties.Settings.Default.score_best.ToString(), "BEST", 5, e);
 
                         if (Properties.Settings.Default.score_best == score)
-                            printLabelNEWBESTSCORE(e);
+                            PrintLabelNEWBESTSCORE(e);
                     }
 
                     break;
@@ -175,34 +186,34 @@ namespace Stick_Hero
 
                 default:
                 {
-                    drawScorePanel(e);
-                    printStartMessage(e);
+                    DrawScorePanel(e);
+                    PrintStartMessage(e);
 
                     break;
                 }
             }
 
-            drawRectangles(e);
-            drawLines(e);
+            DrawRectangles(e);
+            DrawLines(e);
             e.Graphics.DrawImage(im_Hero, rectHero);
         }
 
 
-        private void drawRectangles(PaintEventArgs e)
+        private void DrawRectangles(PaintEventArgs e)
         {
             e.Graphics.FillRectangle(brush_rect, rectPrev);
             e.Graphics.FillRectangle(brush_rect, rectMain);
             e.Graphics.FillRectangle(brush_rect, rectNext);
         }
 
-        private void drawLines(PaintEventArgs e)
+        private void DrawLines(PaintEventArgs e)
         {
             e.Graphics.DrawLine(pen_bonus, stickBonus.X0, stickBonus.Y0, stickBonus.X, stickBonus.Y);
             e.Graphics.DrawLine(pen_stick, stickPrev.X0, stickPrev.Y0, stickPrev.X, stickPrev.Y);
             e.Graphics.DrawLine(pen_stick, stickMain.X0, stickMain.Y0, stickMain.X, stickMain.Y);
         }
 
-        private void drawFinalPanel(PaintEventArgs e)
+        private void DrawFinalPanel(PaintEventArgs e)
         {
             const string text_over = "GAME OVER!";
 
@@ -231,7 +242,7 @@ namespace Stick_Hero
             pen_score.Color = Color.FromArgb(40, 0, 0, 0);
         }
 
-        private void drawScorePanel(PaintEventArgs e)
+        private void DrawScorePanel(PaintEventArgs e)
         {
             e.Graphics.DrawRectangle(pen_score,
                                      (ClientSize.Width - score.ToString().Length * fontString.Height / 2) / 2,
@@ -246,7 +257,7 @@ namespace Stick_Hero
                                   2 * label_MaxIndent - pen_score.Width / 4);
         }
 
-        private void printInfoItem(string item_text, string item_name, int shift_label_indent, PaintEventArgs e)
+        private void PrintInfoItem(string item_text, string item_name, int shift_label_indent, PaintEventArgs e)
         {
             e.Graphics.DrawString(item_name,
                                   new Font("Tahoma", fontString.Size / 2, FontStyle.Bold),
@@ -261,7 +272,7 @@ namespace Stick_Hero
                                   shift_label_indent * label_MaxIndent + (float)0.7 * fontString.Height);
         }
 
-        private void printLabelNEWBESTSCORE(PaintEventArgs e)
+        private void PrintLabelNEWBESTSCORE(PaintEventArgs e)
         {
             e.Graphics.DrawString("NEW!",
                                   new Font("Tahoma", fontString.Size / 3, FontStyle.Bold),
@@ -271,7 +282,7 @@ namespace Stick_Hero
                                   5 * label_MaxIndent + fontString.Height);
         }
 
-        private void printStartMessage(PaintEventArgs e)
+        private void PrintStartMessage(PaintEventArgs e)
         {
             if (score != 0 || stickMain_height != 0) return;
 
@@ -288,7 +299,7 @@ namespace Stick_Hero
 
         private void labelPlay_Click(object sender, EventArgs e)
         {
-            startScreenLabelVisible(false);
+            StartScreenLabelVisible(false);
 
             timer.Interval = 1;
 
@@ -314,17 +325,17 @@ namespace Stick_Hero
 
         private void labelStartScreen_Click(object sender, EventArgs e)
         {
-            start();
+            Start();
         }
 
         private void labelRestart_Click(object sender, EventArgs e)
         {
-            restart();
+            Restart();
         }
 
         private void labelInfoDevelopers_Click(object sender, EventArgs e)
         {
-            printInfoDevelopers = !printInfoDevelopers;
+            isPrintInfoDevelopers = !isPrintInfoDevelopers;
 
             Refresh();
         }
@@ -336,25 +347,25 @@ namespace Stick_Hero
 
         //========== Logical Part 1 ==========//
 
-        private void moveLabelPlay()
+        private void MoveLabelPlay()
         {
-            if (labelPlay_moveUp)
+            if (isMoveUpLabelPlay)
             {
                 labelPlay.Location = new Point(labelPlay.Location.X, labelPlay.Location.Y - 1);
 
                 if (labelPlay.Location.Y == labelPlay_upperBorder)
-                    labelPlay_moveUp = false;
+                    isMoveUpLabelPlay = false;
             }
             else
             {
                 labelPlay.Location = new Point(labelPlay.Location.X, labelPlay.Location.Y + 1);
 
                 if (labelPlay.Location.Y == labelPlay_lowerBorder)
-                    labelPlay_moveUp = true;
+                    isMoveUpLabelPlay = true;
             }
         }
 
-        private void shiftRect(ref RectangleF rect, float border)
+        private void ShiftRect(ref RectangleF rect, float border)
         {
             if (rect.X - shift >= border)
                 rect.X -= shift;
@@ -377,13 +388,13 @@ namespace Stick_Hero
                 rect.Y = rect_maxHeight;
         }
 
-        private void shiftRectHero()
+        private void ShiftRectHero()
         {
             rectHero.X = rectMain.X + rectMain.Width - rectHero.Width;
             rectHero.Y = rectMain.Y - rectHero.Height;
         }
 
-        private void shiftStick(ref Line stick, float border)
+        private void ShiftStick(ref Line stick, float border)
         {
             if (!(stick.X > border)) return;
 
@@ -394,13 +405,13 @@ namespace Stick_Hero
             if (stick.X0 < 0) stick.X0 = 0;
         }
 
-        private void shiftStickBonus()
+        private void ShiftStickBonus()
         {
             stickBonus.X0 = rectNext.X + (rectNext.Width - pen_bonus.Width)/2;
             stickBonus.X = stickBonus.X0 + pen_bonus.Width;
         }
 
-        private void checkWaitingClick()
+        private void CheckWaitingClick()
         {
             if (rectMain.X != rectMain_border || rectNext.X != rectNext_border) return;
 
@@ -411,7 +422,7 @@ namespace Stick_Hero
         }
 
 
-        private void stickUp()
+        private void StickUp()
         {
             if (stickMain.Y - 4 >= 0)
                 stickMain.Y -= 4;
@@ -419,27 +430,27 @@ namespace Stick_Hero
                 stickMain.Y = 0;
         }
       
-        private void stickDropToHorizon()
+        private void StickDropToHorizon()
         {
-            stickDrop(stickMain_height, 0);
+            StickDrop(stickMain_height, 0);
 
             if (stickMain.X == stickMain.X0 + stickMain_height && stickMain.Y == stickMain.Y0)
-                checkLose();
+                CheckLose();
         }
 
-        private void stickDropToAbyss()
+        private void StickDropToAbyss()
         {
             if (rectHero.Y != ClientSize.Height) return;
 
-            stickDrop(0, stickMain_height);
+            StickDrop(0, stickMain_height);
 
             if (stickMain.X != stickMain.X0 || stickMain.Y != stickMain.Y0 + stickMain_height) return;
 
-            checkBestScore();
+            CheckBestScore();
             status = GameState.finalScreen;
         }
 
-        private void stickDrop(float finalShift_X0, float finalShift_Y0)
+        private void StickDrop(float finalShift_X0, float finalShift_Y0)
         {
             float newX = stickMain.X0 + (stickMain.X - stickMain.X0) * (float)Math.Cos(alpha) - (stickMain.Y - stickMain.Y0) * (float)Math.Sin(alpha);
             float newY = stickMain.Y0 + (stickMain.Y - stickMain.Y0) * (float)Math.Cos(alpha) + (stickMain.X - stickMain.X0) * (float)Math.Sin(alpha);
@@ -472,19 +483,19 @@ namespace Stick_Hero
         }
 
 
-        private void heroMoveToAbyss()
+        private void HeroMoveToAbyss()
         {
-            rectHero.X = newCoordinate(5, rectHero.X, stickMain.X);
+            rectHero.X = NewCoordinate(5, rectHero.X, stickMain.X);
 
             if (rectHero.X == stickMain.X)
-                rectHero.Y = newCoordinate(shift, rectHero.Y, ClientSize.Height);
+                rectHero.Y = NewCoordinate(shift, rectHero.Y, ClientSize.Height);
         }
 
-        private void heroMoveToNextRect()
+        private void HeroMoveToNextRect()
         {
             float rectHero_borderX = rectNext.X + rectNext.Width - rectHero.Width;
 
-            rectHero.X = newCoordinate(5, rectHero.X, rectHero_borderX);
+            rectHero.X = NewCoordinate(5, rectHero.X, rectHero_borderX);
 
             if (rectHero.X != rectHero_borderX) return;
 
@@ -494,7 +505,7 @@ namespace Stick_Hero
             rectMain_border = (rect_maxWidth - rectMain.Width)/2;
             stickMain_border = rectMain_border + stickMain.X - rectMain.X;
 
-            generateRectNext();
+            GenerateRectNext();
 
             alpha = 0;
             score++;
@@ -502,7 +513,7 @@ namespace Stick_Hero
             status = GameState.start;
         }
 
-        private float newCoordinate(int SHIFT, float coordinate, float border)
+        private float NewCoordinate(int SHIFT, float coordinate, float border)
         {
             if (coordinate + SHIFT <= border)
                 return coordinate + SHIFT;
@@ -511,7 +522,7 @@ namespace Stick_Hero
         }
 
 
-        private void generateRectNext()
+        private void GenerateRectNext()
         {
             rectNext = new RectangleF(ClientSize.Width,
                                       rect_maxHeight,
@@ -522,7 +533,7 @@ namespace Stick_Hero
                                        ClientSize.Width - shift - (int)rectNext.Width);
         }
 
-        private void checkLose()
+        private void CheckLose()
         {
             if (stickMain.X >= rectNext.X && stickMain.X <= rectNext.X + rectNext.Width)
             {
@@ -535,7 +546,7 @@ namespace Stick_Hero
                 status = GameState.lose;
         }
 
-        private void checkBestScore()
+        private void CheckBestScore()
         {
             if (Properties.Settings.Default.score_best >= score) return;
 
@@ -544,13 +555,13 @@ namespace Stick_Hero
         }
 
 
-        private void startScreenLabelVisible(bool on)
+        private void StartScreenLabelVisible(bool on)
         {
             labelName.Visible = on;
             labelPlay.Visible = on;
         }
 
-        private void finalScreenLabelVisible(bool on)
+        private void FinalScreenLabelVisible(bool on)
         {
             labelRestart.Visible = on;
             labelStartScreen.Visible = on;
@@ -560,11 +571,11 @@ namespace Stick_Hero
 
         //========== Logical Part 2 ==========//
 
-        private void start()
+        private void Start()
         {                  
-            printInfoDevelopers = false;
-            finalScreenLabelVisible(false);
-            startScreenLabelVisible(true);
+            isPrintInfoDevelopers = false;
+            FinalScreenLabelVisible(false);
+            StartScreenLabelVisible(true);
 
             timer.Interval = 90;
             alpha = 0;
@@ -573,35 +584,35 @@ namespace Stick_Hero
             stickMain_border = 0;
 
             rectPrev = new RectangleF();
-            rectMain = new RectangleF((ClientSize.Width - rect_maxWidth)/2,
-                                       rect_maxHeight + 3*shift,
+            rectMain = new RectangleF((ClientSize.Width - rect_maxWidth) / 2,
+                                       rect_maxHeight + 3 * shift,
                                        rect_maxWidth,
                                        rect_maxHeight);
-            rectHero = new RectangleF(rectMain.X + (rectMain.Width - 20)/2, rectMain.Y - 23, 20, 23);
-            generateRectNext();
+            rectHero = new RectangleF(rectMain.X + (rectMain.Width - 20) / 2, rectMain.Y - 23, 20, 23);
+            GenerateRectNext();
 
             rectMain_border = (rect_maxWidth - rectMain.Width)/2;
 
             stickPrev = new Line();
             stickMain = new Line();
-            stickBonus = new Line(rectNext.X + (rectNext.Width - pen_bonus.Width)/2,
-                                  rectNext.Y + pen_bonus.Width/2,
-                                  rectNext.X + (rectNext.Width + pen_bonus.Width)/2,
-                                  rectNext.Y + pen_bonus.Width/2);
+            stickBonus = new Line(rectNext.X + (rectNext.Width - pen_bonus.Width) / 2,
+                                  rectNext.Y + pen_bonus.Width / 2,
+                                  rectNext.X + (rectNext.Width + pen_bonus.Width) / 2,
+                                  rectNext.Y + pen_bonus.Width / 2);
 
             status = GameState.startScreen;
             timer.Start();
         }
 
-        private void restart()
+        private void Restart()
         {
-            printInfoDevelopers = false;
-            finalScreenLabelVisible(false);
+            isPrintInfoDevelopers = false;
+            FinalScreenLabelVisible(false);
 
             alpha = 0;
             score = 0;
 
-            generateRectNext();
+            GenerateRectNext();
 
             stickMain = stickPrev;
             stickPrev = new Line();
