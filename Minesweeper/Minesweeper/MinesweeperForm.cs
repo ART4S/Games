@@ -288,12 +288,12 @@ namespace Minesweeper
 
         private void MinesweeperForm_KeyDown(object sender, KeyEventArgs e)
         {
-            isPressCtrl = true;
+            isPressCtrl = e.KeyCode == Keys.ControlKey;
         }
 
         private void MinesweeperForm_KeyUp(object sender, KeyEventArgs e)
         {
-            isPressCtrl = false;
+            isPressCtrl = e.KeyCode != Keys.ControlKey;
         }
 
         // StartGame, MainMenu
