@@ -8,7 +8,7 @@ namespace Labyrinth
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form_Game());
+            Application.Run(new Game_Form());
         }
     }
 }
