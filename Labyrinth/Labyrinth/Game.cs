@@ -13,6 +13,11 @@ namespace Labyrinth
 {
     public class Game
     {
+        private Map[,] defaultWeights;
+
+        private Point defaultPositionMinotaur;
+        private Point defaultPositionHuman;
+
         private Map[,] weights;
 
         private Point Minotaur;
@@ -27,7 +32,7 @@ namespace Labyrinth
             this.n = n;
             this.m = m;
 
-            weights = new Map[n, m];
+            defaultWeights = new Map[n, m];
 
             for(int i = 0; i < n; ++i)
                 for(int j = 0; j < m; ++j)
@@ -35,37 +40,39 @@ namespace Labyrinth
                     switch (labyrinth[i, j])
                     {
                         case 'X':
-                            weights[i, j] = Map.Wall;
+                            defaultWeights[i, j] = Map.Wall;
                             break;
 
                         case ' ':
-                            weights[i, j] = Map.Path;
+                            defaultWeights[i, j] = Map.Path;
                             break;
 
                         case 'W':
-                            weights[i, j] = Map.Water;
+                            defaultWeights[i, j] = Map.Water;
                             break;
 
                         case 'T':
-                            weights[i, j] = Map.Tree;
+                            defaultWeights[i, j] = Map.Tree;
                             break;
 
                         case 'M':
-                            weights[i, j] = Map.Path;
-                            Minotaur = new Point(i, j);
+                            defaultWeights[i, j] = Map.Path;
+                            defaultPositionMinotaur = new Point(i, j);
                             break;
 
                         case 'H':
-                            weights[i, j] = Map.Path;
-                            Human = new Point(i, j);
+                            defaultWeights[i, j] = Map.Path;
+                            defaultPositionHuman = new Point(i, j);
                             break;
 
                         case 'Q':
-                            weights[i, j] = Map.Exit;
+                            defaultWeights[i, j] = Map.Exit;
                             Exit = new Point(i, j);
                             break;
                     }
                 }
+
+            Restart();
         }
 
         public void Paint(PaintEventArgs e, int cellSize)
@@ -80,7 +87,7 @@ namespace Labyrinth
                     switch (weights[i, j])
                     {
                         case Map.Water:
-                            e.Graphics.DrawString("W", font, Brushes.Blue, currentPoint);
+                            e.Graphics.FillRectangle(Brushes.Blue, j * cellSize, i * cellSize, cellSize, cellSize);
                             break;
 
                         case Map.Tree:
@@ -105,7 +112,13 @@ namespace Labyrinth
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
         }
 
-        public void Move(Direction direction)
+        public void Move(Direction direction, Mode mode)
+        {
+            MoveHuman(direction);
+            MoveMinotaur(mode);
+        }
+        // TODO: !
+        private void MoveHuman(Direction direction)
         {
             int dx = 0;
             int dy = 0;
@@ -133,15 +146,37 @@ namespace Labyrinth
             {
                 if (isMinotaur(Human.X + dx, Human.Y + dy))
                 {
-                    // TODO: !
+                    Restart();
+                    // lose
+                    return;
                 }
 
                 if (isExit(Human.X + dx, Human.Y + dy))
                 {
-                    // TODO: !
+                    Restart();
+                    // won
+                    return;
                 }
 
                 Human = new Point(Human.X + dx, Human.Y + dy);
+            }
+        }
+        // TODO: !
+        private void MoveMinotaur(Mode mode)
+        {
+            switch (mode)
+            {
+                case Mode.Eazy_Crazy:
+                    break;
+
+                case Mode.Eazy:
+                    break;
+
+                case Mode.Normal:
+                    break;
+
+                case Mode.Smart_Hard:
+                    break;
             }
         }
 
@@ -168,6 +203,13 @@ namespace Labyrinth
         private bool isExit(int x, int y)
         {
             return x == Exit.X && y == Exit.Y;
+        }
+
+        private void Restart()
+        {
+            weights = defaultWeights;
+            Human = defaultPositionHuman;
+            Minotaur = defaultPositionMinotaur;
         }
     }
 }
