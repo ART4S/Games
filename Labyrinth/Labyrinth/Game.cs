@@ -24,6 +24,8 @@ namespace Labyrinth
         private Point Human;
         private Point Exit;
 
+        private int PenaltyForCrossing;
+
         private readonly int n;
         private readonly int m;
 
@@ -120,6 +122,12 @@ namespace Labyrinth
         // TODO: !
         private void MoveHuman(Direction direction)
         {
+            if (PenaltyForCrossing != 1)
+            {
+                PenaltyForCrossing--;
+                return;
+            }
+
             int dx = 0;
             int dy = 0;
 
@@ -142,24 +150,27 @@ namespace Labyrinth
                     break;
             }
 
-            if (isNotAbroad(Human.X + dx, Human.Y + dy) && isNotWall(Human.X + dx, Human.Y + dy) && isNotTree(Human.X + dx, Human.Y + dy))
+            Point NextPoint = new Point(Human.X + dx, Human.Y + dy);
+
+            if (isWall(NextPoint) || isTree(NextPoint))
+                return;
+
+            if (isMinotaur(NextPoint))
             {
-                if (isMinotaur(Human.X + dx, Human.Y + dy))
-                {
-                    Restart();
-                    // lose
-                    return;
-                }
-
-                if (isExit(Human.X + dx, Human.Y + dy))
-                {
-                    Restart();
-                    // won
-                    return;
-                }
-
-                Human = new Point(Human.X + dx, Human.Y + dy);
+                Restart();
+                // lose
+                return;
             }
+
+            if (isExit(NextPoint))
+            {
+                Restart();
+                // won
+                return;
+            }
+
+            Human = NextPoint;
+            PenaltyForCrossing = (int)weights[Human.X, Human.Y];
         }
         // TODO: !
         private void MoveMinotaur(Mode mode)
@@ -180,29 +191,24 @@ namespace Labyrinth
             }
         }
 
-        private bool isNotAbroad(int x, int y)
+        private bool isWall(Point point)
         {
-            return x >= 0 && y >= 0 && x < n && y < m;
+            return weights[point.X, point.Y] == Map.Wall;
         }
 
-        private bool isNotWall(int x, int y)
+        private bool isTree(Point point)
         {
-            return weights[x, y] != Map.Wall;
+            return weights[point.X, point.Y] == Map.Tree;
         }
 
-        private bool isNotTree(int x, int y)
+        private bool isMinotaur(Point point)
         {
-            return weights[x, y] != Map.Tree;
+            return point == Minotaur;
         }
 
-        private bool isMinotaur(int x, int y)
+        private bool isExit(Point point)
         {
-            return x == Minotaur.X && y == Minotaur.Y;
-        }
-
-        private bool isExit(int x, int y)
-        {
-            return x == Exit.X && y == Exit.Y;
+            return point == Exit;
         }
 
         private void Restart()
@@ -210,6 +216,7 @@ namespace Labyrinth
             weights = defaultWeights;
             Human = defaultPositionHuman;
             Minotaur = defaultPositionMinotaur;
+            PenaltyForCrossing = 1;
         }
     }
 }
