@@ -13,9 +13,7 @@ namespace Labyrinth
 {
     public class Game
     {
-        private const int Inf = 100000;
-
-        private int[,] weights;
+        private Map[,] weights;
 
         private Point Minotaur;
         private Point Human;
@@ -29,7 +27,7 @@ namespace Labyrinth
             this.n = n;
             this.m = m;
 
-            weights = new int[n, m];
+            weights = new Map[n, m];
 
             for(int i = 0; i < n; ++i)
                 for(int j = 0; j < m; ++j)
@@ -37,33 +35,33 @@ namespace Labyrinth
                     switch (labyrinth[i, j])
                     {
                         case 'X':
-                            weights[i, j] = Inf;
+                            weights[i, j] = Map.Wall;
                             break;
 
                         case ' ':
-                            weights[i, j] = 1;
+                            weights[i, j] = Map.Path;
                             break;
 
                         case 'W':
-                            weights[i, j] = 2;
+                            weights[i, j] = Map.Water;
                             break;
 
                         case 'T':
-                            weights[i, j] = 3;
+                            weights[i, j] = Map.Tree;
                             break;
 
                         case 'M':
-                            weights[i, j] = 1;
+                            weights[i, j] = Map.Path;
                             Minotaur = new Point(i, j);
                             break;
 
                         case 'H':
-                            weights[i, j] = 1;
+                            weights[i, j] = Map.Path;
                             Human = new Point(i, j);
                             break;
 
                         case 'Q':
-                            weights[i, j] = Inf + 1;
+                            weights[i, j] = Map.Exit;
                             Exit = new Point(i, j);
                             break;
                     }
@@ -81,15 +79,15 @@ namespace Labyrinth
 
                     switch (weights[i, j])
                     {
-                        case 2:
+                        case Map.Water:
                             e.Graphics.DrawString("W", font, Brushes.Blue, currentPoint);
                             break;
 
-                        case 3:
+                        case Map.Tree:
                             e.Graphics.DrawString("T", font, Brushes.Green, currentPoint);
                             break;
 
-                        case Inf:
+                        case Map.Wall:
                             e.Graphics.FillRectangle(Brushes.Black, j * cellSize, i * cellSize, cellSize, cellSize);
                             break;
 
@@ -105,6 +103,71 @@ namespace Labyrinth
 
             for (int j = 0; j <= m; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
+        }
+
+        public void Move(Direction direction)
+        {
+            int dx = 0;
+            int dy = 0;
+
+            switch (direction)
+            {
+                case Direction.UP:
+                    dx = -1;
+                    break;
+
+                case Direction.DOWN:
+                    dx = 1;
+                    break;
+
+                case Direction.LEFT:
+                    dy = -1;
+                    break;
+
+                case Direction.RIGHT:
+                    dy = 1;
+                    break;
+            }
+
+            if (isNotAbroad(Human.X + dx, Human.Y + dy) && isNotWall(Human.X + dx, Human.Y + dy) && isNotTree(Human.X + dx, Human.Y + dy))
+            {
+                if (isMinotaur(Human.X + dx, Human.Y + dy))
+                {
+                    // TODO: !
+                }
+
+                if (isExit(Human.X + dx, Human.Y + dy))
+                {
+                    // TODO: !
+                }
+
+                Human = new Point(Human.X + dx, Human.Y + dy);
+            }
+        }
+
+        private bool isNotAbroad(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < n && y < m;
+        }
+
+        private bool isNotWall(int x, int y)
+        {
+            return weights[x, y] != Map.Wall;
+        }
+
+        private bool isNotTree(int x, int y)
+        {
+            return weights[x, y] != Map.Tree;
+        }
+
+        private bool isMinotaur(int x, int y)
+        {
+            return x == Minotaur.X && y == Minotaur.Y;
+        }
+
+        private bool isExit(int x, int y)
+        {
+            return x == Exit.X && y == Exit.Y;
         }
     }
 }

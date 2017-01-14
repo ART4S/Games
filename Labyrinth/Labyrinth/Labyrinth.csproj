@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Direction.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Game_Form.cs">
       <SubType>Form</SubType>
@@ -53,6 +54,7 @@
     <Compile Include="Game_Form.Designer.cs">
       <DependentUpon>Game_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Game_Form.resx">
