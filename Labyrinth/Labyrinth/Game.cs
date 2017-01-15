@@ -130,7 +130,6 @@ namespace Labyrinth
         public void Move(Direction direction, Mode mode)
         {
             // если человек сделал шаг, шаг делает и минотавр
-
             if (MoveHuman(direction))
                 MoveMinotaur(mode);
         }
@@ -206,6 +205,7 @@ namespace Labyrinth
                     break;
 
                 case Mode.Eazy:
+                    MinotaurMoveEazy();
                     break;
 
                 case Mode.Normal:
@@ -244,6 +244,49 @@ namespace Labyrinth
                 {
                     Minotaur = NewPoint;
                     return;
+                }
+            }
+        }
+
+        private void MinotaurMoveEazy()
+        {
+            var queue = new Queue<Point>();
+            var usedCells = new Dictionary<Point, bool>();
+
+            Point[,] saveRoad = new Point[n, m];
+
+            int[] dx = { 1, -1, 0, 0 };
+            int[] dy = { 0, 0, 1, -1 };
+
+            queue.Enqueue(Minotaur);
+
+            while (queue.Any())
+            {
+                Point CurrentCell = queue.Dequeue();
+
+                if (CurrentCell == Human)
+                {
+                    // восстанавливаю путь
+                    while (saveRoad[CurrentCell.X, CurrentCell.Y] != Minotaur)
+                    {
+                        CurrentCell = saveRoad[CurrentCell.X, CurrentCell.Y];
+                    }
+
+                    Minotaur = CurrentCell;
+
+                    return;
+                }
+
+                for (int i = 0; i < dx.Length; ++i)
+                {
+                    Point NewPoint = new Point(CurrentCell.X + dx[i], CurrentCell.Y + dy[i]);
+
+                    if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint) && !usedCells.ContainsKey(NewPoint))
+                    {
+                        saveRoad[NewPoint.X, NewPoint.Y] = CurrentCell;
+                        usedCells.Add(NewPoint, true);
+                        queue.Enqueue(NewPoint);
+                    }
                 }
             }
         }

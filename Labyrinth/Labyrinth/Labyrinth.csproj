@@ -54,6 +54,7 @@
     <Compile Include="Game_Form.Designer.cs">
       <DependentUpon>Game_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Heap.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Mode.cs" />
     <Compile Include="Program.cs" />
