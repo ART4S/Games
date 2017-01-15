@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Labyrinth
 {
@@ -16,12 +17,14 @@ namespace Labyrinth
         private readonly int n;
         private readonly int m;
 
-        private readonly Map[,] defaultWeights;
-
         private readonly Point defaultPositionMinotaur;
         private readonly Point defaultPositionHuman;
 
-        private Map[,] weights;
+        private Map[,] defaultMap;
+        private Map[,] map;
+
+        private Dictionary<Map, int> MinotaurPenaltysTable;
+        private Dictionary<Map, int> HumanPenaltysTable;
 
         private bool[,] HumanUsedCells;
 
@@ -29,48 +32,49 @@ namespace Labyrinth
         private Point Human;
         private Point Exit;
 
-        private int PenaltyForCrossing;
+        private int HumanPenaltyForCrossing;
+        private int MinotaurPenaltyForCrossing;
 
         public Game(char[,] labyrinth, int n, int m)
         {
             this.n = n;
             this.m = m;
 
-            defaultWeights = new Map[n, m];
+            defaultMap = new Map[n, m];
 
-            for(int i = 0; i < n; ++i)
+            for (int i = 0; i < n; ++i)
                 for(int j = 0; j < m; ++j)
                 {
                     switch (labyrinth[i, j])
                     {
                         case 'X':
-                            defaultWeights[i, j] = Map.Wall;
+                            defaultMap[i, j] = Map.Wall;
                             break;
 
                         case ' ':
-                            defaultWeights[i, j] = Map.Path;
+                            defaultMap[i, j] = Map.Path;
                             break;
 
                         case 'W':
-                            defaultWeights[i, j] = Map.Water;
+                            defaultMap[i, j] = Map.Water;
                             break;
 
                         case 'T':
-                            defaultWeights[i, j] = Map.Tree;
+                            defaultMap[i, j] = Map.Tree;
                             break;
 
                         case 'M':
-                            defaultWeights[i, j] = Map.Path;
+                            defaultMap[i, j] = Map.Path;
                             defaultPositionMinotaur = new Point(i, j);
                             break;
 
                         case 'H':
-                            defaultWeights[i, j] = Map.Path;
+                            defaultMap[i, j] = Map.Path;
                             defaultPositionHuman = new Point(i, j);
                             break;
 
                         case 'Q':
-                            defaultWeights[i, j] = Map.Exit;
+                            defaultMap[i, j] = Map.Exit;
                             Exit = new Point(i, j);
                             break;
                     }
@@ -81,6 +85,8 @@ namespace Labyrinth
 
         public void Paint(PaintEventArgs e, int cellSize)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
             Font font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Bold);
 
             for (int i = 0; i < n; i++)
@@ -89,7 +95,7 @@ namespace Labyrinth
                     PointF currentPoint = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
                     RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
 
-                    switch (weights[i, j])
+                    switch (map[i, j])
                     {
                         case Map.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
@@ -123,16 +129,18 @@ namespace Labyrinth
 
         public void Move(Direction direction, Mode mode)
         {
-            MoveHuman(direction);
-            MoveMinotaur(mode);
+            // если человек сделал шаг, шаг делает и минотавр
+
+            if (MoveHuman(direction))
+                MoveMinotaur(mode);
         }
         // TODO: !
-        private void MoveHuman(Direction direction)
+        private bool MoveHuman(Direction direction)
         {
-            if (PenaltyForCrossing != 1)
+            if (HumanPenaltyForCrossing != 0)
             {
-                PenaltyForCrossing--;
-                return;
+                HumanPenaltyForCrossing--;
+                return true;
             }
 
             int dx = 0;
@@ -160,32 +168,41 @@ namespace Labyrinth
             Point NextPoint = new Point(Human.X + dx, Human.Y + dy);
 
             if (isWall(NextPoint) || isTree(NextPoint))
-                return;
+                return false;
 
             if (isMinotaur(NextPoint))
             {
                 Restart();
                 // lose
-                return;
+                return false;
             }
 
             if (isExit(NextPoint))
             {
                 Restart();
                 // won
-                return;
+                return false;
             }
 
             HumanUsedCells[Human.X, Human.Y] = true;
             Human = NextPoint;
-            PenaltyForCrossing = (int)weights[Human.X, Human.Y];
+            HumanPenaltyForCrossing = HumanPenaltysTable[map[Human.X, Human.Y]];
+
+            return true;
         }
         // TODO: !
         private void MoveMinotaur(Mode mode)
         {
+            if (MinotaurPenaltyForCrossing != 0)
+            {
+                MinotaurPenaltyForCrossing--;
+                return;
+            }
+
             switch (mode)
             {
-                case Mode.Eazy_Crazy:
+                case Mode.EazyCrazy:
+                    MinotaurMoveEazyCrazy();
                     break;
 
                 case Mode.Eazy:
@@ -197,21 +214,58 @@ namespace Labyrinth
                 case Mode.Smart_Hard:
                     break;
             }
+
+            if (isHuman(Minotaur))
+            {
+                Restart();
+                // lose
+                return;
+            }
+
+            MinotaurPenaltyForCrossing = MinotaurPenaltysTable[map[Minotaur.X, Minotaur.Y]];
+
+            if (isTree(Minotaur))
+                map[Minotaur.X, Minotaur.Y] = Map.Path;
+        }
+
+        private void MinotaurMoveEazyCrazy()
+        {
+            Random random = new Random();
+
+            int[] dx = { 1,-1, 0, 0 };
+            int[] dy = { 0, 0, 1,-1 };
+
+            while (true)
+            {
+                int RandPosition = random.Next(dx.Length);
+                Point NewPoint = new Point(Minotaur.X + dx[RandPosition], Minotaur.Y + dy[RandPosition]);
+
+                if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint))
+                {
+                    Minotaur = NewPoint;
+                    return;
+                }
+            }
         }
 
         private bool isWall(Point point)
         {
-            return weights[point.X, point.Y] == Map.Wall;
+            return map[point.X, point.Y] == Map.Wall;
         }
 
         private bool isTree(Point point)
         {
-            return weights[point.X, point.Y] == Map.Tree;
+            return map[point.X, point.Y] == Map.Tree;
         }
 
         private bool isMinotaur(Point point)
         {
             return point == Minotaur;
+        }
+
+        private bool isWater(Point point)
+        {
+            return map[point.X, point.Y] == Map.Water;
         }
 
         private bool isExit(Point point)
@@ -226,16 +280,39 @@ namespace Labyrinth
 
         private void Restart()
         {
+            const int Inf = 100000;
+
+            HumanPenaltysTable = new Dictionary<Map, int>()
+            {
+                {Map.Path, 0},
+                {Map.Water, 1},
+                {Map.Tree, Inf},
+                {Map.Wall, Inf},
+                {Map.Exit, Inf}
+            };
+
+            MinotaurPenaltysTable = new Dictionary<Map, int>()
+            {
+                {Map.Path, 0},
+                {Map.Tree, 1},
+                {Map.Water, Inf},
+                {Map.Wall, Inf},
+                {Map.Exit, Inf}
+            };
+
             HumanUsedCells = new bool[n, m];
 
             for (int i = 0; i < n; ++i)
                 for (int j = 0; j < m; ++j)
                     HumanUsedCells[i, j] = false;
 
-            weights = defaultWeights;
+            map = defaultMap;
+
             Human = defaultPositionHuman;
             Minotaur = defaultPositionMinotaur;
-            PenaltyForCrossing = 1;
+
+            HumanPenaltyForCrossing = 0;
+            MinotaurPenaltyForCrossing = 0;
         }
     }
 }
