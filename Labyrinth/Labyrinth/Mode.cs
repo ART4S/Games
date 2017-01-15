@@ -11,6 +11,6 @@ namespace Labyrinth
         EazyCrazy,
         Eazy,
         Normal,
-        Smart_Hard
+        Hard
     }
 }

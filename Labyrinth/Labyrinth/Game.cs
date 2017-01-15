@@ -133,7 +133,7 @@ namespace Labyrinth
             if (MoveHuman(direction))
                 MoveMinotaur(mode);
         }
-        // TODO: !
+
         private bool MoveHuman(Direction direction)
         {
             if (HumanPenaltyForCrossing != 0)
@@ -171,15 +171,13 @@ namespace Labyrinth
 
             if (isMinotaur(NextPoint))
             {
-                Restart();
-                // lose
+                Restart(); // lose
                 return false;
             }
 
             if (isExit(NextPoint))
             {
-                Restart();
-                // won
+                Restart(); // won
                 return false;
             }
 
@@ -189,7 +187,7 @@ namespace Labyrinth
 
             return true;
         }
-        // TODO: !
+
         private void MoveMinotaur(Mode mode)
         {
             if (MinotaurPenaltyForCrossing != 0)
@@ -201,24 +199,23 @@ namespace Labyrinth
             switch (mode)
             {
                 case Mode.EazyCrazy:
-                    MinotaurMoveEazyCrazy();
+                    MinotaurMoveRandomDirrection();
                     break;
 
                 case Mode.Eazy:
-                    MinotaurMoveEazy();
+                    MinotaurMoveBfs();
                     break;
 
                 case Mode.Normal:
                     break;
 
-                case Mode.Smart_Hard:
+                case Mode.Hard:
                     break;
             }
 
             if (isHuman(Minotaur))
             {
-                Restart();
-                // lose
+                Restart(); // lose
                 return;
             }
 
@@ -228,7 +225,7 @@ namespace Labyrinth
                 map[Minotaur.X, Minotaur.Y] = Map.Path;
         }
 
-        private void MinotaurMoveEazyCrazy()
+        private void MinotaurMoveRandomDirrection()
         {
             Random random = new Random();
 
@@ -237,8 +234,8 @@ namespace Labyrinth
 
             while (true)
             {
-                int RandPosition = random.Next(dx.Length);
-                Point NewPoint = new Point(Minotaur.X + dx[RandPosition], Minotaur.Y + dy[RandPosition]);
+                int i = random.Next(dx.Length);
+                Point NewPoint = new Point(Minotaur.X + dx[i], Minotaur.Y + dy[i]);
 
                 if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint))
                 {
@@ -248,12 +245,11 @@ namespace Labyrinth
             }
         }
 
-        private void MinotaurMoveEazy()
+        private void MinotaurMoveBfs()
         {
             var queue = new Queue<Point>();
             var usedCells = new Dictionary<Point, bool>();
-
-            Point[,] saveRoad = new Point[n, m];
+            var saveRoad = new Point[n, m];
 
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
@@ -262,29 +258,34 @@ namespace Labyrinth
 
             while (queue.Any())
             {
-                Point CurrentCell = queue.Dequeue();
+                Point currentCell = queue.Dequeue();
 
-                if (CurrentCell == Human)
+                if (currentCell == Human)
                 {
                     // восстанавливаю путь
-                    while (saveRoad[CurrentCell.X, CurrentCell.Y] != Minotaur)
-                    {
-                        CurrentCell = saveRoad[CurrentCell.X, CurrentCell.Y];
-                    }
+                    while (saveRoad[currentCell.X, currentCell.Y] != Minotaur)
+                        currentCell = saveRoad[currentCell.X, currentCell.Y];
 
-                    Minotaur = CurrentCell;
+                    if (!isWater(currentCell))
+                        Minotaur = currentCell;
 
                     return;
                 }
 
                 for (int i = 0; i < dx.Length; ++i)
                 {
-                    Point NewPoint = new Point(CurrentCell.X + dx[i], CurrentCell.Y + dy[i]);
+                    Point NewPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
 
                     if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint) && !usedCells.ContainsKey(NewPoint))
                     {
-                        saveRoad[NewPoint.X, NewPoint.Y] = CurrentCell;
+                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
                         usedCells.Add(NewPoint, true);
+                        queue.Enqueue(NewPoint);
+                    }
+
+                    if (isWater(NewPoint) && NewPoint == Human)
+                    {
+                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
                         queue.Enqueue(NewPoint);
                     }
                 }
