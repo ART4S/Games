@@ -13,21 +13,23 @@ namespace Labyrinth
 {
     public class Game
     {
-        private Map[,] defaultWeights;
+        private readonly int n;
+        private readonly int m;
 
-        private Point defaultPositionMinotaur;
-        private Point defaultPositionHuman;
+        private readonly Map[,] defaultWeights;
+
+        private readonly Point defaultPositionMinotaur;
+        private readonly Point defaultPositionHuman;
 
         private Map[,] weights;
+
+        private bool[,] HumanUsedCells;
 
         private Point Minotaur;
         private Point Human;
         private Point Exit;
 
         private int PenaltyForCrossing;
-
-        private readonly int n;
-        private readonly int m;
 
         public Game(char[,] labyrinth, int n, int m)
         {
@@ -84,12 +86,13 @@ namespace Labyrinth
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < m; j++)
                 {
-                    PointF currentPoint = new PointF(j * cellSize + cellSize / 6, i * cellSize + cellSize / 6);
+                    PointF currentPoint = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
+                    RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
 
                     switch (weights[i, j])
                     {
                         case Map.Water:
-                            e.Graphics.FillRectangle(Brushes.Blue, j * cellSize, i * cellSize, cellSize, cellSize);
+                            e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
                             break;
 
                         case Map.Tree:
@@ -97,15 +100,19 @@ namespace Labyrinth
                             break;
 
                         case Map.Wall:
-                            e.Graphics.FillRectangle(Brushes.Black, j * cellSize, i * cellSize, cellSize, cellSize);
+                            e.Graphics.FillRectangle(Brushes.Black, currentRectangle);
                             break;
 
+                        case Map.Path:
+                            if (HumanUsedCells[i, j] && !isMinotaur(new Point(i, j)) && !isHuman(new Point(i, j)))
+                                e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+                            break;
                     }
                 }
 
-            e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(Exit.Y * cellSize + cellSize / 6, Exit.X * cellSize + cellSize / 6));
-            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(Human.Y * cellSize + cellSize / 6, Human.X * cellSize + cellSize / 6));
-            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(Minotaur.Y * cellSize + cellSize / 6, Minotaur.X * cellSize + cellSize / 6));
+            e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(Exit.Y * cellSize + cellSize / 2 - 8, Exit.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(Human.Y * cellSize + cellSize / 2 - 8, Human.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(Minotaur.Y * cellSize + cellSize / 2 - 8, Minotaur.X * cellSize + cellSize / 2 - 8));
 
             for (int i = 0; i <= n; i++)
                 e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, m * cellSize, i * cellSize);
@@ -169,6 +176,7 @@ namespace Labyrinth
                 return;
             }
 
+            HumanUsedCells[Human.X, Human.Y] = true;
             Human = NextPoint;
             PenaltyForCrossing = (int)weights[Human.X, Human.Y];
         }
@@ -211,8 +219,19 @@ namespace Labyrinth
             return point == Exit;
         }
 
+        private bool isHuman(Point point)
+        {
+            return point == Human;
+        }
+
         private void Restart()
         {
+            HumanUsedCells = new bool[n, m];
+
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < m; ++j)
+                    HumanUsedCells[i, j] = false;
+
             weights = defaultWeights;
             Human = defaultPositionHuman;
             Minotaur = defaultPositionMinotaur;
