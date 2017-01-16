@@ -35,6 +35,8 @@ namespace Labyrinth
         private int HumanPenaltyForCrossing;
         private int MinotaurPenaltyForCrossing;
 
+        private List<Point> pathMin = new List<Point>();
+
         public Game(char[,] labyrinth, int n, int m)
         {
             this.n = n;
@@ -110,8 +112,8 @@ namespace Labyrinth
                             break;
 
                         case Map.Path:
-                            if (HumanUsedCells[i, j] && !isMinotaur(new Point(i, j)) && !isHuman(new Point(i, j)))
-                                e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+                            //if (HumanUsedCells[i, j] && !isMinotaur(new Point(i, j)) && !isHuman(new Point(i, j)))
+                            //    e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
                             break;
                     }
                 }
@@ -125,6 +127,11 @@ namespace Labyrinth
 
             for (int j = 0; j <= m; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
+
+            foreach(var elem in pathMin)
+            {
+                e.Graphics.FillEllipse(Brushes.Blue, elem.Y * cellSize + cellSize / 2 - 2, elem.X * cellSize + cellSize / 2 - 2, 5, 5);
+            }
         }
 
         public void Move(Direction direction, Mode mode)
@@ -207,6 +214,7 @@ namespace Labyrinth
                     break;
 
                 case Mode.Normal:
+                    MinotaurMoveDijkstra();
                     break;
 
                 case Mode.Hard:
@@ -287,6 +295,52 @@ namespace Labyrinth
                     {
                         saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
                         queue.Enqueue(NewPoint);
+                    }
+                }
+            }
+        }
+
+        private void MinotaurMoveDijkstra()
+        {
+            var heap = new Heap();
+            var usedCells = new Dictionary<Point, bool>();
+            var saveRoad = new Point[n, m];
+
+            int[] dx = { 1, -1, 0, 0 };
+            int[] dy = { 0, 0, 1, -1 };
+
+            heap.Add(Minotaur, MinotaurPenaltysTable[map[Minotaur.X, Minotaur.Y]] + 1);
+
+            while (heap.Any())
+            {
+                Point currentCell = heap.Front();
+
+                heap.Pop();
+                pathMin.Clear();
+                if (currentCell == Human)
+                {
+                    // восстанавливаю путь
+                    while (saveRoad[currentCell.X, currentCell.Y] != Minotaur)
+                    {
+                        currentCell = saveRoad[currentCell.X, currentCell.Y];
+                        pathMin.Add(currentCell);
+                    }
+
+                    if (!isWater(currentCell))
+                        Minotaur = currentCell;
+
+                    return;
+                }
+
+                for (int i = 0; i < dx.Length; ++i)
+                {
+                    Point NewPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
+
+                    if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint) && !usedCells.ContainsKey(NewPoint))
+                    {
+                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
+                        usedCells.Add(NewPoint, true);
+                        heap.Add(NewPoint, MinotaurPenaltysTable[map[NewPoint.X, NewPoint.Y]] + 1);
                     }
                 }
             }
