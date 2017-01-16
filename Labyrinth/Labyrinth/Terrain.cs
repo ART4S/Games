@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Labyrinth
 {
-    enum Map
+    public enum Terrain
     {
         Path,
         Water,

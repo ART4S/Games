@@ -9,9 +9,9 @@ namespace Labyrinth
 {
     class Heap
     {
-        private List<int> heap;
-        private List<Point> keys;
-        public int Count { get { return heap.Count(); } }
+        private readonly List<int> heap;
+        private readonly List<Point> keys;
+        public int Count => heap.Count();
 
         public Heap()
         {

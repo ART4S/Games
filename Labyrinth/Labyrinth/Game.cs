@@ -20,67 +20,87 @@ namespace Labyrinth
         private readonly Point defaultPositionMinotaur;
         private readonly Point defaultPositionHuman;
 
-        private Map[,] defaultMap;
-        private Map[,] map;
+        private readonly Terrain[,] defaultMap;
+        private Terrain[,] map;
 
-        private Dictionary<Map, int> MinotaurPenaltysTable;
-        private Dictionary<Map, int> HumanPenaltysTable;
+        private readonly Dictionary<Terrain, int> minotaurPenaltysTable;
+        private readonly Dictionary<Terrain, int> humanPenaltysTable;
 
-        private bool[,] HumanUsedCells;
+        private bool[,] humanUsedCells;
 
-        private Point Minotaur;
-        private Point Human;
-        private Point Exit;
+        private Point minotaur;
+        private Point human;
+        private Point exit;
 
-        private int HumanPenaltyForCrossing;
-        private int MinotaurPenaltyForCrossing;
+        private int humanPenaltyForCrossing;
+        private int minotaurPenaltyForCrossing;
 
-        private List<Point> pathMin = new List<Point>();
+        private readonly List<Point> pathMin = new List<Point>();
 
         public Game(char[,] labyrinth, int n, int m)
         {
             this.n = n;
             this.m = m;
 
-            defaultMap = new Map[n, m];
+            defaultMap = new Terrain[n, m];
 
-            for (int i = 0; i < n; ++i)
-                for(int j = 0; j < m; ++j)
+            for (int i = 0; i < n; i++)
+                for(int j = 0; j < m; j++)
                 {
                     switch (labyrinth[i, j])
                     {
                         case 'X':
-                            defaultMap[i, j] = Map.Wall;
+                            defaultMap[i, j] = Terrain.Wall;
                             break;
 
                         case ' ':
-                            defaultMap[i, j] = Map.Path;
+                            defaultMap[i, j] = Terrain.Path;
                             break;
 
                         case 'W':
-                            defaultMap[i, j] = Map.Water;
+                            defaultMap[i, j] = Terrain.Water;
                             break;
 
                         case 'T':
-                            defaultMap[i, j] = Map.Tree;
+                            defaultMap[i, j] = Terrain.Tree;
                             break;
 
                         case 'M':
-                            defaultMap[i, j] = Map.Path;
+                            defaultMap[i, j] = Terrain.Path;
                             defaultPositionMinotaur = new Point(i, j);
                             break;
 
                         case 'H':
-                            defaultMap[i, j] = Map.Path;
+                            defaultMap[i, j] = Terrain.Path;
                             defaultPositionHuman = new Point(i, j);
                             break;
 
                         case 'Q':
-                            defaultMap[i, j] = Map.Exit;
-                            Exit = new Point(i, j);
+                            defaultMap[i, j] = Terrain.Exit;
+                            exit = new Point(i, j);
                             break;
                     }
                 }
+
+            const int inf = 100000;
+
+            humanPenaltysTable = new Dictionary<Terrain, int>()
+            {
+                {Terrain.Path, 0},
+                {Terrain.Water, 1},
+                {Terrain.Tree, inf},
+                {Terrain.Wall, inf},
+                {Terrain.Exit, inf}
+            };
+
+            minotaurPenaltysTable = new Dictionary<Terrain, int>()
+            {
+                {Terrain.Path, 0},
+                {Terrain.Tree, 1},
+                {Terrain.Water, inf},
+                {Terrain.Wall, inf},
+                {Terrain.Exit, inf}
+            };
 
             Restart();
         }
@@ -99,28 +119,31 @@ namespace Labyrinth
 
                     switch (map[i, j])
                     {
-                        case Map.Water:
+                        case Terrain.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
                             break;
 
-                        case Map.Tree:
+                        case Terrain.Tree:
                             e.Graphics.DrawString("T", font, Brushes.Green, currentPoint);
                             break;
 
-                        case Map.Wall:
+                        case Terrain.Wall:
                             e.Graphics.FillRectangle(Brushes.Black, currentRectangle);
                             break;
 
-                        case Map.Path:
-                            //if (HumanUsedCells[i, j] && !isMinotaur(new Point(i, j)) && !isHuman(new Point(i, j)))
-                            //    e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+                        case Terrain.Path:
+                            Point point = new Point(i, j);
+
+                            if (humanUsedCells[i, j] && point != minotaur && point != human)
+                                e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+
                             break;
                     }
                 }
 
-            e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(Exit.Y * cellSize + cellSize / 2 - 8, Exit.X * cellSize + cellSize / 2 - 8));
-            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(Human.Y * cellSize + cellSize / 2 - 8, Human.X * cellSize + cellSize / 2 - 8));
-            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(Minotaur.Y * cellSize + cellSize / 2 - 8, Minotaur.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exit.Y * cellSize + cellSize / 2 - 8, exit.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(human.Y * cellSize + cellSize / 2 - 8, human.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(minotaur.Y * cellSize + cellSize / 2 - 8, minotaur.X * cellSize + cellSize / 2 - 8));
 
             for (int i = 0; i <= n; i++)
                 e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, m * cellSize, i * cellSize);
@@ -128,7 +151,7 @@ namespace Labyrinth
             for (int j = 0; j <= m; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
 
-            foreach(var elem in pathMin)
+            foreach (var elem in pathMin)
             {
                 e.Graphics.FillEllipse(Brushes.Blue, elem.Y * cellSize + cellSize / 2 - 2, elem.X * cellSize + cellSize / 2 - 2, 5, 5);
             }
@@ -136,16 +159,15 @@ namespace Labyrinth
 
         public void Move(Direction direction, Mode mode)
         {
-            // если человек сделал шаг, шаг делает и минотавр
             if (MoveHuman(direction))
                 MoveMinotaur(mode);
         }
 
         private bool MoveHuman(Direction direction)
         {
-            if (HumanPenaltyForCrossing != 0)
+            if (humanPenaltyForCrossing != 0)
             {
-                HumanPenaltyForCrossing--;
+                humanPenaltyForCrossing--;
                 return true;
             }
 
@@ -171,35 +193,36 @@ namespace Labyrinth
                     break;
             }
 
-            Point NextPoint = new Point(Human.X + dx, Human.Y + dy);
+            Point nextPoint = new Point(human.X + dx, human.Y + dy);
+            Terrain point = map[nextPoint.X, nextPoint.Y];
 
-            if (isWall(NextPoint) || isTree(NextPoint))
+            if (point == Terrain.Wall || point == Terrain.Tree)
                 return false;
 
-            if (isMinotaur(NextPoint))
+            if (nextPoint == minotaur)
             {
                 Restart(); // lose
                 return false;
             }
 
-            if (isExit(NextPoint))
+            if (nextPoint == exit)
             {
                 Restart(); // won
                 return false;
             }
 
-            HumanUsedCells[Human.X, Human.Y] = true;
-            Human = NextPoint;
-            HumanPenaltyForCrossing = HumanPenaltysTable[map[Human.X, Human.Y]];
+            humanUsedCells[human.X, human.Y] = true;
+            human = nextPoint;
+            humanPenaltyForCrossing = humanPenaltysTable[map[human.X, human.Y]];
 
             return true;
         }
 
         private void MoveMinotaur(Mode mode)
         {
-            if (MinotaurPenaltyForCrossing != 0)
+            if (minotaurPenaltyForCrossing != 0)
             {
-                MinotaurPenaltyForCrossing--;
+                minotaurPenaltyForCrossing--;
                 return;
             }
 
@@ -214,23 +237,22 @@ namespace Labyrinth
                     break;
 
                 case Mode.Normal:
-                    MinotaurMoveDijkstra();
                     break;
 
                 case Mode.Hard:
                     break;
             }
 
-            if (isHuman(Minotaur))
+            if (minotaur == human)
             {
                 Restart(); // lose
                 return;
             }
 
-            MinotaurPenaltyForCrossing = MinotaurPenaltysTable[map[Minotaur.X, Minotaur.Y]];
+            minotaurPenaltyForCrossing = minotaurPenaltysTable[map[minotaur.X, minotaur.Y]];
 
-            if (isTree(Minotaur))
-                map[Minotaur.X, Minotaur.Y] = Map.Path;
+            if (map[minotaur.X, minotaur.Y] == Terrain.Tree)
+                map[minotaur.X, minotaur.Y] = Terrain.Path;
         }
 
         private void MinotaurMoveRandomDirrection()
@@ -243,11 +265,12 @@ namespace Labyrinth
             while (true)
             {
                 int i = random.Next(dx.Length);
-                Point NewPoint = new Point(Minotaur.X + dx[i], Minotaur.Y + dy[i]);
+                Point newPoint = new Point(minotaur.X + dx[i], minotaur.Y + dy[i]);
+                Terrain newPointType = map[newPoint.X, newPoint.Y];
 
-                if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint))
+                if (newPointType != Terrain.Water && newPointType != Terrain.Wall && newPoint != exit)
                 {
-                    Minotaur = NewPoint;
+                    minotaur = newPoint;
                     return;
                 }
             }
@@ -256,161 +279,66 @@ namespace Labyrinth
         private void MinotaurMoveBfs()
         {
             var queue = new Queue<Point>();
-            var usedCells = new Dictionary<Point, bool>();
-            var saveRoad = new Point[n, m];
+            var usedCells = new List<Point>();
+            var saveRoad = new Dictionary<Point, Point>();
 
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
 
-            queue.Enqueue(Minotaur);
+            queue.Enqueue(minotaur);
 
             while (queue.Any())
             {
                 Point currentCell = queue.Dequeue();
 
-                if (currentCell == Human)
+                if (currentCell == human)
                 {
                     // восстанавливаю путь
-                    while (saveRoad[currentCell.X, currentCell.Y] != Minotaur)
-                        currentCell = saveRoad[currentCell.X, currentCell.Y];
+                    while (saveRoad[currentCell] != minotaur)
+                        currentCell = saveRoad[currentCell];
 
-                    if (!isWater(currentCell))
-                        Minotaur = currentCell;
+                    if (map[currentCell.X, currentCell.Y] != Terrain.Water)
+                        minotaur = currentCell;
 
                     return;
                 }
 
-                for (int i = 0; i < dx.Length; ++i)
+                for (int i = 0; i < dx.Length; i++)
                 {
-                    Point NewPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
+                    Point newPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
+                    Terrain newPointType = map[newPoint.X, newPoint.Y];
 
-                    if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint) && !usedCells.ContainsKey(NewPoint))
+                    if (newPointType != Terrain.Water && newPointType != Terrain.Wall && newPoint != exit && !usedCells.Contains(newPoint))
                     {
-                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
-                        usedCells.Add(NewPoint, true);
-                        queue.Enqueue(NewPoint);
+                        saveRoad[newPoint] = currentCell;
+                        usedCells.Add(newPoint);
+                        queue.Enqueue(newPoint);
                     }
 
-                    if (isWater(NewPoint) && NewPoint == Human)
+                    if (newPointType == Terrain.Water && newPoint == human)
                     {
-                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
-                        queue.Enqueue(NewPoint);
+                        saveRoad[newPoint] = currentCell;
+                        queue.Enqueue(newPoint);
                     }
                 }
             }
-        }
-
-        private void MinotaurMoveDijkstra()
-        {
-            var heap = new Heap();
-            var usedCells = new Dictionary<Point, bool>();
-            var saveRoad = new Point[n, m];
-
-            int[] dx = { 1, -1, 0, 0 };
-            int[] dy = { 0, 0, 1, -1 };
-
-            heap.Add(Minotaur, MinotaurPenaltysTable[map[Minotaur.X, Minotaur.Y]] + 1);
-
-            while (heap.Any())
-            {
-                Point currentCell = heap.Front();
-
-                heap.Pop();
-                pathMin.Clear();
-                if (currentCell == Human)
-                {
-                    // восстанавливаю путь
-                    while (saveRoad[currentCell.X, currentCell.Y] != Minotaur)
-                    {
-                        currentCell = saveRoad[currentCell.X, currentCell.Y];
-                        pathMin.Add(currentCell);
-                    }
-
-                    if (!isWater(currentCell))
-                        Minotaur = currentCell;
-
-                    return;
-                }
-
-                for (int i = 0; i < dx.Length; ++i)
-                {
-                    Point NewPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
-
-                    if (!isWater(NewPoint) && !isWall(NewPoint) && !isExit(NewPoint) && !usedCells.ContainsKey(NewPoint))
-                    {
-                        saveRoad[NewPoint.X, NewPoint.Y] = currentCell;
-                        usedCells.Add(NewPoint, true);
-                        heap.Add(NewPoint, MinotaurPenaltysTable[map[NewPoint.X, NewPoint.Y]] + 1);
-                    }
-                }
-            }
-        }
-
-        private bool isWall(Point point)
-        {
-            return map[point.X, point.Y] == Map.Wall;
-        }
-
-        private bool isTree(Point point)
-        {
-            return map[point.X, point.Y] == Map.Tree;
-        }
-
-        private bool isMinotaur(Point point)
-        {
-            return point == Minotaur;
-        }
-
-        private bool isWater(Point point)
-        {
-            return map[point.X, point.Y] == Map.Water;
-        }
-
-        private bool isExit(Point point)
-        {
-            return point == Exit;
-        }
-
-        private bool isHuman(Point point)
-        {
-            return point == Human;
         }
 
         private void Restart()
         {
-            const int Inf = 100000;
+            map = new Terrain[n, m];
 
-            HumanPenaltysTable = new Dictionary<Map, int>()
-            {
-                {Map.Path, 0},
-                {Map.Water, 1},
-                {Map.Tree, Inf},
-                {Map.Wall, Inf},
-                {Map.Exit, Inf}
-            };
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < m; j++)
+                    map[i, j] = defaultMap[i, j];
 
-            MinotaurPenaltysTable = new Dictionary<Map, int>()
-            {
-                {Map.Path, 0},
-                {Map.Tree, 1},
-                {Map.Water, Inf},
-                {Map.Wall, Inf},
-                {Map.Exit, Inf}
-            };
+            humanUsedCells = new bool[n, m];
 
-            HumanUsedCells = new bool[n, m];
+            human = defaultPositionHuman;
+            minotaur = defaultPositionMinotaur;
 
-            for (int i = 0; i < n; ++i)
-                for (int j = 0; j < m; ++j)
-                    HumanUsedCells[i, j] = false;
-
-            map = defaultMap;
-
-            Human = defaultPositionHuman;
-            Minotaur = defaultPositionMinotaur;
-
-            HumanPenaltyForCrossing = 0;
-            MinotaurPenaltyForCrossing = 0;
+            humanPenaltyForCrossing = 0;
+            minotaurPenaltyForCrossing = 0;
         }
     }
 }

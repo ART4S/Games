@@ -70,7 +70,7 @@
       <DependentUpon>Game_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Heap.cs" />
-    <Compile Include="Map.cs" />
+    <Compile Include="Terrain.cs" />
     <Compile Include="Mode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

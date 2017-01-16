@@ -15,8 +15,8 @@ namespace Labyrinth
     {
         private readonly string defaultPath = Application.StartupPath.ToString();
         private Game labyrinth;
-        private const int cellSize = 30;
-        private Mode mode = Mode.Normal;
+        private const int CellSize = 30;
+        private Mode mode = Mode.Eazy;
 
         public Game_Form()
         {
@@ -29,7 +29,7 @@ namespace Labyrinth
         {
             StreamReader reader = new StreamReader(defaultPath + "\\Labyrinth.txt");
 
-            int[] elements = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
+            int[] elements = reader.ReadLine().Split().Select(int.Parse).ToArray();
 
             int n = elements[0];
             int m = elements[1];
@@ -56,14 +56,14 @@ namespace Labyrinth
             StartPosition = FormStartPosition.CenterScreen;
 
             pB_Labyrinth.Location = new Point(indent, indent);
-            pB_Labyrinth.Size = new Size(cellSize * m, cellSize * n);
+            pB_Labyrinth.Size = new Size(CellSize * m, CellSize * n);
 
             ClientSize = new Size(2 * indent + pB_Labyrinth.Width, 2 * indent + pB_Labyrinth.Height);
         }
 
         private void pB_Labyrinth_Paint(object sender, PaintEventArgs e)
         {
-            labyrinth.Paint(e, cellSize);
+            labyrinth.Paint(e, CellSize);
         }
 
         // TODO: я тут
