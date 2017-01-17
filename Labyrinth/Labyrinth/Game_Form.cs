@@ -16,7 +16,7 @@ namespace Labyrinth
         private readonly string defaultPath = Application.StartupPath.ToString();
         private Game labyrinth;
         private const int CellSize = 30;
-        private Mode mode = Mode.Eazy;
+        private Mode mode = Mode.Normal;
 
         public Game_Form()
         {

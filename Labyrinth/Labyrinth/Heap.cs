@@ -11,7 +11,8 @@ namespace Labyrinth
     {
         private readonly List<int> heap;
         private readonly List<Point> keys;
-        public int Count => heap.Count();
+
+        public int Count { get { return heap.Count; } }
 
         public Heap()
         {

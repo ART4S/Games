@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
@@ -114,17 +109,24 @@ namespace Labyrinth
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < m; j++)
                 {
-                    PointF currentPoint = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
+                    PointF pointForDrawingSymbol = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
+                    RectangleF rectangleForDrawingDot = new RectangleF(j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+
                     RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
+                    Point currentPoint = new Point(i, j);
 
                     switch (map[i, j])
                     {
                         case Terrain.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
+
+                            if (humanUsedCells[i, j] && currentPoint != human)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+
                             break;
 
                         case Terrain.Tree:
-                            e.Graphics.DrawString("T", font, Brushes.Green, currentPoint);
+                            e.Graphics.DrawString("T", font, Brushes.Green, pointForDrawingSymbol);
                             break;
 
                         case Terrain.Wall:
@@ -132,10 +134,8 @@ namespace Labyrinth
                             break;
 
                         case Terrain.Path:
-                            Point point = new Point(i, j);
-
-                            if (humanUsedCells[i, j] && point != minotaur && point != human)
-                                e.Graphics.FillEllipse(Brushes.Red, j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
+                            if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
@@ -159,6 +159,7 @@ namespace Labyrinth
 
         public void Move(Direction direction, Mode mode)
         {
+            pathMin.Clear();
             if (MoveHuman(direction))
                 MoveMinotaur(mode);
         }
@@ -237,6 +238,7 @@ namespace Labyrinth
                     break;
 
                 case Mode.Normal:
+                    MinotaurMoveD();
                     break;
 
                 case Mode.Hard:
@@ -279,7 +281,7 @@ namespace Labyrinth
         private void MinotaurMoveBfs()
         {
             var queue = new Queue<Point>();
-            var usedCells = new List<Point>();
+            var usedCells = new HashSet<Point>();
             var saveRoad = new Dictionary<Point, Point>();
 
             int[] dx = { 1, -1, 0, 0 };
@@ -319,6 +321,53 @@ namespace Labyrinth
                     {
                         saveRoad[newPoint] = currentCell;
                         queue.Enqueue(newPoint);
+                    }
+                }
+            }
+        }
+
+        private void MinotaurMoveD()
+        {
+            var queue = new SortedDictionary<Point, int>();
+            var usedCells = new HashSet<Point>();
+            var saveRoad = new Dictionary<Point, Point>();
+
+            int[] dx = { 1, -1, 0, 0 };
+            int[] dy = { 0, 0, 1, -1 };
+
+            queue.Add(minotaur, minotaurPenaltysTable[map[minotaur.X, minotaur.Y]]);
+
+            while (queue.Any())
+            {
+                Point currentCell = queue.First().Key;
+
+                queue.Remove(currentCell);
+
+                if (currentCell == human)
+                {
+                    while (saveRoad[currentCell] != minotaur)
+                        currentCell = saveRoad[currentCell];
+
+                    if (map[currentCell.X, currentCell.Y] != Terrain.Water)
+                        minotaur = currentCell;
+                }
+
+                for (int i = 0; i < dx.Length; i++)
+                {
+                    Point newPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
+                    Terrain newPointType = map[newPoint.X, newPoint.Y];
+
+                    if (!usedCells.Contains(newPoint))
+                    {
+                        saveRoad[newPoint] = currentCell;
+                        usedCells.Add(newPoint);
+                        queue.Add(newPoint, minotaurPenaltysTable[map[newPoint.X, newPoint.Y]]);
+                    }
+
+                    if (newPoint == human)
+                    {
+                        saveRoad[newPoint] = currentCell;
+                        queue.Add(newPoint, minotaurPenaltysTable[map[newPoint.X, newPoint.Y]]);
                     }
                 }
             }
