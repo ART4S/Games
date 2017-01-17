@@ -92,7 +92,7 @@ namespace Labyrinth
             minotaurPenaltysTable = new Dictionary<Terrain, int>()
             {
                 {Terrain.Path, 1},
-                {Terrain.Tree, 4},
+                {Terrain.Tree, 2},
                 {Terrain.Water, inf},
                 {Terrain.Wall, inf},
                 {Terrain.Exit, inf}
