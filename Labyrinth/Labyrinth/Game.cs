@@ -90,8 +90,8 @@ namespace Labyrinth
 
             minotaurPenaltysTable = new Dictionary<Terrain, int>()
             {
-                {Terrain.Path, 0},
-                {Terrain.Tree, 1},
+                {Terrain.Path, 1},
+                {Terrain.Tree, 6},
                 {Terrain.Water, inf},
                 {Terrain.Wall, inf},
                 {Terrain.Exit, inf}
@@ -238,7 +238,7 @@ namespace Labyrinth
                     break;
 
                 case Mode.Normal:
-                    MinotaurMoveD();
+                    MinotaurMoveDijkstra();
                     break;
 
                 case Mode.Hard:
@@ -326,51 +326,9 @@ namespace Labyrinth
             }
         }
 
-        private void MinotaurMoveD()
+        private void MinotaurMoveDijkstra()
         {
-            var queue = new SortedDictionary<Point, int>();
-            var usedCells = new HashSet<Point>();
-            var saveRoad = new Dictionary<Point, Point>();
 
-            int[] dx = { 1, -1, 0, 0 };
-            int[] dy = { 0, 0, 1, -1 };
-
-            queue.Add(minotaur, minotaurPenaltysTable[map[minotaur.X, minotaur.Y]]);
-
-            while (queue.Any())
-            {
-                Point currentCell = queue.First().Key;
-
-                queue.Remove(currentCell);
-
-                if (currentCell == human)
-                {
-                    while (saveRoad[currentCell] != minotaur)
-                        currentCell = saveRoad[currentCell];
-
-                    if (map[currentCell.X, currentCell.Y] != Terrain.Water)
-                        minotaur = currentCell;
-                }
-
-                for (int i = 0; i < dx.Length; i++)
-                {
-                    Point newPoint = new Point(currentCell.X + dx[i], currentCell.Y + dy[i]);
-                    Terrain newPointType = map[newPoint.X, newPoint.Y];
-
-                    if (!usedCells.Contains(newPoint))
-                    {
-                        saveRoad[newPoint] = currentCell;
-                        usedCells.Add(newPoint);
-                        queue.Add(newPoint, minotaurPenaltysTable[map[newPoint.X, newPoint.Y]]);
-                    }
-
-                    if (newPoint == human)
-                    {
-                        saveRoad[newPoint] = currentCell;
-                        queue.Add(newPoint, minotaurPenaltysTable[map[newPoint.X, newPoint.Y]]);
-                    }
-                }
-            }
         }
 
         private void Restart()
@@ -388,6 +346,14 @@ namespace Labyrinth
 
             humanPenaltyForCrossing = 0;
             minotaurPenaltyForCrossing = 0;
+        }
+    }
+
+    public class NonCollidingIntComparer : IComparer<int>
+    {
+        public int Compare(int left, int right)
+        {
+            return (right > left) ? -1 : 1;
         }
     }
 }

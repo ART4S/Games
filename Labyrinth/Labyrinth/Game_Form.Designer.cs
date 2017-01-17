@@ -51,7 +51,7 @@
             this.lbl_status.TabIndex = 1;
             this.lbl_status.Text = "label1";
             // 
-            // Form_Game
+            // Game_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -59,9 +59,8 @@
             this.ClientSize = new System.Drawing.Size(464, 354);
             this.Controls.Add(this.lbl_status);
             this.Controls.Add(this.pB_Labyrinth);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "Form_Game";
+            this.Name = "Game_Form";
             this.Text = "Labyrinth";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pB_Labyrinth)).EndInit();

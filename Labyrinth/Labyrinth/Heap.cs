@@ -32,8 +32,10 @@ namespace Labyrinth
             ShiftUp(Count - 1);
         }
 
-        public void Pop()
+        public Point Pop()
         {
+            Point result = keys[0];
+
             heap[0] = heap[Count - 1];
             keys[0] = keys[Count - 1];
 
@@ -41,11 +43,8 @@ namespace Labyrinth
             keys.RemoveAt(Count);
 
             ShiftDown(0);
-        }
 
-        public Point Front()
-        {
-            return keys[0];
+            return result;
         }
 
         private void ShiftDown(int i)
