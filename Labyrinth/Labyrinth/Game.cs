@@ -329,20 +329,21 @@ namespace Labyrinth
 
         private void MinotaurMoveDijkstra()
         {
-            var queue = new Heap();
+            var heap = new Heap();
             var usedCells = new HashSet<Point>();
             var saveRoad = new Dictionary<Point, Point>();
-            var dist = new Dictionary<Point, int>();
+            var distanceTo = new Dictionary<Point, int>();
 
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
+            
+            distanceTo[minotaur] = 0;
 
-            dist[minotaur] = 0;
-            queue.Add(minotaur, dist[minotaur]);
-
-            while (queue.Any())
+            heap.Add(minotaur, distanceTo[minotaur]);
+            
+            while (heap.Any())
             {
-                Point currentPoint = queue.Pop();
+                Point currentPoint = heap.Pop();
 
                 usedCells.Add(currentPoint);
 
@@ -352,38 +353,28 @@ namespace Labyrinth
                     Terrain newPointType = map[newPoint.X, newPoint.Y];
                     int weigtsCurrentPoint = minotaurPenaltysTable[map[currentPoint.X, currentPoint.Y]];
 
-                    if (newPointType != Terrain.Wall && newPoint != exit)
+                    if (newPointType == Terrain.Wall || newPoint == exit)
+                        continue;
+
+                    if ((!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + weigtsCurrentPoint) && (newPoint == human || newPointType != Terrain.Water))
                     {
-                        if ((!dist.ContainsKey(newPoint) || dist[newPoint] > dist[currentPoint] + weigtsCurrentPoint) && (newPoint == human || newPointType != Terrain.Water))
-                        {
-                            dist[newPoint] = dist[currentPoint] + weigtsCurrentPoint;
+                        distanceTo[newPoint] = distanceTo[currentPoint] + weigtsCurrentPoint;
 
-                            if (!saveRoad.ContainsKey(newPoint))
-                                saveRoad.Add(newPoint, currentPoint);
-                            else
-                                saveRoad[newPoint] = currentPoint;
-                        }
-
-                        if (!usedCells.Contains(newPoint) && newPointType != Terrain.Water)
-                            queue.Add(newPoint, dist[newPoint]);
+                        if (!saveRoad.ContainsKey(newPoint))
+                            saveRoad.Add(newPoint, currentPoint);
+                        else
+                            saveRoad[newPoint] = currentPoint;
                     }
 
-                    //if (newPoint == human)
-                    //{
-                    //    if (!dist.ContainsKey(newPoint) || dist[newPoint] > dist[currentPoint] + weigtsCurrentPoint)
-                    //    {
-                    //        dist[newPoint] = dist[currentPoint] + weigtsCurrentPoint;
+                    if (usedCells.Contains(newPoint) || newPointType == Terrain.Water)
+                        continue;
 
-                    //        if (!saveRoad.ContainsKey(newPoint))
-                    //            saveRoad.Add(newPoint, currentPoint);
-                    //        else
-                    //            saveRoad[newPoint] = currentPoint;
-                    //    }
-                    //}
+                    heap.Add(newPoint, distanceTo[newPoint]);
                 }
 
             }
 
+            // восстанавливаю маршрут
             Point curPoint = human;
 
             while (saveRoad[curPoint] != minotaur)
@@ -395,6 +386,75 @@ namespace Labyrinth
             if (map[curPoint.X, curPoint.Y] != Terrain.Water)
                 minotaur = curPoint;
         }
+
+        //private void MinotaurMoveDijkstr()
+        //{
+        //    var queue = new Heap();
+        //    var usedCells = new HashSet<Point>();
+        //    var saveRoad = new Dictionary<Point, Point>();
+        //    var dist = new Dictionary<Point, int>();
+
+        //    int[] dx = { 1, -1, 0, 0 };
+        //    int[] dy = { 0, 0, 1, -1 };
+
+        //    dist[minotaur] = 0;
+        //    queue.Add(minotaur, dist[minotaur]);
+
+        //    while (queue.Any())
+        //    {
+        //        Point currentPoint = queue.Pop();
+
+        //        usedCells.Add(currentPoint);
+
+        //        for (int i = 0; i < dx.Length; i++)
+        //        {
+        //            Point newPoint = new Point(currentPoint.X + dx[i], currentPoint.Y + dy[i]);
+        //            Terrain newPointType = map[newPoint.X, newPoint.Y];
+        //            int weigtsCurrentPoint = minotaurPenaltysTable[map[currentPoint.X, currentPoint.Y]];
+
+        //            if (newPointType != Terrain.Wall && newPoint != exit)
+        //            {
+        //                if ((!dist.ContainsKey(newPoint) || dist[newPoint] > dist[currentPoint] + weigtsCurrentPoint) && (newPoint == human || newPointType != Terrain.Water))
+        //                {
+        //                    dist[newPoint] = dist[currentPoint] + weigtsCurrentPoint;
+
+        //                    if (!saveRoad.ContainsKey(newPoint))
+        //                        saveRoad.Add(newPoint, currentPoint);
+        //                    else
+        //                        saveRoad[newPoint] = currentPoint;
+        //                }
+
+        //                if (!usedCells.Contains(newPoint) && newPointType != Terrain.Water)
+        //                    queue.Add(newPoint, dist[newPoint]);
+        //            }
+
+        //            //if (newPoint == human)
+        //            //{
+        //            //    if (!dist.ContainsKey(newPoint) || dist[newPoint] > dist[currentPoint] + weigtsCurrentPoint)
+        //            //    {
+        //            //        dist[newPoint] = dist[currentPoint] + weigtsCurrentPoint;
+
+        //            //        if (!saveRoad.ContainsKey(newPoint))
+        //            //            saveRoad.Add(newPoint, currentPoint);
+        //            //        else
+        //            //            saveRoad[newPoint] = currentPoint;
+        //            //    }
+        //            //}
+        //        }
+
+        //    }
+
+        //    Point curPoint = human;
+
+        //    while (saveRoad[curPoint] != minotaur)
+        //    {
+        //        pathMin.Add(curPoint);
+        //        curPoint = saveRoad[curPoint];
+        //    }
+
+        //    if (map[curPoint.X, curPoint.Y] != Terrain.Water)
+        //        minotaur = curPoint;
+        //}
 
         private void Restart()
         {
