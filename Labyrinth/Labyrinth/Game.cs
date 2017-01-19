@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.Net.Mime;
 
 namespace Labyrinth
 {
     public class Game
     {
-        const int Inf = 100000;
+        private const int Inf = int.MaxValue;
 
         private readonly int n;
         private readonly int m;
@@ -21,20 +18,18 @@ namespace Labyrinth
         private readonly Terrain[,] defaultMap;
         private Terrain[,] map;
 
-        private readonly Dictionary<Terrain, int> minotaurTablePenaltys;
-        private readonly Dictionary<Terrain, int> humanTablePenaltys;
+        private readonly Dictionary<Terrain, int> minotaurTablePenalties;
+        private readonly Dictionary<Terrain, int> humanTablePenalties;
 
         private bool[,] humanUsedCells;
 
+        private readonly Point exit;
+
         private Point minotaur;
         private Point human;
-        private Point exit;
 
         private int humanPenaltyForCrossing;
         private int minotaurPenaltyForCrossing;
-
-        private  List<Point> pathMinHuman = new List<Point>();
-        private List<Point> pathMinMinotaur = new List<Point>();
 
         public Game(char[,] labyrinth, int n, int m)
         {
@@ -53,7 +48,7 @@ namespace Labyrinth
                             break;
 
                         case ' ':
-                            defaultMap[i, j] = Terrain.Path;
+                            defaultMap[i, j] = Terrain.Empty;
                             break;
 
                         case 'W':
@@ -65,12 +60,12 @@ namespace Labyrinth
                             break;
 
                         case 'M':
-                            defaultMap[i, j] = Terrain.Path;
+                            defaultMap[i, j] = Terrain.Empty;
                             defaultPositionMinotaur = new Point(i, j);
                             break;
 
                         case 'H':
-                            defaultMap[i, j] = Terrain.Path;
+                            defaultMap[i, j] = Terrain.Empty;
                             defaultPositionHuman = new Point(i, j);
                             break;
 
@@ -81,22 +76,22 @@ namespace Labyrinth
                     }
                 }
 
-            humanTablePenaltys = new Dictionary<Terrain, int>()
+            humanTablePenalties = new Dictionary<Terrain, int>()
             {
-                {Terrain.Path, 1},
+                {Terrain.Empty, 1},
                 {Terrain.Water, 2},
                 {Terrain.Tree, Inf},
                 {Terrain.Wall, Inf},
                 {Terrain.Exit, 1}
             };
 
-            minotaurTablePenaltys = new Dictionary<Terrain, int>()
+            minotaurTablePenalties = new Dictionary<Terrain, int>()
             {
-                {Terrain.Path, 1},
+                {Terrain.Empty, 1},
                 {Terrain.Tree, 2},
                 {Terrain.Water, Inf},
                 {Terrain.Wall, Inf},
-                {Terrain.Exit, Inf}
+                {Terrain.Exit, 1}
             };
 
             Restart();
@@ -104,7 +99,7 @@ namespace Labyrinth
 
         public void Paint(PaintEventArgs e, int cellSize)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             Font font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Bold);
 
@@ -135,15 +130,17 @@ namespace Labyrinth
                             e.Graphics.FillRectangle(Brushes.Black, currentRectangle);
                             break;
 
-                        case Terrain.Path:
-                            //if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
-                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                        case Terrain.Empty:
+                            if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
                 }
 
-            e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exit.Y * cellSize + cellSize / 2 - 8, exit.X * cellSize + cellSize / 2 - 8));
+            if (minotaur != exit)
+                e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exit.Y * cellSize + cellSize / 2 - 8, exit.X * cellSize + cellSize / 2 - 8));
+
             e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(human.Y * cellSize + cellSize / 2 - 8, human.X * cellSize + cellSize / 2 - 8));
             e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(minotaur.Y * cellSize + cellSize / 2 - 8, minotaur.X * cellSize + cellSize / 2 - 8));
 
@@ -152,21 +149,10 @@ namespace Labyrinth
 
             for (int j = 0; j <= m; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
-
-            foreach (var elem in pathMinHuman)
-            {
-                e.Graphics.FillEllipse(Brushes.Green, elem.Y * cellSize + cellSize / 2 - 2, elem.X * cellSize + cellSize / 2 - 2, 5, 5);
-            }
-            foreach (var elem in pathMinMinotaur)
-            {
-                e.Graphics.FillEllipse(Brushes.Red, elem.Y * cellSize + cellSize / 2 - 2, elem.X * cellSize + cellSize / 2 - 2, 5, 5);
-            }
         }
 
         public void Move(Direction direction, Mode mode)
         {
-            pathMinHuman.Clear();
-            pathMinMinotaur.Clear();
             if (MoveHuman(direction))
                 MoveMinotaur(mode);
         }
@@ -179,29 +165,32 @@ namespace Labyrinth
                 return true;
             }
 
-            int dx = 0;
-            int dy = 0;
+            Point directionPoint;
 
             switch (direction)
             {
-                case Direction.UP:
-                    dx = -1;
+                case Direction.Up:
+                    directionPoint = new Point(-1, 0);
                     break;
 
-                case Direction.DOWN:
-                    dx = 1;
+                case Direction.Down:
+                    directionPoint = new Point(1, 0);
                     break;
 
-                case Direction.LEFT:
-                    dy = -1;
+                case Direction.Left:
+                    directionPoint = new Point(0, -1);
                     break;
 
-                case Direction.RIGHT:
-                    dy = 1;
+                case Direction.Right:
+                    directionPoint = new Point(0, 1);
+                    break;
+
+                default:
+                    directionPoint = new Point();
                     break;
             }
 
-            Point nextPoint = new Point(human.X + dx, human.Y + dy);
+            Point nextPoint = human + directionPoint;
             Terrain nextPointType = map[nextPoint.X, nextPoint.Y];
 
             if (nextPointType == Terrain.Wall || nextPointType == Terrain.Tree)
@@ -221,7 +210,7 @@ namespace Labyrinth
 
             humanUsedCells[human.X, human.Y] = true;
             human = nextPoint;
-            humanPenaltyForCrossing = humanTablePenaltys[map[human.X, human.Y]];
+            humanPenaltyForCrossing = humanTablePenalties[map[human.X, human.Y]];
 
             return true;
         }
@@ -234,28 +223,24 @@ namespace Labyrinth
                 return;
             }
 
+            var waveAlgorithm = new WaveAlgorithm(map);
+
             switch (mode)
             {
                 case Mode.EazyCrazy:
-                    MinotaurMoveRandomDirrection();
+                    minotaur = waveAlgorithm.GetRoadWithDfs(minotaurTablePenalties, minotaur, human).First();
                     break;
 
                 case Mode.Eazy:
-                    MinotaurMoveBfs();
+                    minotaur = waveAlgorithm.GetRoadWithBfs(minotaurTablePenalties, minotaur, human).First();
                     break;
 
                 case Mode.Normal:
-                    //var MinRoad = SearchMinimalPath(minotaurTablePenaltys, map, minotaur, human);
-
-                    //if (MinRoad.Any())
-                    //    minotaur = MinRoad[0];
-
-                    //pathMinHuman = MinRoad;
-                    MinotaurMoveDijkstra();
-                    Solve();
+                    minotaur = waveAlgorithm.GetRoadWithDijkstra(minotaurTablePenalties, minotaur, human).First();
                     break;
 
                 case Mode.Hard:
+                    minotaur = waveAlgorithm.GetRoadWithSmartDijkstra(minotaurTablePenalties, humanTablePenalties, minotaur, human, exit).First();
                     break;
             }
 
@@ -265,283 +250,11 @@ namespace Labyrinth
                 return;
             }
 
-            minotaurPenaltyForCrossing = minotaurTablePenaltys[map[minotaur.X, minotaur.Y]];
+            minotaurPenaltyForCrossing = minotaurTablePenalties[map[minotaur.X, minotaur.Y]];
 
             if (map[minotaur.X, minotaur.Y] == Terrain.Tree)
-                map[minotaur.X, minotaur.Y] = Terrain.Path;
+                map[minotaur.X, minotaur.Y] = Terrain.Empty;
         }
-
-        private void MinotaurMoveRandomDirrection()
-        {
-            Random random = new Random();
-
-            int[] dx = { 1,-1, 0, 0 };
-            int[] dy = { 0, 0, 1,-1 };
-
-            while (true)
-            {
-                int i = random.Next(dx.Length);
-                Point newPoint = new Point(minotaur.X + dx[i], minotaur.Y + dy[i]);
-                Terrain newPointType = map[newPoint.X, newPoint.Y];
-
-                if (newPointType != Terrain.Water && newPointType != Terrain.Wall && newPoint != exit)
-                {
-                    minotaur = newPoint;
-                    return;
-                }
-            }
-        }
-
-        private void MinotaurMoveBfs()
-        {
-            var queue = new Queue<Point>();
-            var usedCells = new HashSet<Point>();
-            var saveRoad = new Dictionary<Point, Point>();
-
-            int[] dx = { 1, -1, 0, 0 };
-            int[] dy = { 0, 0, 1, -1 };
-
-            queue.Enqueue(minotaur);
-
-            while (queue.Any())
-            {
-                Point currentPoint = queue.Dequeue();
-
-                if (currentPoint == human)
-                {
-                    // восстанавливаю путь
-                    while (saveRoad[currentPoint] != minotaur)
-                        currentPoint = saveRoad[currentPoint];
-
-                    if (map[currentPoint.X, currentPoint.Y] != Terrain.Water)
-                        minotaur = currentPoint;
-
-                    return;
-                }
-
-                for (int i = 0; i < dx.Length; i++)
-                {
-                    Point newPoint = new Point(currentPoint.X + dx[i], currentPoint.Y + dy[i]);
-                    Terrain newPointType = map[newPoint.X, newPoint.Y];
-
-                    if (newPointType != Terrain.Water && newPointType != Terrain.Wall && newPoint != exit && !usedCells.Contains(newPoint))
-                    {
-                        saveRoad[newPoint] = currentPoint;
-                        usedCells.Add(newPoint);
-                        queue.Enqueue(newPoint);
-                    }
-
-                    if (newPointType == Terrain.Water && newPoint == human)
-                    {
-                        saveRoad[newPoint] = currentPoint;
-                        queue.Enqueue(newPoint);
-                    }
-                }
-            }
-        }
-
-        private void MinotaurMoveDijkstra()
-        {
-            var heap = new Heap();
-            var usedCells = new HashSet<Point>();
-            var saveRoad = new Dictionary<Point, Point>();
-            var distanceTo = new Dictionary<Point, int>();
-
-            int[] dx = { 1, -1, 0, 0 };
-            int[] dy = { 0, 0, 1, -1 };
-
-            distanceTo[minotaur] = 0;
-
-            heap.Add(minotaur, distanceTo[minotaur]);
-
-            while (heap.Any())
-            {
-                Point currentPoint = heap.Pop();
-                int currentPointWeight = minotaurTablePenaltys[map[currentPoint.X, currentPoint.Y]];
-
-                usedCells.Add(currentPoint);
-
-                for (int i = 0; i < dx.Length; i++)
-                {
-                    Point newPoint = new Point(currentPoint.X + dx[i], currentPoint.Y + dy[i]);
-                    Terrain newPointType = map[newPoint.X, newPoint.Y];
-
-                    if (!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight)
-                    {
-                        distanceTo[newPoint] = distanceTo[currentPoint] + currentPointWeight;
-                        saveRoad[newPoint] = currentPoint;
-                    }
-
-                    if (!usedCells.Contains(newPoint) && newPointType != Terrain.Water && newPointType != Terrain.Wall && newPoint != exit)
-                        heap.Add(newPoint, distanceTo[newPoint]);
-                }
-
-            }
-
-            // восстанавливаю маршрут
-            if (!saveRoad.ContainsKey(human))
-                return;
-
-            Point curPoint = human;
-
-            while (saveRoad[curPoint] != minotaur)
-            {
-                //pathMinHuman.Add(curPoint);
-                curPoint = saveRoad[curPoint];
-            }
-
-            if (map[curPoint.X, curPoint.Y] != Terrain.Water)
-                minotaur = curPoint;
-        }
-
-        private List<Point> SearchMinimalPath(Dictionary<Terrain, int> tableWeigths, Terrain[,] mapTerrains, Point startPoint, Point finishPoint)
-        {
-            var heap = new Heap();
-            var usedCells = new HashSet<Point>();
-            var saveRoad = new Dictionary<Point, Point>();
-            var distanceTo = new Dictionary<Point, int>();
-            
-            int[] dx = { 1, -1, 0, 0 };
-            int[] dy = { 0, 0, 1, -1 };
-
-            distanceTo[startPoint] = 0;
-            
-            heap.Add(startPoint, distanceTo[startPoint]);
-
-            while (heap.Any())
-            {
-                Point currentPoint = heap.Pop();
-                int currentPointWeight = tableWeigths[map[currentPoint.X, currentPoint.Y]];
-
-                usedCells.Add(currentPoint);
-
-                for (int i = 0; i < dx.Length; i++)
-                {
-                    Point newPoint = new Point(currentPoint.X + dx[i], currentPoint.Y + dy[i]);
-
-                    if (tableWeigths[mapTerrains[newPoint.X, newPoint.Y]] == Inf)
-                        continue;
-
-                    if (!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight)
-                    {
-                        distanceTo[newPoint] = distanceTo[currentPoint] + currentPointWeight;
-                        saveRoad[newPoint] = currentPoint;
-                    }
-
-                    if (!usedCells.Contains(newPoint))
-                        heap.Add(newPoint, distanceTo[newPoint]);
-                }
-
-            }
-
-            var MinRoad = new List<Point>();
-
-            if (saveRoad.ContainsKey(finishPoint))
-            {
-                Point currentPoint = finishPoint;
-
-                while (saveRoad[currentPoint] != startPoint)
-                {
-                    currentPoint = saveRoad[currentPoint];
-                    MinRoad.Add(currentPoint);
-                }
-            }
-
-            MinRoad.Reverse();
-
-            return MinRoad;
-        }
-
-        private void Solve()
-        {
-            List<Point> humanMinRoadToExit = SearchMinimalPath(humanTablePenaltys, map, human, exit);
-
-            pathMinHuman = humanMinRoadToExit;
-
-            if (!humanMinRoadToExit.Any())
-                return;
-
-            List<Point> minotaurtMinRoadToMinRoadHuman = new List<Point>();
-
-            int minSumWeigths = int.MaxValue;
-
-            foreach (var point1 in humanMinRoadToExit)
-            {
-                List<Point> minotaurMinRoadToPoint = SearchMinimalPath(minotaurTablePenaltys, map, minotaur, point1);
-
-                int sum = 0;
-
-                foreach (var point2 in minotaurMinRoadToPoint)
-                    sum += minotaurTablePenaltys[map[point2.X, point2.Y]];
-
-                if (sum < minSumWeigths && minotaurMinRoadToPoint.Any())
-                {
-                    minSumWeigths = sum;
-                    minotaurtMinRoadToMinRoadHuman = minotaurMinRoadToPoint;
-                }
-            }
-
-            if (!humanMinRoadToExit.Contains(minotaur))
-                pathMinMinotaur = minotaurtMinRoadToMinRoadHuman;
-        }
-
-        //private void MinotaurMoveDijkstra()
-        //{
-        //    var heap = new Heap();
-        //    var usedCells = new HashSet<Point>();
-        //    var saveRoad = new Dictionary<Point, Point>();
-        //    var distanceTo = new Dictionary<Point, int>();
-
-        //    int[] dx = { 1, -1, 0, 0 };
-        //    int[] dy = { 0, 0, 1, -1 };
-
-        //    distanceTo[minotaur] = 0;
-
-        //    heap.Add(minotaur, distanceTo[minotaur]);
-
-        //    while (heap.Any())
-        //    {
-        //        Point currentPoint = heap.Pop();
-        //        int currentPointWeight = minotaurTablePenaltys[map[currentPoint.X, currentPoint.Y]];
-
-        //        usedCells.Add(currentPoint);
-
-        //        for (int i = 0; i < dx.Length; i++)
-        //        {
-        //            Point newPoint = new Point(currentPoint.X + dx[i], currentPoint.Y + dy[i]);
-        //            Terrain newPointType = map[newPoint.X, newPoint.Y];
-
-        //            if (newPointType == Terrain.Wall || newPoint == exit)
-        //                continue;
-
-        //            if ((!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight) && (newPoint == human || newPointType != Terrain.Water))
-        //            {
-        //                distanceTo[newPoint] = distanceTo[currentPoint] + currentPointWeight;
-
-        //                if (!saveRoad.ContainsKey(newPoint))
-        //                    saveRoad.Add(newPoint, currentPoint);
-        //                else
-        //                    saveRoad[newPoint] = currentPoint;
-        //            }
-
-        //            if (!usedCells.Contains(newPoint) && newPointType != Terrain.Water)
-        //                heap.Add(newPoint, distanceTo[newPoint]);
-        //        }
-
-        //    }
-
-        //    // восстанавливаю маршрут
-        //    Point curPoint = human;
-
-        //    while (saveRoad[curPoint] != minotaur)
-        //    {
-        //        pathMinHuman.Add(curPoint);
-        //        curPoint = saveRoad[curPoint];
-        //    }
-
-        //    if (map[curPoint.X, curPoint.Y] != Terrain.Water)
-        //        minotaur = curPoint;
-        //}
 
         private void Restart()
         {

@@ -1,11 +1,10 @@
-﻿using System.Windows.Forms;
-namespace Labyrinth
+﻿namespace Labyrinth
 {
     public enum Direction
     {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
+        Up,
+        Down,
+        Left,
+        Right
     }
 }

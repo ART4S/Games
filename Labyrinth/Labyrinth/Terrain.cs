@@ -8,7 +8,7 @@ namespace Labyrinth
 {
     public enum Terrain
     {
-        Path,
+        Empty,
         Water,
         Tree,
         Wall,

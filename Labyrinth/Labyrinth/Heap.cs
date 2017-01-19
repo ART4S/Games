@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
 
 namespace Labyrinth
 {
@@ -75,15 +74,15 @@ namespace Labyrinth
 
         private void Swap(int i, int j)
         {
-            int temp_heap = heap[i];
+            int tempHeap = heap[i];
 
             heap[i] = heap[j];
-            heap[j] = temp_heap;
+            heap[j] = tempHeap;
 
-            Point temp_keys = keys[i];
+            Point tempKeys = keys[i];
 
             keys[i] = keys[j];
-            keys[j] = temp_keys;
+            keys[j] = tempKeys;
         }
     }
 }
