@@ -31,6 +31,9 @@ namespace Labyrinth
         private int humanPenaltyForCrossing;
         private int minotaurPenaltyForCrossing;
 
+        private List<Point> pathMinMinotaur = new List<Point>();
+        private List<Point> pathMinHuman = new List<Point>();
+
         public Game(char[,] labyrinth, int n, int m)
         {
             this.n = n;
@@ -131,8 +134,8 @@ namespace Labyrinth
                             break;
 
                         case Terrain.Empty:
-                            if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
-                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            //if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
+                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
@@ -149,6 +152,16 @@ namespace Labyrinth
 
             for (int j = 0; j <= m; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
+
+            foreach (var point in pathMinHuman)
+            {
+                e.Graphics.FillEllipse(Brushes.Green, point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5);
+            }
+
+            foreach (var point in pathMinMinotaur)
+            {
+                e.Graphics.FillEllipse(Brushes.Red, point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5);
+            }
         }
 
         public void Move(Direction direction, Mode mode)
@@ -196,15 +209,15 @@ namespace Labyrinth
             if (nextPointType == Terrain.Wall || nextPointType == Terrain.Tree)
                 return false;
 
-            if (nextPoint == minotaur)
-            {
-                Restart(); // lose
-                return false;
-            }
-
             if (nextPoint == exit)
             {
                 Restart(); // won
+                return false;
+            }
+
+            if (nextPoint == minotaur)
+            {
+                Restart(); // lose
                 return false;
             }
 
@@ -229,18 +242,26 @@ namespace Labyrinth
             {
                 case Mode.EazyCrazy:
                     minotaur = waveAlgorithm.GetRoadWithDfs(minotaurTablePenalties, minotaur, human).First();
+                    pathMinHuman = waveAlgorithm.GetRoadWithDfs(humanTablePenalties, human, exit);
+                    pathMinMinotaur = waveAlgorithm.GetRoadWithDfs(minotaurTablePenalties, minotaur, human);
                     break;
 
                 case Mode.Eazy:
                     minotaur = waveAlgorithm.GetRoadWithBfs(minotaurTablePenalties, minotaur, human).First();
+                    pathMinHuman = waveAlgorithm.GetRoadWithBfs(humanTablePenalties, human, exit);
+                    pathMinMinotaur = waveAlgorithm.GetRoadWithBfs(minotaurTablePenalties, minotaur, human);
                     break;
 
                 case Mode.Normal:
                     minotaur = waveAlgorithm.GetRoadWithDijkstra(minotaurTablePenalties, minotaur, human).First();
+                    pathMinHuman = waveAlgorithm.GetRoadWithDijkstra(humanTablePenalties, human, exit);
+                    pathMinMinotaur = waveAlgorithm.GetRoadWithDijkstra(minotaurTablePenalties, minotaur, human);
                     break;
 
                 case Mode.Hard:
                     minotaur = waveAlgorithm.GetRoadWithSmartDijkstra(minotaurTablePenalties, humanTablePenalties, minotaur, human, exit).First();
+                    pathMinHuman = waveAlgorithm.GetRoadWithDijkstra(humanTablePenalties, human, exit);
+                    pathMinMinotaur = waveAlgorithm.GetRoadWithSmartDijkstra(minotaurTablePenalties, humanTablePenalties, minotaur, human, exit);
                     break;
             }
 

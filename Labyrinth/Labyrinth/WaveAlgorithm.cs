@@ -45,6 +45,10 @@ namespace Labyrinth
                         continue;
 
                     saveRoads[newPoint] = currentPoint;
+
+                    if (newPoint == secondPoint)
+                        break;
+
                     stack.Push(newPoint);
                 }
             }
@@ -74,6 +78,10 @@ namespace Labyrinth
                         continue;
 
                     saveRoads[newPoint] = currentPoint;
+
+                    if (newPoint == secondPoint)
+                        break;
+
                     queue.Enqueue(newPoint);
                 }
             }
