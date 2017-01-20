@@ -11,11 +11,7 @@
             Y = y;
         }
 
-        public Point()
-        {
-            X = 0;
-            Y = 0;
-        }
+        public Point() : this(0, 0) { }
 
         public static Point operator+(Point a, Point b)
         {

@@ -61,12 +61,52 @@ namespace Labyrinth.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Developer: ART4S
-        ///Year: 2016.
+        ///   Ищет локализованную строку, похожую на Разработчки: ART4S, SemikX
+        ///Год: 2017.
         /// </summary>
-        internal static string GameForm_labelAboutGame_Click_ {
+        internal static string aboutGameText {
             get {
-                return ResourceManager.GetString("GameForm_labelAboutGame_Click_", resourceCulture);
+                return ResourceManager.GetString("aboutGameText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Лучший результат: .
+        /// </summary>
+        internal static string bestScoreText {
+            get {
+                return ResourceManager.GetString("bestScoreText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Доберись до выхода из лабиринта избегая встречи с минотавром.
+        ///
+        ///Присутствующие обозначения:
+        ///Q - выход из лабиринта
+        ///M - минотавр
+        ///H - человек
+        ///Белое поле - тропинка
+        ///Синее поле - вода
+        ///Зелёное поле - дерево
+        ///
+        ///Штрафы за проход по местности:
+        ///Тропинка - человек и минотавр проходят один ход
+        ///Вода - человек проходит за два хода, минотавр пройти не может
+        ///Дерево - минотавр проходит за два хода и превращает в тропинку, человек пройти не может.
+        /// </summary>
+        internal static string rulesText {
+            get {
+                return ResourceManager.GetString("rulesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Посещённые клетки: .
+        /// </summary>
+        internal static string usedCellsCounterText {
+            get {
+                return ResourceManager.GetString("usedCellsCounterText", resourceCulture);
             }
         }
     }

@@ -9,99 +9,109 @@ namespace Labyrinth
 {
     public partial class GameForm : Form
     {
-        private const int CellSize = 40;
+        private const int CellSize = 30;
 
-        private readonly char[,] labyrinth;
-        private readonly int n;
-        private readonly int m;
+        private readonly char[,] gameField;
+
+        private readonly int gameFieldHeight;
+        private readonly int gameFieldWidth;
 
         private Game game;
-        private Mode mode;
+        private Mode currentMode;
 
         public GameForm()
         {
             InitializeComponent();
 
+            currentMode = Mode.Hard;
+
             StreamReader reader = new StreamReader(Application.StartupPath + "\\Labyrinth.txt");
 
             int[] read = reader.ReadLine().Split().Select(int.Parse).ToArray();
 
-            n = read[0];
-            m = read[1];
+            gameFieldHeight = read[0];
+            gameFieldWidth = read[1];
 
-            labyrinth = new char[n, m];
+            gameField = new char[gameFieldHeight, gameFieldWidth];
 
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < gameFieldHeight; ++i)
             {
                 string line = reader.ReadLine();
 
-                for (int j = 0; j < m; ++j)
-                    labyrinth[i, j] = line[j];
+                for (int j = 0; j < gameFieldWidth; ++j)
+                    gameField[i, j] = line[j];
             }
 
-            SetSizesForm(n, m);
-            mode = Mode.Hard;
+            SetSizesForm();
             Start();
         }
 
-        private void SetSizesForm(int n, int m)
+        private void SetSizesForm()
         {
             const int indent = 16;
 
             StartPosition = FormStartPosition.CenterScreen;
 
-            pictureBoxLabyrinth.Location = new System.Drawing.Point(indent, indent + menuStrip.Height);
-            pictureBoxLabyrinth.Size = new Size(CellSize * m + 2 * labelVisitedСells.Width, CellSize * n);
-            labelVisitedСells.Location = new System.Drawing.Point(pictureBoxLabyrinth.Location.X + pictureBoxLabyrinth.Height + indent, pictureBoxLabyrinth.Location.Y);
-            ClientSize = new Size(2 * indent + pictureBoxLabyrinth.Width, 2 * indent + menuStrip.Height + pictureBoxLabyrinth.Height);
+            pictureBoxGameField.Location = new System.Drawing.Point(indent, menuStrip.Height + indent);
+            pictureBoxGameField.Size = new Size(gameFieldWidth * CellSize, gameFieldHeight * CellSize);
+
+            labelVisitedСells.Location = new System.Drawing.Point(pictureBoxGameField.Location.X + pictureBoxGameField.Width + indent, pictureBoxGameField.Location.Y);
+            labelBestScore.Location = new System.Drawing.Point(labelVisitedСells.Location.X, labelVisitedСells.Location.Y + labelVisitedСells.Height + indent);
+
+            ClientSize = new Size(4 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
         }
 
-        private void pB_Labyrinth_Paint(object sender, PaintEventArgs e)
+        private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
         {
             game.Paint(e, CellSize);
         }
 
-        private void Game_KeyDown(object sender, KeyEventArgs e)
+        private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    game.Move(Direction.Up, mode);
+                    game.Move(Direction.Up);
                     break;
 
                 case Keys.Down:
-                    game.Move(Direction.Down, mode);
+                    game.Move(Direction.Down);
                     break;
 
                 case Keys.Left:
-                    game.Move(Direction.Left, mode);
+                    game.Move(Direction.Left);
                     break;
 
                 case Keys.Right:
-                    game.Move(Direction.Right, mode);
+                    game.Move(Direction.Right);
                     break;
 
                 default: return;
             }
 
-            pictureBoxLabyrinth.Refresh();
-        }
+            pictureBoxGameField.Refresh();
 
-        private void Start()
-        {
-            game = new Game(labyrinth, n, m);
-
-            pictureBoxLabyrinth.Refresh();
+            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
         }
 
         private void labelAboutGame_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Resources.GameForm_labelAboutGame_Click_, "About game");
+            MessageBox.Show(Resources.aboutGameText, @"Об игре");
         }
 
         private void labelRules_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("!", "Rules");
+            MessageBox.Show(Resources.rulesText, @"Правила");
+        }
+
+        private void Start()
+        {
+            game = new Game(gameField, gameFieldHeight, gameFieldWidth, currentMode);
+
+            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+            labelBestScore.Text = Resources.bestScoreText + Settings.Default.bestScore.ToString();
+
+            pictureBoxGameField.Refresh();
         }
     }
 }

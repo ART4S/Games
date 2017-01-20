@@ -9,77 +9,78 @@ namespace Labyrinth
     {
         private const int Inf = int.MaxValue;
 
-        private readonly int n;
-        private readonly int m;
+        private readonly int height;
+        private readonly int width;
 
-        private readonly Point defaultPositionMinotaur;
-        private readonly Point defaultPositionHuman;
+        private readonly Mode mode;
 
-        private readonly Terrain[,] defaultMap;
-        private Terrain[,] map;
-
-        private readonly Dictionary<Terrain, int> minotaurTablePenalties;
-        private readonly Dictionary<Terrain, int> humanTablePenalties;
+        private readonly Terrain[,] defaultGameField;
+        private Terrain[,] gameField;
 
         private bool[,] humanUsedCells;
 
-        private readonly Point exit;
+        private readonly Dictionary<Terrain, int> minotaurPenaltiesTable;
+        private readonly Dictionary<Terrain, int> humanPenaltiesTable;
 
-        private Point minotaur;
-        private Point human;
+        private int humanPenalty;
+        private int minotaurPenalty;
 
-        private int humanPenaltyForCrossing;
-        private int minotaurPenaltyForCrossing;
+        private readonly Point minotaurDefaultPoint;
+        private readonly Point humanDefaultPoint;
 
-        private List<Point> pathMinMinotaur = new List<Point>();
-        private List<Point> pathMinHuman = new List<Point>();
+        private readonly Point exitPoint;
+        private Point minotaurPoint;
+        private Point humanPoint;
 
-        public Game(char[,] labyrinth, int n, int m)
+        public int UsedCellsCounter { get; private set; }
+
+        public Game(char[,] gameField, int height, int width, Mode mode)
         {
-            this.n = n;
-            this.m = m;
+            this.height = height;
+            this.width = width;
+            this.mode = mode;
 
-            defaultMap = new Terrain[n, m];
+            defaultGameField = new Terrain[height, width];
 
-            for (int i = 0; i < n; i++)
-                for(int j = 0; j < m; j++)
+            for (int i = 0; i < height; i++)
+                for(int j = 0; j < width; j++)
                 {
-                    switch (labyrinth[i, j])
+                    switch (gameField[i, j])
                     {
                         case 'X':
-                            defaultMap[i, j] = Terrain.Wall;
+                            defaultGameField[i, j] = Terrain.Wall;
                             break;
 
                         case ' ':
-                            defaultMap[i, j] = Terrain.Empty;
+                            defaultGameField[i, j] = Terrain.Empty;
                             break;
 
                         case 'W':
-                            defaultMap[i, j] = Terrain.Water;
+                            defaultGameField[i, j] = Terrain.Water;
                             break;
 
                         case 'T':
-                            defaultMap[i, j] = Terrain.Tree;
+                            defaultGameField[i, j] = Terrain.Tree;
                             break;
 
                         case 'M':
-                            defaultMap[i, j] = Terrain.Empty;
-                            defaultPositionMinotaur = new Point(i, j);
+                            defaultGameField[i, j] = Terrain.Empty;
+                            minotaurDefaultPoint = new Point(i, j);
                             break;
 
                         case 'H':
-                            defaultMap[i, j] = Terrain.Empty;
-                            defaultPositionHuman = new Point(i, j);
+                            defaultGameField[i, j] = Terrain.Empty;
+                            humanDefaultPoint = new Point(i, j);
                             break;
 
                         case 'Q':
-                            defaultMap[i, j] = Terrain.Exit;
-                            exit = new Point(i, j);
+                            defaultGameField[i, j] = Terrain.Exit;
+                            exitPoint = new Point(i, j);
                             break;
                     }
                 }
 
-            humanTablePenalties = new Dictionary<Terrain, int>()
+            humanPenaltiesTable = new Dictionary<Terrain, int>()
             {
                 {Terrain.Empty, 1},
                 {Terrain.Water, 2},
@@ -88,7 +89,7 @@ namespace Labyrinth
                 {Terrain.Exit, 1}
             };
 
-            minotaurTablePenalties = new Dictionary<Terrain, int>()
+            minotaurPenaltiesTable = new Dictionary<Terrain, int>()
             {
                 {Terrain.Empty, 1},
                 {Terrain.Tree, 2},
@@ -106,8 +107,8 @@ namespace Labyrinth
 
             Font font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Bold);
 
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
                 {
                     PointF pointForDrawingSymbol = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
                     RectangleF rectangleForDrawingDot = new RectangleF(j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
@@ -115,12 +116,12 @@ namespace Labyrinth
                     RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
                     Point currentPoint = new Point(i, j);
 
-                    switch (map[i, j])
+                    switch (gameField[i, j])
                     {
                         case Terrain.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
 
-                            if (humanUsedCells[i, j] && currentPoint != human)
+                            if (humanUsedCells[i, j] && currentPoint != humanPoint)
                                 e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
@@ -134,164 +135,129 @@ namespace Labyrinth
                             break;
 
                         case Terrain.Empty:
-                            //if (humanUsedCells[i, j] && currentPoint != minotaur && currentPoint != human)
-                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
                 }
 
-            if (minotaur != exit)
-                e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exit.Y * cellSize + cellSize / 2 - 8, exit.X * cellSize + cellSize / 2 - 8));
+            if (minotaurPoint != exitPoint)
+                e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exitPoint.Y * cellSize + cellSize / 2 - 8, exitPoint.X * cellSize + cellSize / 2 - 8));
 
-            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(human.Y * cellSize + cellSize / 2 - 8, human.X * cellSize + cellSize / 2 - 8));
-            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(minotaur.Y * cellSize + cellSize / 2 - 8, minotaur.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(humanPoint.Y * cellSize + cellSize / 2 - 8, humanPoint.X * cellSize + cellSize / 2 - 8));
+            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(minotaurPoint.Y * cellSize + cellSize / 2 - 8, minotaurPoint.X * cellSize + cellSize / 2 - 8));
 
-            for (int i = 0; i <= n; i++)
-                e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, m * cellSize, i * cellSize);
+            for (int i = 0; i <= height; i++)
+                e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, width * cellSize, i * cellSize);
 
-            for (int j = 0; j <= m; j++)
-                e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, n * cellSize);
-
-            foreach (var point in pathMinHuman)
-            {
-                e.Graphics.FillEllipse(Brushes.Green, point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5);
-            }
-
-            foreach (var point in pathMinMinotaur)
-            {
-                e.Graphics.FillEllipse(Brushes.Red, point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5);
-            }
+            for (int j = 0; j <= width; j++)
+                e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, height * cellSize);
         }
 
-        public void Move(Direction direction, Mode mode)
+        public void Move(Direction direction)
         {
             if (MoveHuman(direction))
-                MoveMinotaur(mode);
+                MoveMinotaur();
         }
 
         private bool MoveHuman(Direction direction)
         {
-            if (humanPenaltyForCrossing != 1)
+            if (humanPenalty != 1)
             {
-                humanPenaltyForCrossing--;
+                humanPenalty--;
                 return true;
             }
 
-            Point directionPoint;
+            Point nextPoint = humanPoint + direction.ToPoint();
+            Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
 
-            switch (direction)
-            {
-                case Direction.Up:
-                    directionPoint = new Point(-1, 0);
-                    break;
-
-                case Direction.Down:
-                    directionPoint = new Point(1, 0);
-                    break;
-
-                case Direction.Left:
-                    directionPoint = new Point(0, -1);
-                    break;
-
-                case Direction.Right:
-                    directionPoint = new Point(0, 1);
-                    break;
-
-                default:
-                    directionPoint = new Point();
-                    break;
-            }
-
-            Point nextPoint = human + directionPoint;
-            Terrain nextPointType = map[nextPoint.X, nextPoint.Y];
-
-            if (nextPointType == Terrain.Wall || nextPointType == Terrain.Tree)
+            if (humanPenaltiesTable[nextPointType] == Inf)
                 return false;
 
-            if (nextPoint == exit)
+            if (nextPoint == exitPoint)
             {
                 Restart(); // won
                 return false;
             }
 
-            if (nextPoint == minotaur)
+            if (nextPoint == minotaurPoint)
             {
                 Restart(); // lose
                 return false;
             }
 
-            humanUsedCells[human.X, human.Y] = true;
-            human = nextPoint;
-            humanPenaltyForCrossing = humanTablePenalties[map[human.X, human.Y]];
+            humanPoint = nextPoint;
+            humanPenalty = humanPenaltiesTable[gameField[humanPoint.X, humanPoint.Y]];
+
+            if (humanUsedCells[humanPoint.X, humanPoint.Y] == false)
+            {
+                humanUsedCells[humanPoint.X, humanPoint.Y] = true;
+                UsedCellsCounter++;
+            }
 
             return true;
         }
 
-        private void MoveMinotaur(Mode mode)
+        private void MoveMinotaur()
         {
-            if (minotaurPenaltyForCrossing != 1)
+            if (minotaurPenalty != 1)
             {
-                minotaurPenaltyForCrossing--;
+                minotaurPenalty--;
                 return;
             }
 
-            var waveAlgorithm = new WaveAlgorithm(map);
+            var pathfinder = new Pathfinder(gameField);
 
             switch (mode)
             {
                 case Mode.EazyCrazy:
-                    minotaur = waveAlgorithm.GetRoadWithDfs(minotaurTablePenalties, minotaur, human).First();
-                    pathMinHuman = waveAlgorithm.GetRoadWithDfs(humanTablePenalties, human, exit);
-                    pathMinMinotaur = waveAlgorithm.GetRoadWithDfs(minotaurTablePenalties, minotaur, human);
+                    minotaurPoint = pathfinder.FindPathWithDfs(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Eazy:
-                    minotaur = waveAlgorithm.GetRoadWithBfs(minotaurTablePenalties, minotaur, human).First();
-                    pathMinHuman = waveAlgorithm.GetRoadWithBfs(humanTablePenalties, human, exit);
-                    pathMinMinotaur = waveAlgorithm.GetRoadWithBfs(minotaurTablePenalties, minotaur, human);
+                    minotaurPoint = pathfinder.FindPathWithBfs(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Normal:
-                    minotaur = waveAlgorithm.GetRoadWithDijkstra(minotaurTablePenalties, minotaur, human).First();
-                    pathMinHuman = waveAlgorithm.GetRoadWithDijkstra(humanTablePenalties, human, exit);
-                    pathMinMinotaur = waveAlgorithm.GetRoadWithDijkstra(minotaurTablePenalties, minotaur, human);
+                    minotaurPoint = pathfinder.FindPathWithDijkstra(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Hard:
-                    minotaur = waveAlgorithm.GetRoadWithSmartDijkstra(minotaurTablePenalties, humanTablePenalties, minotaur, human, exit).First();
-                    pathMinHuman = waveAlgorithm.GetRoadWithDijkstra(humanTablePenalties, human, exit);
-                    pathMinMinotaur = waveAlgorithm.GetRoadWithSmartDijkstra(minotaurTablePenalties, humanTablePenalties, minotaur, human, exit);
+                    minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
                     break;
             }
 
-            if (minotaur == human)
+            if (minotaurPoint == humanPoint)
             {
                 Restart(); // lose
                 return;
             }
 
-            minotaurPenaltyForCrossing = minotaurTablePenalties[map[minotaur.X, minotaur.Y]];
+            minotaurPenalty = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
 
-            if (map[minotaur.X, minotaur.Y] == Terrain.Tree)
-                map[minotaur.X, minotaur.Y] = Terrain.Empty;
+            if (gameField[minotaurPoint.X, minotaurPoint.Y] == Terrain.Tree)
+                gameField[minotaurPoint.X, minotaurPoint.Y] = Terrain.Empty;
         }
 
         private void Restart()
         {
-            map = new Terrain[n, m];
+            gameField = new Terrain[height, width];
 
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
-                    map[i, j] = defaultMap[i, j];
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
+                    gameField[i, j] = defaultGameField[i, j];
 
-            humanUsedCells = new bool[n, m];
+            humanPoint = humanDefaultPoint;
+            minotaurPoint = minotaurDefaultPoint;
 
-            human = defaultPositionHuman;
-            minotaur = defaultPositionMinotaur;
+            humanPenalty = 1;
+            minotaurPenalty = 1;
 
-            humanPenaltyForCrossing = 1;
-            minotaurPenaltyForCrossing = 1;
+            humanUsedCells = new bool[height, width];
+
+            humanUsedCells[humanPoint.X, humanPoint.Y] = true;
+            UsedCellsCounter = 1;
         }
     }
 }
