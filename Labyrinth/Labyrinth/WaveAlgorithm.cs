@@ -127,7 +127,7 @@ namespace Labyrinth
 
             return RecoveryRoadBetweenPoints(saveRoads, firstPoint, secondPoint);
         }
-
+        // TODO: переделать движение минотавра к человеку
         public List<Point> GetRoadWithSmartDijkstra(Dictionary<Terrain, int> tableWeigthsFirstPoint, Dictionary<Terrain, int> tableWeigthsSecondPoint, Point firstPoint, Point secondPointStart, Point secondPointFinish)
         {
             List<Point> minRoadSecondPoint = GetRoadWithDijkstra(tableWeigthsSecondPoint, secondPointStart, secondPointFinish);
