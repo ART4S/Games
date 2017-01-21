@@ -11,10 +11,10 @@
   &lt;string&gt;Зачем ты вообще играешь против того, кого не в силах обыграть?&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="wonMessages" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="wonMessages" Type="System.Collections.Specialized.StringCollection" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;Тебе просто повезло&lt;/string&gt;
+  &lt;string&gt;Везение и ничего более&lt;/string&gt;
   &lt;string&gt;Тебя бы на такую стартовую позицию поставить...&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>

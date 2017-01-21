@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.pictureBoxGameField = new System.Windows.Forms.PictureBox();
             this.labelVisitedСells = new System.Windows.Forms.Label();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
@@ -92,7 +93,7 @@
             // 
             this.labelNewGame.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.labelNewGame.Name = "labelNewGame";
-            this.labelNewGame.Size = new System.Drawing.Size(152, 22);
+            this.labelNewGame.Size = new System.Drawing.Size(134, 22);
             this.labelNewGame.Text = "Новая игра";
             this.labelNewGame.Click += new System.EventHandler(this.labelNewGame_Click);
             // 
@@ -105,34 +106,34 @@
             this.labelHard});
             this.labelMode.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.labelMode.Name = "labelMode";
-            this.labelMode.Size = new System.Drawing.Size(152, 22);
+            this.labelMode.Size = new System.Drawing.Size(134, 22);
             this.labelMode.Text = "Режим";
             // 
             // labelEazyCrazy
             // 
             this.labelEazyCrazy.Name = "labelEazyCrazy";
-            this.labelEazyCrazy.Size = new System.Drawing.Size(152, 22);
+            this.labelEazyCrazy.Size = new System.Drawing.Size(139, 22);
             this.labelEazyCrazy.Text = "Очень легко";
             this.labelEazyCrazy.Click += new System.EventHandler(this.labelEazyCrazy_Click);
             // 
             // labelEazy
             // 
             this.labelEazy.Name = "labelEazy";
-            this.labelEazy.Size = new System.Drawing.Size(152, 22);
+            this.labelEazy.Size = new System.Drawing.Size(139, 22);
             this.labelEazy.Text = "Легко";
             this.labelEazy.Click += new System.EventHandler(this.labelEazy_Click);
             // 
             // labelNormal
             // 
             this.labelNormal.Name = "labelNormal";
-            this.labelNormal.Size = new System.Drawing.Size(152, 22);
+            this.labelNormal.Size = new System.Drawing.Size(139, 22);
             this.labelNormal.Text = "Нормально";
             this.labelNormal.Click += new System.EventHandler(this.labelNormal_Click);
             // 
             // labelHard
             // 
             this.labelHard.Name = "labelHard";
-            this.labelHard.Size = new System.Drawing.Size(152, 22);
+            this.labelHard.Size = new System.Drawing.Size(139, 22);
             this.labelHard.Text = "Сложно";
             this.labelHard.Click += new System.EventHandler(this.labelHard_Click);
             // 
@@ -140,20 +141,20 @@
             // 
             this.labelRules.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.labelRules.Name = "labelRules";
-            this.labelRules.Size = new System.Drawing.Size(152, 22);
+            this.labelRules.Size = new System.Drawing.Size(134, 22);
             this.labelRules.Text = "Правила";
             this.labelRules.Click += new System.EventHandler(this.labelRules_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
             // 
             // labelAboutGame
             // 
             this.labelAboutGame.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.labelAboutGame.Name = "labelAboutGame";
-            this.labelAboutGame.Size = new System.Drawing.Size(152, 22);
+            this.labelAboutGame.Size = new System.Drawing.Size(134, 22);
             this.labelAboutGame.Text = "Об игре";
             this.labelAboutGame.Click += new System.EventHandler(this.labelAboutGame_Click);
             // 
@@ -178,6 +179,7 @@
             this.Controls.Add(this.pictureBoxGameField);
             this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.Name = "GameForm";

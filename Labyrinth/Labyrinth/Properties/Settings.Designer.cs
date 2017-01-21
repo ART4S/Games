@@ -41,19 +41,16 @@ namespace Labyrinth.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>Тебе просто повезло</string>
+  <string>Везение и ничего более</string>
   <string>Тебя бы на такую стартовую позицию поставить...</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection wonMessages {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["wonMessages"]));
-            }
-            set {
-                this["wonMessages"] = value;
             }
         }
     }

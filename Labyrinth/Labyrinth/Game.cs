@@ -5,8 +5,12 @@ using System.Windows.Forms;
 
 namespace Labyrinth
 {
+    public delegate void myDelegate();
+
     public class Game
     {
+        public event myDelegate victoryEvent;
+
         private readonly int height;
         private readonly int width;
 

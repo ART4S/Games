@@ -80,6 +80,16 @@ namespace Labyrinth.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon Minotaur {
+            get {
+                object obj = ResourceManager.GetObject("Minotaur", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Доберись до выхода из лабиринта избегая встречи с минотавром.
         ///
         ///Присутствующие обозначения:
