@@ -141,6 +141,6 @@ H - человек
 Дерево - минотавр проходит за два хода и превращает в тропинку, человек пройти не может</value>
   </data>
   <data name="usedCellsCounterText" xml:space="preserve">
-    <value>Посещённые клетки: </value>
+    <value>Пройденные клетки: </value>
   </data>
 </root>

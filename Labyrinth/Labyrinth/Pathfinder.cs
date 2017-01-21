@@ -6,14 +6,15 @@ namespace Labyrinth
 {
     class Pathfinder
     {
-        private const int Inf = int.MaxValue;
+        private readonly int maxWeigths;
 
         private readonly Terrain[,] terrainsMap;
         private readonly List<Point> directionsList;
         
-        public Pathfinder(Terrain[,] terrainsMap)
+        public Pathfinder(Terrain[,] terrainsMap, int maxWeigths)
         {
             this.terrainsMap = terrainsMap;
+            this.maxWeigths = maxWeigths;
 
             directionsList = new List<Point>();
 
@@ -39,7 +40,7 @@ namespace Labyrinth
                 {
                     Point newPoint = currentPoint + direction;
 
-                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == Inf || usedCells.Contains(newPoint))
+                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == maxWeigths || usedCells.Contains(newPoint))
                         continue;
 
                     savePaths[newPoint] = currentPoint;
@@ -72,7 +73,7 @@ namespace Labyrinth
                 {
                     Point newPoint = currentPoint + direction;
 
-                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == Inf || usedCells.Contains(newPoint))
+                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == maxWeigths || usedCells.Contains(newPoint))
                         continue;
 
                     savePaths[newPoint] = currentPoint;
@@ -109,7 +110,7 @@ namespace Labyrinth
                 {
                     Point newPoint = currentPoint + direction;
 
-                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == Inf)
+                    if (weigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == maxWeigths)
                         continue;
 
                     if (!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight)
@@ -141,7 +142,7 @@ namespace Labyrinth
 
             foreach (var point in minPathSecondPoint)
             {
-                if (weigthsTableFirstPoint[terrainsMap[point.X, point.Y]] == Inf)
+                if (weigthsTableFirstPoint[terrainsMap[point.X, point.Y]] == maxWeigths)
                     continue;
 
                 List<Point> minPathToPointInPathSecondPoint = FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, point);

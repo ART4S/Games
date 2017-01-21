@@ -102,7 +102,7 @@ namespace Labyrinth.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Посещённые клетки: .
+        ///   Ищет локализованную строку, похожую на Пройденные клетки: .
         /// </summary>
         internal static string usedCellsCounterText {
             get {

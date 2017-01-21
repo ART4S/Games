@@ -42,11 +42,11 @@ namespace Labyrinth
                     gameField[i, j] = line[j];
             }
 
-            SetSizesForm();
+            SetSizesElementsInForm();
             Start();
         }
 
-        private void SetSizesForm()
+        private void SetSizesElementsInForm()
         {
             const int indent = 16;
 
