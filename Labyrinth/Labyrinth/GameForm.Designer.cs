@@ -40,7 +40,6 @@
             this.labelNormal = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHard = new System.Windows.Forms.ToolStripMenuItem();
             this.labelRules = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.labelAboutGame = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCurrentMode = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGameField)).BeginInit();
@@ -59,10 +58,10 @@
             // labelVisitedСells
             // 
             this.labelVisitedСells.AutoSize = true;
-            this.labelVisitedСells.Font = new System.Drawing.Font("Comic Sans MS", 8.25F, System.Drawing.FontStyle.Bold);
+            this.labelVisitedСells.Font = new System.Drawing.Font("Comic Sans MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelVisitedСells.Location = new System.Drawing.Point(370, 29);
             this.labelVisitedСells.Name = "labelVisitedСells";
-            this.labelVisitedСells.Size = new System.Drawing.Size(114, 16);
+            this.labelVisitedСells.Size = new System.Drawing.Size(124, 16);
             this.labelVisitedСells.TabIndex = 1;
             this.labelVisitedСells.Text = "Клеток посещено: ";
             // 
@@ -73,7 +72,7 @@
             this.menuToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(548, 24);
+            this.menuStrip.Size = new System.Drawing.Size(548, 25);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -83,17 +82,17 @@
             this.labelNewGame,
             this.labelMode,
             this.labelRules,
-            this.toolStripSeparator1,
             this.labelAboutGame});
+            this.menuToolStripMenuItem.Font = new System.Drawing.Font("Comic Sans MS", 9F);
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            this.menuToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.menuToolStripMenuItem.Size = new System.Drawing.Size(54, 21);
             this.menuToolStripMenuItem.Text = "Меню";
             // 
             // labelNewGame
             // 
-            this.labelNewGame.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.labelNewGame.Font = new System.Drawing.Font("Comic Sans MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelNewGame.Name = "labelNewGame";
-            this.labelNewGame.Size = new System.Drawing.Size(134, 22);
+            this.labelNewGame.Size = new System.Drawing.Size(152, 22);
             this.labelNewGame.Text = "Новая игра";
             this.labelNewGame.Click += new System.EventHandler(this.labelNewGame_Click);
             // 
@@ -104,67 +103,66 @@
             this.labelEazy,
             this.labelNormal,
             this.labelHard});
-            this.labelMode.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.labelMode.Font = new System.Drawing.Font("Comic Sans MS", 9F);
             this.labelMode.Name = "labelMode";
-            this.labelMode.Size = new System.Drawing.Size(134, 22);
+            this.labelMode.Size = new System.Drawing.Size(152, 22);
             this.labelMode.Text = "Режим";
             // 
             // labelEazyCrazy
             // 
+            this.labelEazyCrazy.ForeColor = System.Drawing.Color.LimeGreen;
             this.labelEazyCrazy.Name = "labelEazyCrazy";
-            this.labelEazyCrazy.Size = new System.Drawing.Size(139, 22);
+            this.labelEazyCrazy.Size = new System.Drawing.Size(152, 22);
             this.labelEazyCrazy.Text = "Очень легко";
             this.labelEazyCrazy.Click += new System.EventHandler(this.labelEazyCrazy_Click);
             // 
             // labelEazy
             // 
+            this.labelEazy.ForeColor = System.Drawing.Color.Green;
             this.labelEazy.Name = "labelEazy";
-            this.labelEazy.Size = new System.Drawing.Size(139, 22);
+            this.labelEazy.Size = new System.Drawing.Size(152, 22);
             this.labelEazy.Text = "Легко";
             this.labelEazy.Click += new System.EventHandler(this.labelEazy_Click);
             // 
             // labelNormal
             // 
+            this.labelNormal.ForeColor = System.Drawing.Color.Gold;
             this.labelNormal.Name = "labelNormal";
-            this.labelNormal.Size = new System.Drawing.Size(139, 22);
+            this.labelNormal.Size = new System.Drawing.Size(152, 22);
             this.labelNormal.Text = "Нормально";
             this.labelNormal.Click += new System.EventHandler(this.labelNormal_Click);
             // 
             // labelHard
             // 
+            this.labelHard.ForeColor = System.Drawing.Color.Red;
             this.labelHard.Name = "labelHard";
-            this.labelHard.Size = new System.Drawing.Size(139, 22);
+            this.labelHard.Size = new System.Drawing.Size(152, 22);
             this.labelHard.Text = "Сложно";
             this.labelHard.Click += new System.EventHandler(this.labelHard_Click);
             // 
             // labelRules
             // 
-            this.labelRules.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.labelRules.Font = new System.Drawing.Font("Comic Sans MS", 9F);
             this.labelRules.Name = "labelRules";
-            this.labelRules.Size = new System.Drawing.Size(134, 22);
+            this.labelRules.Size = new System.Drawing.Size(152, 22);
             this.labelRules.Text = "Правила";
             this.labelRules.Click += new System.EventHandler(this.labelRules_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
-            // 
             // labelAboutGame
             // 
-            this.labelAboutGame.Font = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.labelAboutGame.Font = new System.Drawing.Font("Comic Sans MS", 9F);
             this.labelAboutGame.Name = "labelAboutGame";
-            this.labelAboutGame.Size = new System.Drawing.Size(134, 22);
+            this.labelAboutGame.Size = new System.Drawing.Size(152, 22);
             this.labelAboutGame.Text = "Об игре";
             this.labelAboutGame.Click += new System.EventHandler(this.labelAboutGame_Click);
             // 
             // labelCurrentMode
             // 
             this.labelCurrentMode.AutoSize = true;
-            this.labelCurrentMode.Font = new System.Drawing.Font("Comic Sans MS", 8.25F, System.Drawing.FontStyle.Bold);
+            this.labelCurrentMode.Font = new System.Drawing.Font("Comic Sans MS", 9F, System.Drawing.FontStyle.Bold);
             this.labelCurrentMode.Location = new System.Drawing.Point(370, 55);
             this.labelCurrentMode.Name = "labelCurrentMode";
-            this.labelCurrentMode.Size = new System.Drawing.Size(106, 16);
+            this.labelCurrentMode.Size = new System.Drawing.Size(115, 16);
             this.labelCurrentMode.TabIndex = 4;
             this.labelCurrentMode.Text = "Текущий режим: ";
             // 
@@ -202,7 +200,6 @@
         private System.Windows.Forms.ToolStripMenuItem labelNewGame;
         private System.Windows.Forms.ToolStripMenuItem labelMode;
         private System.Windows.Forms.ToolStripMenuItem labelRules;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem labelAboutGame;
         private System.Windows.Forms.ToolStripMenuItem labelEazyCrazy;
         private System.Windows.Forms.ToolStripMenuItem labelEazy;

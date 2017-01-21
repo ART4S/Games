@@ -57,7 +57,7 @@ namespace Labyrinth
             labelVisitedСells.Location = new System.Drawing.Point(pictureBoxGameField.Location.X + pictureBoxGameField.Width + indent, pictureBoxGameField.Location.Y);
             labelCurrentMode.Location = new System.Drawing.Point(labelVisitedСells.Location.X, labelVisitedСells.Location.Y + labelVisitedСells.Height + indent);
 
-            ClientSize = new Size(6 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
+            ClientSize = new Size(7 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
         }
 
         private void Start()

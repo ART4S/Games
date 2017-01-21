@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 namespace Labyrinth
@@ -117,10 +119,9 @@ namespace Labyrinth
             for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
                 {
-                    PointF pointForDrawingSymbol = new PointF(j * cellSize + cellSize / 2 - 8, i * cellSize + cellSize / 2 - 8);
                     RectangleF rectangleForDrawingDot = new RectangleF(j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
-
                     RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
+
                     Point currentPoint = new Point(i, j);
 
                     switch (gameField[i, j])
@@ -149,12 +150,14 @@ namespace Labyrinth
                     }
                 }
 
+            Func<Point, PointF> getPointForDrawingSymbol = point => new PointF(point.Y * cellSize + cellSize / 2 - 8, point.X * cellSize + cellSize / 2 - 8);
+
             if (minotaurPoint != exitPoint)
-                e.Graphics.DrawString("Q", font, Brushes.Red, new PointF(exitPoint.Y * cellSize + cellSize / 2 - 8, exitPoint.X * cellSize + cellSize / 2 - 8));
-
-            e.Graphics.DrawString("H", font, Brushes.Orange, new PointF(humanPoint.Y * cellSize + cellSize / 2 - 8, humanPoint.X * cellSize + cellSize / 2 - 8));
-            e.Graphics.DrawString("M", font, Brushes.Magenta, new PointF(minotaurPoint.Y * cellSize + cellSize / 2 - 8, minotaurPoint.X * cellSize + cellSize / 2 - 8));
-
+                e.Graphics.DrawString("Q", font, Brushes.Red, getPointForDrawingSymbol(exitPoint));
+            
+            e.Graphics.DrawString("H", font, Brushes.Orange, getPointForDrawingSymbol(humanPoint));
+            e.Graphics.DrawString("M", font, Brushes.Magenta, getPointForDrawingSymbol(minotaurPoint));
+            
             for (int i = 0; i <= height; i++)
                 e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, width * cellSize, i * cellSize);
 
