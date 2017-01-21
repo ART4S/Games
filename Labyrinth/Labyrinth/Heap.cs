@@ -3,17 +3,19 @@ using System.Linq;
 
 namespace Labyrinth
 {
-    class Heap
+    class Heap<TKey, TValue>
     {
-        private readonly List<int> heap;
-        private readonly List<Point> keys;
+        private readonly List<TKey> keys;
+        private readonly List<TValue> heap;
+        private readonly Comparer<TValue> comparer;
 
         public int Count { get { return heap.Count; } }
 
         public Heap()
         {
-            heap = new List<int>();
-            keys = new List<Point>();
+            keys = new List<TKey>();
+            heap = new List<TValue>();
+            comparer = Comparer<TValue>.Default;
         }
 
         public bool Any()
@@ -21,16 +23,17 @@ namespace Labyrinth
             return heap.Any();
         }
 
-        public void Add(Point key, int value)
+        public void Add(TKey key, TValue value)
         {
             heap.Add(value);
-            keys.Add(key);   
+            keys.Add(key);  
+             
             ShiftUp(Count - 1);
         }
 
-        public Point Pop()
+        public TKey Pop()
         {
-            Point result = keys[0];
+            TKey result = keys[0];
 
             heap[0] = heap[Count - 1];
             keys[0] = keys[Count - 1];
@@ -48,13 +51,13 @@ namespace Labyrinth
             int leftChild = 2 * i + 1;
             int rightChild = 2 * i + 2;
 
-            if (leftChild < Count && heap[i] > heap[leftChild])
+            if (leftChild < Count && comparer.Compare(heap[i], heap[leftChild]) > 0)
             {
                 Swap(i, leftChild);
                 ShiftDown(leftChild);
             }
 
-            if (rightChild < Count && heap[i] > heap[rightChild])
+            if (rightChild < Count && comparer.Compare(heap[i], heap[rightChild]) > 0)
             {
                 Swap(i, rightChild);
                 ShiftDown(rightChild);
@@ -65,7 +68,7 @@ namespace Labyrinth
         {
             int parent = (i - 1) / 2;
 
-            if (i > 0 && heap[i] < heap[parent])
+            if (i > 0 && comparer.Compare(heap[i], heap[parent]) < 0)
             {
                 Swap(i, parent);
                 ShiftUp(parent);
@@ -74,12 +77,12 @@ namespace Labyrinth
 
         private void Swap(int i, int j)
         {
-            int tempHeap = heap[i];
+            TValue tempHeap = heap[i];
 
             heap[i] = heap[j];
             heap[j] = tempHeap;
 
-            Point tempKeys = keys[i];
+            TKey tempKeys = keys[i];
 
             keys[i] = keys[j];
             keys[j] = tempKeys;

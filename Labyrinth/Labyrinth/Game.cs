@@ -164,14 +164,14 @@ namespace Labyrinth
 
         private bool MoveHumanPoint(Direction direction)
         {
+            Point nextPoint = humanPoint + direction.ToPoint();
+            Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
+
             if (humanPenalty != minPenalty)
             {
                 humanPenalty--;
                 return true;
             }
-
-            Point nextPoint = humanPoint + direction.ToPoint();
-            Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
 
             if (humanPenaltiesTable[nextPointType] == maxPenalty)
                 return false;
@@ -189,7 +189,7 @@ namespace Labyrinth
             }
 
             humanPoint = nextPoint;
-            humanPenalty = humanPenaltiesTable[gameField[humanPoint.X, humanPoint.Y]];
+            humanPenalty = humanPenaltiesTable[nextPointType];
 
             if (humanUsedCells[humanPoint.X, humanPoint.Y] == false)
             {

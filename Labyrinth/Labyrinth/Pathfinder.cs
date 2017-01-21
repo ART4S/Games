@@ -90,7 +90,7 @@ namespace Labyrinth
 
         public List<Point> FindPathWithDijkstra(Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
         {
-            var heap = new Heap();
+            var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
             var savePaths = new Dictionary<Point, Point>();
             var distanceTo = new Dictionary<Point, int>();
