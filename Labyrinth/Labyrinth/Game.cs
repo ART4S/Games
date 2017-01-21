@@ -35,12 +35,14 @@ namespace Labyrinth
 
         public int UsedCellsCounter { get; private set; }
 
+        public State GameState { get; private set; }
+
         public Game(char[,] gameField, int height, int width, Mode mode)
         {
             this.height = height;
             this.width = width;
             this.mode = mode;
-
+            
             defaultGameField = new Terrain[height, width];
 
             for (int i = 0; i < height; i++)
@@ -158,6 +160,8 @@ namespace Labyrinth
 
         public void Move(Direction direction)
         {
+            GameState = State.NotFinished;
+
             if (MoveHumanPoint(direction))
                 MoveMinotaurPoint();
         }
@@ -178,13 +182,17 @@ namespace Labyrinth
 
             if (nextPoint == exitPoint)
             {
-                Restart(); // won
+                GameState = State.Win;
+                Restart();
+
                 return false;
             }
 
             if (nextPoint == minotaurPoint)
             {
-                Restart(); // lose
+                GameState = State.Lose;
+                Restart();
+
                 return false;
             }
 
@@ -234,7 +242,9 @@ namespace Labyrinth
 
             if (minotaurPoint == humanPoint)
             {
-                Restart(); // lose
+                GameState = State.Lose;
+                Restart();
+
                 return;
             }
 

@@ -46,46 +46,46 @@ namespace Labyrinth
             return result;
         }
 
-        private void ShiftDown(int i)
+        private void ShiftDown(int index)
         {
-            int leftChild = 2 * i + 1;
-            int rightChild = 2 * i + 2;
+            int leftChildIndex = 2 * index + 1;
+            int rightChildIndex = 2 * index + 2;
 
-            if (leftChild < Count && comparer.Compare(heap[i], heap[leftChild]) > 0)
+            if (leftChildIndex < Count && comparer.Compare(heap[index], heap[leftChildIndex]) > 0)
             {
-                Swap(i, leftChild);
-                ShiftDown(leftChild);
+                Swap(index, leftChildIndex);
+                ShiftDown(leftChildIndex);
             }
 
-            if (rightChild < Count && comparer.Compare(heap[i], heap[rightChild]) > 0)
+            if (rightChildIndex < Count && comparer.Compare(heap[index], heap[rightChildIndex]) > 0)
             {
-                Swap(i, rightChild);
-                ShiftDown(rightChild);
-            }
-        }
-
-        private void ShiftUp(int i)
-        {
-            int parent = (i - 1) / 2;
-
-            if (i > 0 && comparer.Compare(heap[i], heap[parent]) < 0)
-            {
-                Swap(i, parent);
-                ShiftUp(parent);
+                Swap(index, rightChildIndex);
+                ShiftDown(rightChildIndex);
             }
         }
 
-        private void Swap(int i, int j)
+        private void ShiftUp(int index)
         {
-            TValue tempHeap = heap[i];
+            int parentIndex = (index - 1) / 2;
 
-            heap[i] = heap[j];
-            heap[j] = tempHeap;
+            if (index > 0 && comparer.Compare(heap[index], heap[parentIndex]) < 0)
+            {
+                Swap(index, parentIndex);
+                ShiftUp(parentIndex);
+            }
+        }
 
-            TKey tempKeys = keys[i];
+        private void Swap(int leftIndex, int rightIndex)
+        {
+            TValue tempHeap = heap[leftIndex];
 
-            keys[i] = keys[j];
-            keys[j] = tempKeys;
+            heap[leftIndex] = heap[rightIndex];
+            heap[rightIndex] = tempHeap;
+
+            TKey tempKeys = keys[leftIndex];
+
+            keys[leftIndex] = keys[rightIndex];
+            keys[rightIndex] = tempKeys;
         }
     }
 }

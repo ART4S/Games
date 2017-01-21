@@ -71,11 +71,11 @@ namespace Labyrinth.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Лучший результат: .
+        ///   Ищет локализованную строку, похожую на Текущий режим: .
         /// </summary>
-        internal static string bestScoreText {
+        internal static string currentModeText {
             get {
-                return ResourceManager.GetString("bestScoreText", resourceCulture);
+                return ResourceManager.GetString("currentModeText", resourceCulture);
             }
         }
         
@@ -102,7 +102,7 @@ namespace Labyrinth.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Пройденные клетки: .
+        ///   Ищет локализованную строку, похожую на Клеток посещено: .
         /// </summary>
         internal static string usedCellsCounterText {
             get {

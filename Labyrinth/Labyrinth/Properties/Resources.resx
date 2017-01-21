@@ -121,8 +121,8 @@
     <value>Разработчки: ART4S, SemikX
 Год: 2017</value>
   </data>
-  <data name="bestScoreText" xml:space="preserve">
-    <value>Лучший результат: </value>
+  <data name="currentModeText" xml:space="preserve">
+    <value>Текущий режим: </value>
   </data>
   <data name="rulesText" xml:space="preserve">
     <value>Доберись до выхода из лабиринта избегая встречи с минотавром.
@@ -141,6 +141,6 @@ H - человек
 Дерево - минотавр проходит за два хода и превращает в тропинку, человек пройти не может</value>
   </data>
   <data name="usedCellsCounterText" xml:space="preserve">
-    <value>Пройденные клетки: </value>
+    <value>Клеток посещено: </value>
   </data>
 </root>

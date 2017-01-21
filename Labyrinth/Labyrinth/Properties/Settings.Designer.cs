@@ -23,12 +23,37 @@ namespace Labyrinth.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int bestScore {
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>В следующий раз сделай уровень полегче!</string>
+  <string>Может лучше убрать минотавра?</string>
+  <string>Тебя обыграл какой-то компьютер...</string>
+  <string>Зачем ты вообще играешь против того, кого не в силах обыграть?</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection loseMessages {
             get {
-                return ((int)(this["bestScore"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["loseMessages"]));
+            }
+            set {
+                this["loseMessages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>Тебе просто повезло</string>
+  <string>Тебя бы на такую стартовую позицию поставить...</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection wonMessages {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["wonMessages"]));
+            }
+            set {
+                this["wonMessages"] = value;
             }
         }
     }

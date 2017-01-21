@@ -2,8 +2,21 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Labyrinth.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="bestScore" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="loseMessages" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;В следующий раз сделай уровень полегче!&lt;/string&gt;
+  &lt;string&gt;Может лучше убрать минотавра?&lt;/string&gt;
+  &lt;string&gt;Тебя обыграл какой-то компьютер...&lt;/string&gt;
+  &lt;string&gt;Зачем ты вообще играешь против того, кого не в силах обыграть?&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="wonMessages" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;Тебе просто повезло&lt;/string&gt;
+  &lt;string&gt;Тебя бы на такую стартовую позицию поставить...&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

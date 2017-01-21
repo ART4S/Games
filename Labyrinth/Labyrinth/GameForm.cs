@@ -9,7 +9,7 @@ namespace Labyrinth
 {
     public partial class GameForm : Form
     {
-        private const int CellSize = 30;
+        private const int CellSize = 25;
 
         private readonly char[,] gameField;
 
@@ -23,7 +23,7 @@ namespace Labyrinth
         {
             InitializeComponent();
 
-            currentMode = Mode.Hard;
+            currentMode = Mode.EazyCrazy;
 
             StreamReader reader = new StreamReader(Application.StartupPath + "\\Labyrinth.txt");
 
@@ -31,7 +31,6 @@ namespace Labyrinth
 
             gameFieldHeight = read[0];
             gameFieldWidth = read[1];
-
             gameField = new char[gameFieldHeight, gameFieldWidth];
 
             for (int i = 0; i < gameFieldHeight; ++i)
@@ -56,9 +55,19 @@ namespace Labyrinth
             pictureBoxGameField.Size = new Size(gameFieldWidth * CellSize, gameFieldHeight * CellSize);
 
             labelVisitedСells.Location = new System.Drawing.Point(pictureBoxGameField.Location.X + pictureBoxGameField.Width + indent, pictureBoxGameField.Location.Y);
-            labelBestScore.Location = new System.Drawing.Point(labelVisitedСells.Location.X, labelVisitedСells.Location.Y + labelVisitedСells.Height + indent);
+            labelCurrentMode.Location = new System.Drawing.Point(labelVisitedСells.Location.X, labelVisitedСells.Location.Y + labelVisitedСells.Height + indent);
 
-            ClientSize = new Size(4 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
+            ClientSize = new Size(6 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
+        }
+
+        private void Start()
+        {
+            game = new Game(gameField, gameFieldHeight, gameFieldWidth, currentMode);
+
+            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+            labelCurrentMode.Text = Resources.currentModeText + currentMode.ToRussianString();
+
+            pictureBoxGameField.Refresh();
         }
 
         private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
@@ -91,7 +100,31 @@ namespace Labyrinth
 
             pictureBoxGameField.Refresh();
 
-            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+            Random random = new Random();
+            string loseMessage = Settings.Default.loseMessages[random.Next(Settings.Default.loseMessages.Count)];
+            string wonMessage = Settings.Default.wonMessages[random.Next(Settings.Default.wonMessages.Count)];
+
+            switch (game.GameState)
+            {
+                case State.NotFinished:
+                    labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+                    break;
+
+                case State.Win:
+                    MessageBox.Show(wonMessage, @"Победа");
+                    Start();
+                    break;
+
+                case State.Lose:
+                    MessageBox.Show(loseMessage, @"Поражение");
+                    Start();
+                    break;
+            }
+        }
+
+        private void labelNewGame_Click(object sender, EventArgs e)
+        {
+            Start();
         }
 
         private void labelAboutGame_Click(object sender, EventArgs e)
@@ -104,14 +137,28 @@ namespace Labyrinth
             MessageBox.Show(Resources.rulesText, @"Правила");
         }
 
-        private void Start()
+        private void labelEazyCrazy_Click(object sender, EventArgs e)
         {
-            game = new Game(gameField, gameFieldHeight, gameFieldWidth, currentMode);
+            currentMode = Mode.EazyCrazy;
+            Start();
+        }
 
-            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
-            labelBestScore.Text = Resources.bestScoreText + Settings.Default.bestScore.ToString();
+        private void labelEazy_Click(object sender, EventArgs e)
+        {
+            currentMode = Mode.Eazy;
+            Start();
+        }
 
-            pictureBoxGameField.Refresh();
+        private void labelNormal_Click(object sender, EventArgs e)
+        {
+            currentMode = Mode.Normal;
+            Start();
+        }
+
+        private void labelHard_Click(object sender, EventArgs e)
+        {
+            currentMode = Mode.Hard;
+            Start();
         }
     }
 }
