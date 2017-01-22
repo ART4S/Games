@@ -6,12 +6,10 @@ using System.Windows.Forms;
 
 namespace Labyrinth
 {
-    public delegate void myDelegate();
-
     public class Game
     {
-        public event EventHandler<EventArgs> VictoryEvent;
-        public event EventHandler<EventArgs> LoseEvent;
+        private const int MaxPenalty = int.MaxValue;
+        private const int MinPenalty = 1;
 
         private readonly int height;
         private readonly int width;
@@ -26,9 +24,6 @@ namespace Labyrinth
         private readonly Dictionary<Terrain, int> minotaurPenaltiesTable;
         private readonly Dictionary<Terrain, int> humanPenaltiesTable;
 
-        private const int maxPenalty = int.MaxValue;
-        private const int minPenalty = 1;
-
         private int humanPenalty;
         private int minotaurPenalty;
 
@@ -40,6 +35,9 @@ namespace Labyrinth
         private Point humanPoint;
 
         public int UsedCellsCounter { get; private set; }
+
+        public event EventHandler<EventArgs> VictoryEvent;
+        public event EventHandler<EventArgs> LoseEvent;
 
         public Game(char[,] gameField, int height, int width, Mode mode)
         {
@@ -89,20 +87,20 @@ namespace Labyrinth
 
             humanPenaltiesTable = new Dictionary<Terrain, int>()
             {
-                {Terrain.Empty, minPenalty},
-                {Terrain.Water, minPenalty + 1},
-                {Terrain.Tree, maxPenalty},
-                {Terrain.Wall, maxPenalty},
-                {Terrain.Exit, minPenalty}
+                {Terrain.Empty, MinPenalty},
+                {Terrain.Water, MinPenalty + 1},
+                {Terrain.Tree, MaxPenalty},
+                {Terrain.Wall, MaxPenalty},
+                {Terrain.Exit, MinPenalty}
             };
 
             minotaurPenaltiesTable = new Dictionary<Terrain, int>()
             {
-                {Terrain.Empty, minPenalty},
-                {Terrain.Tree, minPenalty + 1},
-                {Terrain.Water, maxPenalty},
-                {Terrain.Wall, maxPenalty},
-                {Terrain.Exit, minPenalty}
+                {Terrain.Empty, MinPenalty},
+                {Terrain.Tree, MinPenalty + 1},
+                {Terrain.Water, MaxPenalty},
+                {Terrain.Wall, MaxPenalty},
+                {Terrain.Exit, MinPenalty}
             };
 
             Restart();
@@ -119,7 +117,6 @@ namespace Labyrinth
                 {
                     RectangleF rectangleForDrawingDot = new RectangleF(j * cellSize + cellSize / 2 - 2, i * cellSize + cellSize / 2 - 2, 5, 5);
                     RectangleF currentRectangle = new RectangleF(j * cellSize, i * cellSize, cellSize, cellSize);
-
                     Point currentPoint = new Point(i, j);
 
                     switch (gameField[i, j])
@@ -174,19 +171,20 @@ namespace Labyrinth
             Point nextPoint = humanPoint + direction.ToPoint();
             Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
 
-            if (humanPenalty != minPenalty)
+            if (humanPenalty != MinPenalty)
             {
                 humanPenalty--;
                 return true;
             }
 
-            if (humanPenaltiesTable[nextPointType] == maxPenalty)
+            if (humanPenaltiesTable[nextPointType] == MaxPenalty)
                 return false;
 
             if (nextPoint == exitPoint)
             {
                 Restart();
                 VictoryEvent(this, EventArgs.Empty);
+
                 return false;
             }
 
@@ -194,6 +192,7 @@ namespace Labyrinth
             {
                 Restart();
                 LoseEvent(this, EventArgs.Empty);
+
                 return false;
             }
 
@@ -211,16 +210,17 @@ namespace Labyrinth
 
         private void MoveMinotaurPoint()
         {
-            if (minotaurPenalty != minPenalty)
+            if (minotaurPenalty != MinPenalty)
             {
                 if (gameField[minotaurPoint.X, minotaurPoint.Y] == Terrain.Tree)
                     gameField[minotaurPoint.X, minotaurPoint.Y] = Terrain.Empty;
 
                 minotaurPenalty--;
+
                 return;
             }
 
-            var pathfinder = new Pathfinder(gameField, maxPenalty);
+            var pathfinder = new Pathfinder(gameField, MaxPenalty);
 
             switch (mode)
             {
@@ -243,8 +243,9 @@ namespace Labyrinth
 
             if (minotaurPoint == humanPoint)
             {
-                Restart(); // lose
+                Restart();
                 LoseEvent(this, EventArgs.Empty);
+
                 return;
             }
 
@@ -262,8 +263,8 @@ namespace Labyrinth
             humanPoint = humanDefaultPoint;
             minotaurPoint = minotaurDefaultPoint;
 
-            humanPenalty = minPenalty;
-            minotaurPenalty = minPenalty;
+            humanPenalty = MinPenalty;
+            minotaurPenalty = MinPenalty;
 
             humanUsedCells = new bool[height, width];
 
