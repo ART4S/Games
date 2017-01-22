@@ -178,8 +178,6 @@ namespace Labyrinth
 
         public void Move(Direction direction)
         {
-            pathMinMinotaur.Clear();
-            pathMinHuman.Clear();
             GameState = State.NotFinished;
 
             if (MoveHumanPoint(direction))

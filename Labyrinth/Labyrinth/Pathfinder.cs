@@ -127,15 +127,15 @@ namespace Labyrinth
             return RecoveryPathBetweenPoints(savePaths, firstPoint, secondPoint);
         }
 
-        public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> weigthsTableFirstPoint, Dictionary<Terrain, int> weigthsTableSecondPoint, Point firstPoint, Point secondPoint, Point secondPointFinish)
+        public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> firstPointWeigthsTable, Dictionary<Terrain, int> secondPointWeigthsTable, Point firstPoint, Point secondPoint, Point secondPointFinish)
         {
-            List<Point> minPathSecondPoint = FindPathWithDijkstra(weigthsTableSecondPoint, secondPoint, secondPointFinish);
+            List<Point> minPathSecondPoint = FindPathWithDijkstra(secondPointWeigthsTable, secondPoint, secondPointFinish);
 
             if (!minPathSecondPoint.Contains(secondPoint))
                 minPathSecondPoint.Add(secondPoint);
 
             if (minPathSecondPoint.Any(point => point == firstPoint))
-                return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, secondPoint);
+                return FindPathWithDijkstra(firstPointWeigthsTable, firstPoint, secondPoint);
 
             var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
@@ -149,7 +149,7 @@ namespace Labyrinth
             while (heap.Any())
             {
                 Point currentPoint = heap.Pop();
-                int currentPointWeight = weigthsTableFirstPoint[terrainsMap[currentPoint.X, currentPoint.Y]];
+                int currentPointWeight = firstPointWeigthsTable[terrainsMap[currentPoint.X, currentPoint.Y]];
 
                 usedCells.Add(currentPoint);
 
@@ -157,7 +157,7 @@ namespace Labyrinth
                 {
                     Point newPoint = currentPoint + direction;
 
-                    if (weigthsTableFirstPoint[terrainsMap[newPoint.X, newPoint.Y]] == maxWeigths)
+                    if (firstPointWeigthsTable[terrainsMap[newPoint.X, newPoint.Y]] == maxWeigths)
                         continue;
 
                     if (!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight)
@@ -183,7 +183,7 @@ namespace Labyrinth
                 }
             }
 
-            return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, minPointOnPathSecondPoint);
+            return FindPathWithDijkstra(firstPointWeigthsTable, firstPoint, minPointOnPathSecondPoint);
         }
 
         private List<Point> RecoveryPathBetweenPoints(Dictionary<Point, Point> savePaths, Point firstPoint, Point secondPoint)
