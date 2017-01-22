@@ -10,43 +10,34 @@ namespace Labyrinth
     public partial class GameForm : Form
     {
         private const int CellSize = 20;
-
-        private readonly char[,] gameField;
-
-        private readonly int gameFieldHeight;
-        private readonly int gameFieldWidth;
-
         private Game game;
-        private Mode currentMode;
 
         public GameForm()
         {
             InitializeComponent();
 
-            currentMode = Mode.EazyCrazy;
-
             StreamReader reader = new StreamReader(Application.StartupPath + "\\Labyrinth.txt");
 
             int[] read = reader.ReadLine().Split().Select(int.Parse).ToArray();
 
-            gameFieldHeight = read[0];
-            gameFieldWidth = read[1];
+            int height = read[0];
+            int width = read[1];
 
-            gameField = new char[gameFieldHeight, gameFieldWidth];
+            char[,] gameField = new char[height, width];
 
-            for (int i = 0; i < gameFieldHeight; ++i)
+            for (int i = 0; i < height; ++i)
             {
                 string line = reader.ReadLine();
 
-                for (int j = 0; j < gameFieldWidth; ++j)
+                for (int j = 0; j < width; ++j)
                     gameField[i, j] = line[j];
             }
-
-            SetSizesElementsInForm();
-            Start();
+                     
+            SetSizesElementsInForm(height, width);
+            Start(gameField, height, width);
         }
 
-        private void SetSizesElementsInForm()
+        private void SetSizesElementsInForm(int gameFieldHeight, int gameFieldWidth)
         {
             const int indent = 16;
 
@@ -61,16 +52,22 @@ namespace Labyrinth
             ClientSize = new Size(7 * indent + pictureBoxGameField.Width + labelVisitedСells.Width, 2 * indent + pictureBoxGameField.Height + menuStrip.Height);
         }
 
-        private void Start()
+        private void Start(char[,] gameField, int gameFieldHeight, int gameFieldWidth)
         {
-            game = new Game(gameField, gameFieldHeight, gameFieldWidth, currentMode);
+            game = new Game(gameField, gameFieldHeight, gameFieldWidth, Mode.EazyCrazy);
 
             game.VictoryEvent += GameOnVictoryEvent;
             game.LoseEvent += GameOnLoseEvent;
 
-            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
-            labelCurrentMode.Text = Resources.currentModeText + currentMode.ToRussianString();
+            labelsInfoRefresh();
+            pictureBoxGameField.Refresh();
+        }
 
+        private void Restart(Mode mode)
+        {
+            game.Restart(mode);
+
+            labelsInfoRefresh();
             pictureBoxGameField.Refresh();
         }
 
@@ -97,9 +94,8 @@ namespace Labyrinth
                 default: return;
             }
 
+            labelsInfoRefresh();
             pictureBoxGameField.Refresh();
-
-            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
         }
 
         private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
@@ -109,7 +105,7 @@ namespace Labyrinth
 
         private void labelNewGame_Click(object sender, EventArgs e)
         {
-            Start();
+            Restart(game.Mode);
         }
 
         private void labelAboutGame_Click(object sender, EventArgs e)
@@ -124,30 +120,22 @@ namespace Labyrinth
 
         private void labelEazyCrazy_Click(object sender, EventArgs e)
         {
-            currentMode = Mode.EazyCrazy;
-
-            Start();
+            Restart(Mode.EazyCrazy);
         }
 
         private void labelEazy_Click(object sender, EventArgs e)
         {
-            currentMode = Mode.Eazy;
-
-            Start();
+            Restart(Mode.Eazy);
         }
 
         private void labelNormal_Click(object sender, EventArgs e)
         {
-            currentMode = Mode.Normal;
-
-            Start();
+            Restart(Mode.Normal);
         }
 
         private void labelHard_Click(object sender, EventArgs e)
         {
-            currentMode = Mode.Hard;
-
-            Start();
+            Restart(Mode.Hard);
         }
 
         private void GameOnLoseEvent(object sender, EventArgs eventArgs)
@@ -156,7 +144,7 @@ namespace Labyrinth
 
             MessageBox.Show(loseMessage, @"Поражение");
 
-            Start();
+            Restart(game.Mode);
         }
 
         private void GameOnVictoryEvent(object sender, EventArgs eventArgs)
@@ -165,7 +153,13 @@ namespace Labyrinth
 
             MessageBox.Show(wonMessage, @"Победа");
 
-            Start();
+            Restart(game.Mode);
+        }
+
+        private void labelsInfoRefresh()
+        {
+            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+            labelCurrentMode.Text = Resources.currentModeText + game.Mode.ToRussianString();
         }
     }
 }

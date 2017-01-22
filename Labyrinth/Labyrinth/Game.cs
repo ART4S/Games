@@ -14,8 +14,6 @@ namespace Labyrinth
         private readonly int height;
         private readonly int width;
 
-        private readonly Mode mode;
-
         private readonly Terrain[,] defaultGameField;
         private Terrain[,] gameField;
 
@@ -34,6 +32,7 @@ namespace Labyrinth
         private Point minotaurPoint;
         private Point humanPoint;
 
+        public Mode Mode { get; private set; }
         public int UsedCellsCounter { get; private set; }
 
         public event EventHandler<EventArgs> VictoryEvent;
@@ -43,8 +42,7 @@ namespace Labyrinth
         {
             this.height = height;
             this.width = width;
-            this.mode = mode;
-            
+         
             defaultGameField = new Terrain[height, width];
 
             for (int i = 0; i < height; i++)
@@ -103,7 +101,29 @@ namespace Labyrinth
                 {Terrain.Exit, MinPenalty}
             };
 
-            Restart();
+            Restart(mode);
+        }
+
+        public void Restart(Mode mode)
+        {
+            Mode = mode;
+
+            gameField = new Terrain[height, width];
+
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
+                    gameField[i, j] = defaultGameField[i, j];
+
+            humanPoint = humanDefaultPoint;
+            minotaurPoint = minotaurDefaultPoint;
+
+            humanPenalty = MinPenalty;
+            minotaurPenalty = MinPenalty;
+
+            humanUsedCells = new bool[height, width];
+
+            humanUsedCells[humanPoint.X, humanPoint.Y] = true;
+            UsedCellsCounter = 1;
         }
 
         public void Paint(PaintEventArgs e, int cellSize)
@@ -182,7 +202,7 @@ namespace Labyrinth
 
             if (nextPoint == exitPoint)
             {
-                Restart();
+                Restart(Mode);
                 VictoryEvent(this, EventArgs.Empty);
 
                 return false;
@@ -190,7 +210,7 @@ namespace Labyrinth
 
             if (nextPoint == minotaurPoint)
             {
-                Restart();
+                Restart(Mode);
                 LoseEvent(this, EventArgs.Empty);
 
                 return false;
@@ -199,7 +219,7 @@ namespace Labyrinth
             humanPoint = nextPoint;
             humanPenalty = humanPenaltiesTable[nextPointType];
 
-            if (humanUsedCells[humanPoint.X, humanPoint.Y] == false)
+            if (!humanUsedCells[humanPoint.X, humanPoint.Y])
             {
                 humanUsedCells[humanPoint.X, humanPoint.Y] = true;
                 UsedCellsCounter++;
@@ -222,7 +242,7 @@ namespace Labyrinth
 
             var pathfinder = new Pathfinder(gameField, MaxPenalty);
 
-            switch (mode)
+            switch (Mode)
             {
                 case Mode.EazyCrazy:
                     minotaurPoint = pathfinder.FindPathWithDfs(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
@@ -241,38 +261,18 @@ namespace Labyrinth
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                    throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null);
             }
 
             if (minotaurPoint == humanPoint)
             {
-                Restart();
+                Restart(Mode);
                 LoseEvent(this, EventArgs.Empty);
 
                 return;
             }
 
             minotaurPenalty = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
-        }
-
-        private void Restart()
-        {
-            gameField = new Terrain[height, width];
-
-            for (int i = 0; i < height; i++)
-                for (int j = 0; j < width; j++)
-                    gameField[i, j] = defaultGameField[i, j];
-
-            humanPoint = humanDefaultPoint;
-            minotaurPoint = minotaurDefaultPoint;
-
-            humanPenalty = MinPenalty;
-            minotaurPenalty = MinPenalty;
-
-            humanUsedCells = new bool[height, width];
-
-            humanUsedCells[humanPoint.X, humanPoint.Y] = true;
-            UsedCellsCounter = 1;
         }
     }
 }
