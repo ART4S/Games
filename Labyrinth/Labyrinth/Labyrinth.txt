@@ -1,10 +1,10 @@
 9 9
 XXXXXXXXX
-X      HX
-XWWWWWWWX
-XWWWWWWWX
-X       X
-X       X
-X       X
-X M    QX
+X   W  HX
+X TTTTT X
+X TT  T X
+X TTMTT X
+X TTTTT X
+X TTTTT X
+X      QX
 XXXXXXXXX

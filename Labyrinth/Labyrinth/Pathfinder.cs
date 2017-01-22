@@ -127,47 +127,15 @@ namespace Labyrinth
             return RecoveryPathBetweenPoints(savePaths, firstPoint, secondPoint);
         }
 
-        //public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> weigthsTableFirstPoint, Dictionary<Terrain, int> weigthsTableSecondPoint, Point firstPoint, Point secondPointStart, Point secondPointFinish)
-        //{
-        //    List<Point> minPathSecondPoint = FindPathWithDijkstra(weigthsTableSecondPoint, secondPointStart, secondPointFinish);
-
-        //    if (!minPathSecondPoint.Contains(secondPointStart))
-        //        minPathSecondPoint.Add(secondPointStart);
-
-        //    if (minPathSecondPoint.Any(point => point == firstPoint))
-        //        return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, secondPointStart);
-
-        //    var minPathToMinPathSecondPoint = new List<Point>() { firstPoint };
-        //    var minSumWeigths = int.MaxValue;
-
-        //    foreach (var point in minPathSecondPoint)
-        //    {
-        //        if (weigthsTableFirstPoint[terrainsMap[point.X, point.Y]] == maxWeigths)
-        //            continue;
-
-        //        List<Point> minPathToPointInPathSecondPoint = FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, point);
-
-        //        int sumWeigths = minPathToPointInPathSecondPoint.Sum(p => weigthsTableFirstPoint[terrainsMap[p.X, p.Y]]);
-
-        //        if (sumWeigths < minSumWeigths)
-        //        {
-        //            minSumWeigths = sumWeigths;
-        //            minPathToMinPathSecondPoint = minPathToPointInPathSecondPoint;
-        //        }
-        //    }
-
-        //    return minPathToMinPathSecondPoint;
-        //}
-
-        public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> weigthsTableFirstPoint, Dictionary<Terrain, int> weigthsTableSecondPoint, Point firstPoint, Point secondPointStart, Point secondPointFinish)
+        public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> weigthsTableFirstPoint, Dictionary<Terrain, int> weigthsTableSecondPoint, Point firstPoint, Point secondPoint, Point secondPointFinish)
         {
-            List<Point> minPathSecondPoint = FindPathWithDijkstra(weigthsTableSecondPoint, secondPointStart, secondPointFinish);
+            List<Point> minPathSecondPoint = FindPathWithDijkstra(weigthsTableSecondPoint, secondPoint, secondPointFinish);
 
-            if (!minPathSecondPoint.Contains(secondPointStart))
-                minPathSecondPoint.Add(secondPointStart);
+            if (!minPathSecondPoint.Contains(secondPoint))
+                minPathSecondPoint.Add(secondPoint);
 
             if (minPathSecondPoint.Any(point => point == firstPoint))
-                return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, secondPointStart);
+                return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, secondPoint);
 
             var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
@@ -203,19 +171,19 @@ namespace Labyrinth
                 }
             }
 
-            int minWeigths = int.MaxValue;
-            Point minPoint = firstPoint;
+            int minDistanceToPathSecondPoint = int.MaxValue;
+            Point minPointOnPathSecondPoint = secondPoint;
 
             foreach (Point point in minPathSecondPoint)
             {
-                if (distanceTo.ContainsKey(point) && minWeigths > distanceTo[point])
+                if (distanceTo.ContainsKey(point) && minDistanceToPathSecondPoint > distanceTo[point])
                 {
-                    minWeigths = distanceTo[point];
-                    minPoint = point;
+                    minDistanceToPathSecondPoint = distanceTo[point];
+                    minPointOnPathSecondPoint = point;
                 }
             }
 
-            return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, minPoint);
+            return FindPathWithDijkstra(weigthsTableFirstPoint, firstPoint, minPointOnPathSecondPoint);
         }
 
         private List<Point> RecoveryPathBetweenPoints(Dictionary<Point, Point> savePaths, Point firstPoint, Point secondPoint)

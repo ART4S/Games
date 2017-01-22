@@ -131,8 +131,8 @@ namespace Labyrinth
                         case Terrain.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
 
-                            if (humanUsedCells[i, j] && currentPoint != humanPoint)
-                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            //if (humanUsedCells[i, j] && currentPoint != humanPoint)
+                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
 
@@ -256,9 +256,8 @@ namespace Labyrinth
                     break;
 
                 case Mode.Hard:
-                    var minPath = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint);
-                    minotaurPoint = minPath.First();
-                    pathMinMinotaur = minPath;
+                    minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
+                    pathMinMinotaur = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint);
                     pathMinHuman = pathfinder.FindPathWithDijkstra(humanPenaltiesTable, humanPoint, exitPoint);
                     break;
             }
