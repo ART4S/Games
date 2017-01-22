@@ -1,22 +1,10 @@
-21 21
-XXXXXXXXXXXXXXXXXXXXX
-XH  T   X   T   W   X
-XWX W T W T W W XXT X
-X X T T   T   T     X
-X T X XWWWXXXXTXTXX X
-X   W   W   W       X
-X XWT X T W WTTXW TWX
-X X   T   X     W   X
-X XTW WWTTTTT W TWW X
-X   W T  M  T X T   X
-XXT XXW TXT WXX X TXX
-X X     W T     T X X
-X WTXWTXW XWWTWTT T X
-X   X         T X W X
-XXW W WTX XTT X T X X
-X   W   T W   X X X X
-X XWXTX X WTW T W W X
-X       T   X   W   X
-X XTTXTTXWX TWXWXTW X
-X         T        QX
-XXXXXXXXXXXXXXXXXXXXX
+9 9
+XXXXXXXXX
+X      HX
+XWWWWWWWX
+XWWWWWWWX
+X       X
+X       X
+X       X
+X M    QX
+XXXXXXXXX

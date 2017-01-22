@@ -38,6 +38,8 @@ namespace Labyrinth
         private readonly Point exitPoint;
         private Point minotaurPoint;
         private Point humanPoint;
+        private List<Point> pathMinHuman = new List<Point>();
+        private List<Point> pathMinMinotaur = new List<Point>();
 
         public int UsedCellsCounter { get; private set; }
 
@@ -143,8 +145,8 @@ namespace Labyrinth
                             break;
 
                         case Terrain.Empty:
-                            if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
-                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            //if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
+                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
@@ -163,10 +165,21 @@ namespace Labyrinth
 
             for (int j = 0; j <= width; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, height * cellSize);
+
+            foreach (var point in pathMinHuman)
+            {
+                e.Graphics.FillEllipse(Brushes.Green, new RectangleF(point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5));
+            }
+            foreach (var point in pathMinMinotaur)
+            {
+                e.Graphics.FillEllipse(Brushes.Red, new RectangleF(point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5));
+            }
         }
 
         public void Move(Direction direction)
         {
+            pathMinMinotaur.Clear();
+            pathMinHuman.Clear();
             GameState = State.NotFinished;
 
             if (MoveHumanPoint(direction))
@@ -243,7 +256,10 @@ namespace Labyrinth
                     break;
 
                 case Mode.Hard:
-                    minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
+                    var minPath = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint);
+                    minotaurPoint = minPath.First();
+                    pathMinMinotaur = minPath;
+                    pathMinHuman = pathfinder.FindPathWithDijkstra(humanPenaltiesTable, humanPoint, exitPoint);
                     break;
             }
 
