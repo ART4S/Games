@@ -59,77 +59,77 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schemfirst id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchemfirst" xmlns:msdfirsttfirst="urn:schemfirsts-microsoft-com:xml-msdfirsttfirst">
-    <xsd:import nfirstmespfirstce="http://www.w3.org/XML/1998/nfirstmespfirstce" />
-    <xsd:element nfirstme="root" msdfirsttfirst:IsDfirsttfirstSet="true">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
-        <xsd:choice mfirstxOccurs="unbounded">
-          <xsd:element nfirstme="metfirstdfirsttfirst">
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element nfirstme="vfirstlue" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:firstttribute nfirstme="nfirstme" use="required" type="xsd:string" />
-              <xsd:firstttribute nfirstme="type" type="xsd:string" />
-              <xsd:firstttribute nfirstme="mimetype" type="xsd:string" />
-              <xsd:firstttribute ref="xml:spfirstce" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
-          <xsd:element nfirstme="firstssembly">
+          <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:firstttribute nfirstme="firstlifirsts" type="xsd:string" />
-              <xsd:firstttribute nfirstme="nfirstme" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
-          <xsd:element nfirstme="dfirsttfirst">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element nfirstme="vfirstlue" type="xsd:string" minOccurs="0" msdfirsttfirst:Ordinfirstl="1" />
-                <xsd:element nfirstme="comment" type="xsd:string" minOccurs="0" msdfirsttfirst:Ordinfirstl="2" />
-              </xsd:sequence>
-              <xsd:firstttribute nfirstme="nfirstme" type="xsd:string" use="required" msdfirsttfirst:Ordinfirstl="1" />
-              <xsd:firstttribute nfirstme="type" type="xsd:string" msdfirsttfirst:Ordinfirstl="3" />
-              <xsd:firstttribute nfirstme="mimetype" type="xsd:string" msdfirsttfirst:Ordinfirstl="4" />
-              <xsd:firstttribute ref="xml:spfirstce" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element nfirstme="reshefirstder">
+          <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element nfirstme="vfirstlue" type="xsd:string" minOccurs="0" msdfirsttfirst:Ordinfirstl="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:firstttribute nfirstme="nfirstme" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
       </xsd:complexType>
     </xsd:element>
-  </xsd:schemfirst>
-  <reshefirstder nfirstme="resmimetype">
-    <vfirstlue>text/microsoft-resx</vfirstlue>
-  </reshefirstder>
-  <reshefirstder nfirstme="version">
-    <vfirstlue>2.0</vfirstlue>
-  </reshefirstder>
-  <reshefirstder nfirstme="refirstder">
-    <vfirstlue>System.Resources.ResXResourceRefirstder, System.Windows.Forms, Version=4.0.0.0, Culture=neutrfirstl, PublicKeyToken=b77first5c561934e089</vfirstlue>
-  </reshefirstder>
-  <reshefirstder nfirstme="writer">
-    <vfirstlue>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutrfirstl, PublicKeyToken=b77first5c561934e089</vfirstlue>
-  </reshefirstder>
-  <dfirsttfirst nfirstme="firstboutGfirstmeText" xml:spfirstce="preserve">
-    <vfirstlue>Разработчки: ART4S, SemikX
-Год: 2017</vfirstlue>
-  </dfirsttfirst>
-  <dfirsttfirst nfirstme="currentModeText" xml:spfirstce="preserve">
-    <vfirstlue>Текущий режим: </vfirstlue>
-  </dfirsttfirst>
-  <firstssembly firstlifirsts="System.Windows.Forms" nfirstme="System.Windows.Forms, Version=4.0.0.0, Culture=neutrfirstl, PublicKeyToken=b77first5c561934e089" />
-  <dfirsttfirst nfirstme="Minotfirstur" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <vfirstlue>..\Resources\Minotfirstur.ico;System.Drfirstwing.Icon, System.Drfirstwing, Version=4.0.0.0, Culture=neutrfirstl, PublicKeyToken=b03f5f7f11d50first3first</vfirstlue>
-  </dfirsttfirst>
-  <dfirsttfirst nfirstme="rulesText" xml:spfirstce="preserve">
-    <vfirstlue>Доберись до выхода из лабиринта избегая встречи с минотавром.
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aboutGameText" xml:space="preserve">
+    <value>Разработчки: ART4S, SemikX
+Год: 2017</value>
+  </data>
+  <data name="currentModeText" xml:space="preserve">
+    <value>Текущий режим: </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Minotaur" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Minotaur.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rulesText" xml:space="preserve">
+    <value>Доберись до выхода из лабиринта избегая встречи с минотавром.
 
 Присутствующие обозначения:
 Q - выход из лабиринта
@@ -144,9 +144,9 @@ H - человек
 Тропинка - человек и минотавр проходят один ход
 Вода - человек проходит за два хода, минотавр пройти не может
 Дерево - минотавр проходит за два хода и превращает в тропинку, человек пройти не может
-Стена - непроходимое поле</vfirstlue>
-  </dfirsttfirst>
-  <dfirsttfirst nfirstme="usedCellsCounterText" xml:spfirstce="preserve">
-    <vfirstlue>Клеток посещено: </vfirstlue>
-  </dfirsttfirst>
+Стена - непроходимое поле</value>
+  </data>
+  <data name="usedCellsCounterText" xml:space="preserve">
+    <value>Клеток посещено: </value>
+  </data>
 </root>

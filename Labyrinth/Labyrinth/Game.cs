@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 namespace Labyrinth
@@ -11,7 +10,8 @@ namespace Labyrinth
 
     public class Game
     {
-        public event myDelegate victoryEvent;
+        public event EventHandler<EventArgs> VictoryEvent;
+        public event EventHandler<EventArgs> LoseEvent;
 
         private readonly int height;
         private readonly int width;
@@ -38,12 +38,8 @@ namespace Labyrinth
         private readonly Point exitPoint;
         private Point minotaurPoint;
         private Point humanPoint;
-        private List<Point> pathMinHuman = new List<Point>();
-        private List<Point> pathMinMinotaur = new List<Point>();
 
         public int UsedCellsCounter { get; private set; }
-
-        public State GameState { get; private set; }
 
         public Game(char[,] gameField, int height, int width, Mode mode)
         {
@@ -131,8 +127,8 @@ namespace Labyrinth
                         case Terrain.Water:
                             e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
 
-                            //if (humanUsedCells[i, j] && currentPoint != humanPoint)
-                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            if (humanUsedCells[i, j] && currentPoint != humanPoint)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
 
@@ -145,8 +141,8 @@ namespace Labyrinth
                             break;
 
                         case Terrain.Empty:
-                            //if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
-                            //    e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                            if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
+                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
@@ -165,21 +161,10 @@ namespace Labyrinth
 
             for (int j = 0; j <= width; j++)
                 e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, height * cellSize);
-
-            foreach (var point in pathMinHuman)
-            {
-                e.Graphics.FillEllipse(Brushes.Green, new RectangleF(point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5));
-            }
-            foreach (var point in pathMinMinotaur)
-            {
-                e.Graphics.FillEllipse(Brushes.Red, new RectangleF(point.Y * cellSize + cellSize / 2 - 2, point.X * cellSize + cellSize / 2 - 2, 5, 5));
-            }
         }
 
         public void Move(Direction direction)
         {
-            GameState = State.NotFinished;
-
             if (MoveHumanPoint(direction))
                 MoveMinotaurPoint();
         }
@@ -200,17 +185,15 @@ namespace Labyrinth
 
             if (nextPoint == exitPoint)
             {
-                GameState = State.Win;
                 Restart();
-
+                VictoryEvent(this, EventArgs.Empty);
                 return false;
             }
 
             if (nextPoint == minotaurPoint)
             {
-                GameState = State.Lose;
                 Restart();
-
+                LoseEvent(this, EventArgs.Empty);
                 return false;
             }
 
@@ -255,16 +238,13 @@ namespace Labyrinth
 
                 case Mode.Hard:
                     minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
-                    pathMinMinotaur = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint);
-                    pathMinHuman = pathfinder.FindPathWithDijkstra(humanPenaltiesTable, humanPoint, exitPoint);
                     break;
             }
 
             if (minotaurPoint == humanPoint)
             {
-                GameState = State.Lose;
-                Restart();
-
+                Restart(); // lose
+                LoseEvent(this, EventArgs.Empty);
                 return;
             }
 

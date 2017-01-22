@@ -9,7 +9,7 @@ namespace Labyrinth
 {
     public partial class GameForm : Form
     {
-        private const int CellSize = 25;
+        private const int CellSize = 20;
 
         private readonly char[,] gameField;
 
@@ -31,6 +31,7 @@ namespace Labyrinth
 
             gameFieldHeight = read[0];
             gameFieldWidth = read[1];
+
             gameField = new char[gameFieldHeight, gameFieldWidth];
 
             for (int i = 0; i < gameFieldHeight; ++i)
@@ -64,15 +65,13 @@ namespace Labyrinth
         {
             game = new Game(gameField, gameFieldHeight, gameFieldWidth, currentMode);
 
+            game.VictoryEvent += GameOnVictoryEvent;
+            game.LoseEvent += GameOnLoseEvent;
+
             labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
             labelCurrentMode.Text = Resources.currentModeText + currentMode.ToRussianString();
 
             pictureBoxGameField.Refresh();
-        }
-
-        private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
-        {
-            game.Paint(e, CellSize);
         }
 
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
@@ -100,26 +99,12 @@ namespace Labyrinth
 
             pictureBoxGameField.Refresh();
 
-            Random random = new Random();
-            string loseMessage = Settings.Default.loseMessages[random.Next(Settings.Default.loseMessages.Count)];
-            string wonMessage = Settings.Default.wonMessages[random.Next(Settings.Default.wonMessages.Count)];
+            labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
+        }
 
-            switch (game.GameState)
-            {
-                case State.NotFinished:
-                    labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
-                    break;
-
-                case State.Win:
-                    MessageBox.Show(wonMessage, @"Победа");
-                    Start();
-                    break;
-
-                case State.Lose:
-                    MessageBox.Show(loseMessage, @"Поражение");
-                    Start();
-                    break;
-            }
+        private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
+        {
+            game.Paint(e, CellSize);
         }
 
         private void labelNewGame_Click(object sender, EventArgs e)
@@ -140,24 +125,46 @@ namespace Labyrinth
         private void labelEazyCrazy_Click(object sender, EventArgs e)
         {
             currentMode = Mode.EazyCrazy;
+
             Start();
         }
 
         private void labelEazy_Click(object sender, EventArgs e)
         {
             currentMode = Mode.Eazy;
+
             Start();
         }
 
         private void labelNormal_Click(object sender, EventArgs e)
         {
             currentMode = Mode.Normal;
+
             Start();
         }
 
         private void labelHard_Click(object sender, EventArgs e)
         {
             currentMode = Mode.Hard;
+
+            Start();
+        }
+
+        private void GameOnLoseEvent(object sender, EventArgs eventArgs)
+        {
+            string loseMessage = Settings.Default.loseMessages[new Random().Next(Settings.Default.loseMessages.Count)];
+
+            MessageBox.Show(loseMessage, @"Поражение");
+
+            Start();
+        }
+
+        private void GameOnVictoryEvent(object sender, EventArgs eventArgs)
+        {
+            string wonMessage = Settings.Default.wonMessages[new Random().Next(Settings.Default.wonMessages.Count)];
+
+            MessageBox.Show(wonMessage, @"Победа");
+
             Start();
         }
     }

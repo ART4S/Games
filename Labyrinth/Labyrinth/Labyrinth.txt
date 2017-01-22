@@ -1,22 +1,22 @@
 21 21
 XXXXXXXXXXXXXXXXXXXXX
-XH  T   X   T   W   X
-XWX W T W T W W XXT X
-X X T T   T   T     X
-X T X XWWWXXXXTXTXX X
-X   W   W   W       X
-X XWT X T W WTTXW TWX
-X X   T   X     W   X
-X XTW WWTTTTT W TWW X
-X   W T  M  T X T   X
-XXT XXW TXT WXX X TXX
-X X     W T     T X X
-X WTXWTXW XWWTWTT T X
-X   X         T X W X
-XXW W WTX XTT X T X X
-X   W   T W   X X X X
-X XWXTX X WTW T W W X
-X       T   X   W   X
-X XTTXTTXWX TWXWXTW X
-X         T        QX
+XHW           T     X
+X XTXTTTXTX X X TTT X
+X     X   W T W X   X
+XTWXW X X XWW X T W X
+X   T   X   X   T T X
+XTX TXXWTXT X TWW X X
+X   W     X T   W T X
+X X T X WTT XXXXX T X
+X T   W X   X     T X
+X TTXWXTW WTT WXWWW X
+X     W   W   W     X
+X TWT T TWW XTT XWWTX
+X   T W  M  X W W   X
+XXXTT TXXXWWT W W WTX
+X       T       X   X
+X XTXTXTW XTTTWXTWT X
+X X     T X         X
+X W WTW X T WTXXWXX X
+X     W     T      QX
 XXXXXXXXXXXXXXXXXXXXX
