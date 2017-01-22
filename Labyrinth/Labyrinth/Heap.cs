@@ -7,6 +7,7 @@ namespace Labyrinth
     {
         private readonly List<TKey> keys;
         private readonly List<TValue> heap;
+
         private readonly Comparer<TValue> comparer;
 
         public int Count { get { return heap.Count; } }
@@ -15,6 +16,7 @@ namespace Labyrinth
         {
             keys = new List<TKey>();
             heap = new List<TValue>();
+
             comparer = Comparer<TValue>.Default;
         }
 
