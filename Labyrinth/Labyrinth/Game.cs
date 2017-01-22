@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Labyrinth
 {
@@ -18,12 +17,12 @@ namespace Labyrinth
         private Terrain[,] gameField;
 
         private bool[,] humanUsedCells;
-
+        
         private readonly Dictionary<Terrain, int> minotaurPenaltiesTable;
         private readonly Dictionary<Terrain, int> humanPenaltiesTable;
 
-        private int humanPenalty;
-        private int minotaurPenalty;
+        private int humanPenaltyForCellCrossing;
+        private int minotaurPenaltyForCellCrossing;
 
         private readonly Point minotaurDefaultPoint;
         private readonly Point humanDefaultPoint;
@@ -117,8 +116,8 @@ namespace Labyrinth
             humanPoint = humanDefaultPoint;
             minotaurPoint = minotaurDefaultPoint;
 
-            humanPenalty = MinPenalty;
-            minotaurPenalty = MinPenalty;
+            humanPenaltyForCellCrossing = MinPenalty;
+            minotaurPenaltyForCellCrossing = MinPenalty;
 
             humanUsedCells = new bool[height, width];
 
@@ -126,11 +125,11 @@ namespace Labyrinth
             UsedCellsCounter = 1;
         }
 
-        public void Paint(PaintEventArgs e, int cellSize)
+        public void Paint(Graphics graphics, int cellSize)
         {          
             Font font = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Bold);
 
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
@@ -142,24 +141,24 @@ namespace Labyrinth
                     switch (gameField[i, j])
                     {
                         case Terrain.Water:
-                            e.Graphics.FillRectangle(Brushes.Blue, currentRectangle);
+                            graphics.FillRectangle(Brushes.Blue, currentRectangle);
 
                             if (humanUsedCells[i, j] && currentPoint != humanPoint)
-                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                                graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
 
                         case Terrain.Tree:
-                            e.Graphics.FillRectangle(Brushes.Green, currentRectangle);
+                            graphics.FillRectangle(Brushes.Green, currentRectangle);
                             break;
 
                         case Terrain.Wall:
-                            e.Graphics.FillRectangle(Brushes.Black, currentRectangle);
+                            graphics.FillRectangle(Brushes.Black, currentRectangle);
                             break;
 
                         case Terrain.Empty:
                             if (humanUsedCells[i, j] && currentPoint != minotaurPoint && currentPoint != humanPoint)
-                                e.Graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
+                                graphics.FillEllipse(Brushes.Red, rectangleForDrawingDot);
 
                             break;
                     }
@@ -168,16 +167,16 @@ namespace Labyrinth
             Func<Point, PointF> getPointForDrawingSymbol = point => new PointF(point.Y * cellSize + cellSize / 2 - 8, point.X * cellSize + cellSize / 2 - 8);
 
             if (minotaurPoint != exitPoint)
-                e.Graphics.DrawString("Q", font, Brushes.Red, getPointForDrawingSymbol(exitPoint));
-            
-            e.Graphics.DrawString("H", font, Brushes.Orange, getPointForDrawingSymbol(humanPoint));
-            e.Graphics.DrawString("M", font, Brushes.Magenta, getPointForDrawingSymbol(minotaurPoint));
+                graphics.DrawString("Q", font, Brushes.Red, getPointForDrawingSymbol(exitPoint));
+
+            graphics.DrawString("H", font, Brushes.Orange, getPointForDrawingSymbol(humanPoint));
+            graphics.DrawString("M", font, Brushes.Magenta, getPointForDrawingSymbol(minotaurPoint));
             
             for (int i = 0; i <= height; i++)
-                e.Graphics.DrawLine(Pens.Black, 0, i * cellSize, width * cellSize, i * cellSize);
+                graphics.DrawLine(Pens.Black, 0, i * cellSize, width * cellSize, i * cellSize);
 
             for (int j = 0; j <= width; j++)
-                e.Graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, height * cellSize);
+                graphics.DrawLine(Pens.Black, j * cellSize, 0, j * cellSize, height * cellSize);
         }
 
         public void Move(Direction direction)
@@ -191,9 +190,9 @@ namespace Labyrinth
             Point nextPoint = humanPoint + direction.ToPoint();
             Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
 
-            if (humanPenalty != MinPenalty)
+            if (humanPenaltyForCellCrossing != MinPenalty)
             {
-                humanPenalty--;
+                humanPenaltyForCellCrossing--;
                 return true;
             }
 
@@ -217,7 +216,7 @@ namespace Labyrinth
             }
 
             humanPoint = nextPoint;
-            humanPenalty = humanPenaltiesTable[nextPointType];
+            humanPenaltyForCellCrossing = humanPenaltiesTable[nextPointType];
 
             if (!humanUsedCells[humanPoint.X, humanPoint.Y])
             {
@@ -230,12 +229,12 @@ namespace Labyrinth
 
         private void MoveMinotaurPoint()
         {
-            if (minotaurPenalty != MinPenalty)
+            if (minotaurPenaltyForCellCrossing != MinPenalty)
             {
                 if (gameField[minotaurPoint.X, minotaurPoint.Y] == Terrain.Tree)
                     gameField[minotaurPoint.X, minotaurPoint.Y] = Terrain.Empty;
 
-                minotaurPenalty--;
+                minotaurPenaltyForCellCrossing--;
 
                 return;
             }
@@ -272,7 +271,7 @@ namespace Labyrinth
                 return;
             }
 
-            minotaurPenalty = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
+            minotaurPenaltyForCellCrossing = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
         }
     }
 }

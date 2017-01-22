@@ -45,9 +45,6 @@ namespace Labyrinth
 
                     savePaths[newPoint] = currentPoint;
 
-                    if (newPoint == secondPoint)
-                        break;
-
                     stack.Push(newPoint);
                 }
             }
@@ -67,6 +64,9 @@ namespace Labyrinth
             {
                 Point currentPoint = queue.Dequeue();
 
+                if (currentPoint == secondPoint)
+                    break;
+
                 usedCells.Add(currentPoint);
 
                 foreach (Point direction in directionsList)
@@ -77,9 +77,6 @@ namespace Labyrinth
                         continue;
 
                     savePaths[newPoint] = currentPoint;
-
-                    if (newPoint == secondPoint)
-                        break;
 
                     queue.Enqueue(newPoint);
                 }

@@ -100,7 +100,7 @@ namespace Labyrinth
 
         private void pictureBoxGameField_Paint(object sender, PaintEventArgs e)
         {
-            game.Paint(e, CellSize);
+            game.Paint(e.Graphics, CellSize);
         }
 
         private void labelNewGame_Click(object sender, EventArgs e)
