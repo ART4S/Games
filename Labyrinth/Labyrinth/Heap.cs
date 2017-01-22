@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Labyrinth
 {
-    class Heap<TKey, TValue>
+    public class Heap<TKey, TValue>
     {
         private readonly List<TKey> keys;
         private readonly List<TValue> heap;

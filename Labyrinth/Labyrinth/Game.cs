@@ -239,6 +239,9 @@ namespace Labyrinth
                 case Mode.Hard:
                     minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
 
             if (minotaurPoint == humanPoint)

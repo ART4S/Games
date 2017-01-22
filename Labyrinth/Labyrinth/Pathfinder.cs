@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Labyrinth
 {
-    class Pathfinder
+    public class Pathfinder
     {
         private readonly int maxWeigths;
 
@@ -139,7 +139,6 @@ namespace Labyrinth
 
             var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
-            var savePaths = new Dictionary<Point, Point>();
             var distanceTo = new Dictionary<Point, int>();
 
             distanceTo[firstPoint] = 0;
@@ -161,10 +160,7 @@ namespace Labyrinth
                         continue;
 
                     if (!distanceTo.ContainsKey(newPoint) || distanceTo[newPoint] > distanceTo[currentPoint] + currentPointWeight)
-                    {
                         distanceTo[newPoint] = distanceTo[currentPoint] + currentPointWeight;
-                        savePaths[newPoint] = currentPoint;
-                    }
 
                     if (!usedCells.Contains(newPoint))
                         heap.Add(newPoint, distanceTo[newPoint]);
