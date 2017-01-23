@@ -265,15 +265,13 @@ namespace Labyrinth
                     throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null);
             }
 
+            minotaurPenaltyForCellCrossing = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
+
             if (minotaurPoint == humanPoint)
             {
                 Restart(Mode);
                 LoseEvent(this, EventArgs.Empty);
-
-                return;
             }
-
-            minotaurPenaltyForCellCrossing = minotaurPenaltiesTable[gameField[minotaurPoint.X, minotaurPoint.Y]];
         }
     }
 }
