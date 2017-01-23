@@ -7,22 +7,19 @@ namespace Labyrinth
     public class Pathfinder
     {
         private readonly int maxWeigths;
-
-        private readonly Terrain[,] terrainsMap;
-        private readonly List<Point> directionsList;
-        
-        public Pathfinder(Terrain[,] terrainsMap, int maxWeigths)
+        private readonly Point[] directionsArray;
+                    
+        public Pathfinder(int maxWeigths)
         {
-            this.terrainsMap = terrainsMap;
             this.maxWeigths = maxWeigths;
 
-            directionsList = new List<Point>();
-
-            foreach (Direction direction in Enum.GetValues(typeof(Direction)))
-                directionsList.Add(direction.ToPoint());
+            directionsArray = Enum.GetValues(typeof(Direction))
+                .Cast<Direction>()
+                .Select(direction => direction.ToPoint())
+                .ToArray();
         }
 
-        public List<Point> FindPathWithDfs(Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
+        public List<Point> FindPathWithDfs(Terrain[,] terrainsMap, Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
         {
             var stack = new Stack<Point>();
             var usedCells = new HashSet<Point>();
@@ -36,7 +33,7 @@ namespace Labyrinth
 
                 usedCells.Add(currentPoint);
 
-                foreach (Point direction in directionsList)
+                foreach (Point direction in directionsArray)
                 {
                     Point newPoint = currentPoint + direction;
 
@@ -52,7 +49,7 @@ namespace Labyrinth
             return RecoveryPathBetweenPoints(savePaths, firstPoint, secondPoint);
         }
 
-        public List<Point> FindPathWithBfs(Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
+        public List<Point> FindPathWithBfs(Terrain[,] terrainsMap, Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
         {
             var queue = new Queue<Point>();
             var usedCells = new HashSet<Point>();
@@ -69,7 +66,7 @@ namespace Labyrinth
 
                 usedCells.Add(currentPoint);
 
-                foreach (Point direction in directionsList)
+                foreach (Point direction in directionsArray)
                 {
                     Point newPoint = currentPoint + direction;
 
@@ -85,7 +82,7 @@ namespace Labyrinth
             return RecoveryPathBetweenPoints(savePaths, firstPoint, secondPoint);
         }
 
-        public List<Point> FindPathWithDijkstra(Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
+        public List<Point> FindPathWithDijkstra(Terrain[,] terrainsMap, Dictionary<Terrain, int> weigthsTable, Point firstPoint, Point secondPoint)
         {
             var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
@@ -103,7 +100,7 @@ namespace Labyrinth
 
                 usedCells.Add(currentPoint);
 
-                foreach (Point direction in directionsList)
+                foreach (Point direction in directionsArray)
                 {
                     Point newPoint = currentPoint + direction;
 
@@ -124,15 +121,15 @@ namespace Labyrinth
             return RecoveryPathBetweenPoints(savePaths, firstPoint, secondPoint);
         }
 
-        public List<Point> FindPathWithSmartDijkstra(Dictionary<Terrain, int> firstPointWeigthsTable, Dictionary<Terrain, int> secondPointWeigthsTable, Point firstPoint, Point secondPoint, Point secondPointFinish)
+        public List<Point> FindPathWithSmartDijkstra(Terrain[,] terrainsMap, Dictionary<Terrain, int> firstPointWeigthsTable, Dictionary<Terrain, int> secondPointWeigthsTable, Point firstPoint, Point secondPoint, Point secondPointFinish)
         {
-            List<Point> minPathSecondPoint = FindPathWithDijkstra(secondPointWeigthsTable, secondPoint, secondPointFinish);
+            List<Point> minPathSecondPoint = FindPathWithDijkstra(terrainsMap, secondPointWeigthsTable, secondPoint, secondPointFinish);
 
             if (!minPathSecondPoint.Contains(secondPoint))
                 minPathSecondPoint.Add(secondPoint);
 
             if (minPathSecondPoint.Any(point => point == firstPoint))
-                return FindPathWithDijkstra(firstPointWeigthsTable, firstPoint, secondPoint);
+                return FindPathWithDijkstra(terrainsMap, firstPointWeigthsTable, firstPoint, secondPoint);
 
             var heap = new Heap<Point, int>();
             var usedCells = new HashSet<Point>();
@@ -149,7 +146,7 @@ namespace Labyrinth
 
                 usedCells.Add(currentPoint);
 
-                foreach (Point direction in directionsList)
+                foreach (Point direction in directionsArray)
                 {
                     Point newPoint = currentPoint + direction;
 
@@ -176,7 +173,7 @@ namespace Labyrinth
                 }
             }
 
-            return FindPathWithDijkstra(firstPointWeigthsTable, firstPoint, minPointOnPathSecondPoint);
+            return FindPathWithDijkstra(terrainsMap, firstPointWeigthsTable, firstPoint, minPointOnPathSecondPoint);
         }
 
         private List<Point> RecoveryPathBetweenPoints(Dictionary<Point, Point> savePaths, Point firstPoint, Point secondPoint)

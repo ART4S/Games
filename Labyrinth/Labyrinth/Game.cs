@@ -31,6 +31,8 @@ namespace Labyrinth
         private Point minotaurPoint;
         private Point humanPoint;
 
+        private readonly Pathfinder pathfinder;
+
         public Mode Mode { get; private set; }
         public int UsedCellsCounter { get; private set; }
 
@@ -99,6 +101,8 @@ namespace Labyrinth
                 {Terrain.Wall, MaxPenalty},
                 {Terrain.Exit, MinPenalty}
             };
+
+            pathfinder = new Pathfinder(MaxPenalty);
 
             Restart(mode);
         }
@@ -181,11 +185,11 @@ namespace Labyrinth
 
         public void Move(Direction direction)
         {
-            if (MoveHumanPoint(direction))
+            if (TryMoveHumanPoint(direction))
                 MoveMinotaurPoint();
         }
 
-        private bool MoveHumanPoint(Direction direction)
+        private bool TryMoveHumanPoint(Direction direction)
         {
             Point nextPoint = humanPoint + direction.ToPoint();
             Terrain nextPointType = gameField[nextPoint.X, nextPoint.Y];
@@ -239,24 +243,22 @@ namespace Labyrinth
                 return;
             }
 
-            var pathfinder = new Pathfinder(gameField, MaxPenalty);
-
             switch (Mode)
             {
                 case Mode.EazyCrazy:
-                    minotaurPoint = pathfinder.FindPathWithDfs(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
+                    minotaurPoint = pathfinder.FindPathWithDfs(gameField, minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Eazy:
-                    minotaurPoint = pathfinder.FindPathWithBfs(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
+                    minotaurPoint = pathfinder.FindPathWithBfs(gameField, minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Normal:
-                    minotaurPoint = pathfinder.FindPathWithDijkstra(minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
+                    minotaurPoint = pathfinder.FindPathWithDijkstra(gameField, minotaurPenaltiesTable, minotaurPoint, humanPoint).First();
                     break;
 
                 case Mode.Hard:
-                    minotaurPoint = pathfinder.FindPathWithSmartDijkstra(minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
+                    minotaurPoint = pathfinder.FindPathWithSmartDijkstra(gameField, minotaurPenaltiesTable, humanPenaltiesTable, minotaurPoint, humanPoint, exitPoint).First();
                     break;
 
                 default:
