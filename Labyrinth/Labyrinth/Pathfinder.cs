@@ -31,6 +31,9 @@ namespace Labyrinth
             {
                 Point currentPoint = stack.Pop();
 
+                if (currentPoint == secondPoint)
+                    break;
+
                 usedCells.Add(currentPoint);
 
                 foreach (Point direction in directionsArray)
