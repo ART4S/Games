@@ -16,9 +16,9 @@ namespace Labyrinth
         {
             InitializeComponent();
 
-            StreamReader reader = new StreamReader(Application.StartupPath + "\\Labyrinth.txt");
+            StreamReader file = new StreamReader(Application.StartupPath + "\\Labyrinth.txt");
 
-            int[] read = reader.ReadLine().Split().Select(int.Parse).ToArray();
+            int[] read = file.ReadLine().Split().Select(int.Parse).ToArray();
 
             int height = read[0];
             int width = read[1];
@@ -27,12 +27,12 @@ namespace Labyrinth
 
             for (int i = 0; i < height; ++i)
             {
-                string line = reader.ReadLine();
+                string line = file.ReadLine();
 
                 for (int j = 0; j < width; ++j)
                     gameField[i, j] = line[j];
             }
-                     
+
             SetSizesElementsInForm(height, width);
             Start(gameField, height, width);
         }
