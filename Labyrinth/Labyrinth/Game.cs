@@ -81,6 +81,9 @@ namespace Labyrinth
                             defaultGameField[i, j] = Terrain.Exit;
                             exitPoint = new Point(i, j);
                             break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(gameField), gameField[i, j], null);
                     }
                 }
 

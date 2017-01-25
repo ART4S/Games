@@ -55,7 +55,7 @@ namespace Labyrinth
             game.VictoryEvent += GameOnVictoryEvent;
             game.LoseEvent += GameOnLoseEvent;
 
-            labelsInfoRefresh();
+            LabelsInfoRefresh();
             pictureBoxGameField.Refresh();
         }
 
@@ -63,7 +63,7 @@ namespace Labyrinth
         {
             game.Restart(mode);
 
-            labelsInfoRefresh();
+            LabelsInfoRefresh();
             pictureBoxGameField.Refresh();
         }
 
@@ -90,7 +90,7 @@ namespace Labyrinth
                 default: return;
             }
 
-            labelsInfoRefresh();
+            LabelsInfoRefresh();
             pictureBoxGameField.Refresh();
         }
 
@@ -152,7 +152,7 @@ namespace Labyrinth
             Restart(game.Mode);
         }
 
-        private void labelsInfoRefresh()
+        private void LabelsInfoRefresh()
         {
             labelVisitedСells.Text = Resources.usedCellsCounterText + game.UsedCellsCounter;
             labelCurrentMode.Text = Resources.currentModeText + game.Mode.ToRussianString();
