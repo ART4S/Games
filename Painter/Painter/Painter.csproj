@@ -62,6 +62,7 @@
     </Compile>
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
+    <Compile Include="ShapeForDrawing.cs" />
     <Compile Include="ShapeType.cs" />
     <Compile Include="ShapesPainter.cs" />
     <Compile Include="Program.cs" />

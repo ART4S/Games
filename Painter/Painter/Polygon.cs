@@ -1,28 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Paint
 {
-    public class Polygon
+    public class Polygon : ShapeForDrawing
     {
-        private readonly List<Point> points;
+        private readonly PointF[] points;
 
-        private readonly Pen pen;
-        private readonly TextureBrush fillingBrush;
-
-        public Polygon(List<Point> points)
+        public Polygon(PointF[] points, Pen pen, TextureBrush textruBrush) : base(pen, textruBrush)
         {
             this.points = points;
         }
 
-        public Polygon() : this(new List<Point>())
+        public override void Draw(Graphics graphics)
         {
-            
-        }
-
-        public void Draw(Graphics graphics)
-        {
-            //graphics.DrawPolygon(pen, points);
+            graphics.DrawPolygon(pen, points);
+            graphics.FillPolygon(textruBrush, points);
         }
     }
 }
