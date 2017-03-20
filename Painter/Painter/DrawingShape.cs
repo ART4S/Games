@@ -5,11 +5,11 @@ namespace Paint
     public abstract class DrawingShape
     {
         protected readonly Pen pen;
-        protected readonly TextureBrush textruBrush;
+        protected readonly TextureBrush textureBrush;
 
-        protected DrawingShape(Pen pen, TextureBrush textruBrush)
+        protected DrawingShape(Pen pen, TextureBrush textureBrush)
         {
-            this.textruBrush = textruBrush;
+            this.textureBrush = textureBrush;
             this.pen = pen;
         }
 

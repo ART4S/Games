@@ -6,7 +6,7 @@ namespace Paint
     {
         private readonly PointF[] points;
 
-        public Polygon(PointF[] points, Pen pen, TextureBrush textruBrush) : base(pen, textruBrush)
+        public Polygon(PointF[] points, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
         {
             this.points = points;
         }
@@ -14,7 +14,7 @@ namespace Paint
         public override void Draw(Graphics graphics)
         {
             graphics.DrawPolygon(pen, points);
-            graphics.FillPolygon(textruBrush, points);
+            graphics.FillPolygon(textureBrush, points);
         }
     }
 }

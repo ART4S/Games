@@ -7,7 +7,7 @@ namespace Paint
         private readonly int radius;
         private readonly Point middlePoint;
 
-        public Circle(Point middlePoint, int radius, Pen pen, TextureBrush textruBrush) : base(pen, textruBrush)
+        public Circle(Point middlePoint, int radius, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
         {
             this.middlePoint = middlePoint;
             this.radius = radius;
@@ -16,7 +16,7 @@ namespace Paint
         public override void Draw(Graphics graphics)
         {
             graphics.DrawEllipse(pen, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
-            graphics.FillEllipse(textruBrush, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
+            graphics.FillEllipse(textureBrush, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
         }
     }
 }

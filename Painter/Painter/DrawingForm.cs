@@ -98,10 +98,10 @@ namespace Paint
 
             drawingState = DrawingState.Waiting;
             selectedSecondPoint = cursorPoint;
-            AddCurrentShapeInFiguresPainter();
+            AddCurrentShapeInShapesPainter();
         }
 
-        private void AddCurrentShapeInFiguresPainter()
+        private void AddCurrentShapeInShapesPainter()
         {
             TextureBrush textureBrush = new TextureBrush(selectedImageForFilling);
             Pen pen = new Pen(Color.Black, 3);
