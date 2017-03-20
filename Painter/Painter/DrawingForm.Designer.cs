@@ -280,6 +280,7 @@
             this.drawPolygonButton.Name = "drawPolygonButton";
             this.drawPolygonButton.Size = new System.Drawing.Size(23, 22);
             this.drawPolygonButton.Text = "Polygon";
+            this.drawPolygonButton.Click += new System.EventHandler(this.drawPolygonButton_Click);
             // 
             // toolStripSeparator5
             // 

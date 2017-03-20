@@ -10,18 +10,20 @@ namespace Paint
     {
         private readonly List<Circle> circles;
         private readonly List<Rectangle> rectangles;
+        private readonly List<Polygon> polygons;
 
         private readonly Stack<ShapeType> addedShapesStack;
 
-        public ShapesPainter(List<Circle> circles, List<Rectangle> rectangles)
+        public ShapesPainter(List<Circle> circles, List<Rectangle> rectangles, List<Polygon> polygons)
         {
             this.circles = circles;
             this.rectangles = rectangles;
+            this.polygons = polygons;
 
             addedShapesStack = new Stack<ShapeType>();
         }
 
-        public ShapesPainter() : this(new List<Circle>(), new List<Rectangle>())
+        public ShapesPainter() : this(new List<Circle>(), new List<Rectangle>(), new List<Polygon>())
         {
             
         }
@@ -37,6 +39,7 @@ namespace Paint
 
             int circlesCurrentIndex = 0;
             int rectanglesCurrentIndex = 0;
+            int polygonsCurrentIndex = 0;
 
             while (drawingQueue.Any())
             {
@@ -44,18 +47,20 @@ namespace Paint
 
                 switch (currentShapeType)
                 {
-                    case ShapeType.Rectangle:
-                        rectangles[rectanglesCurrentIndex].Draw(graphics);
-                        rectanglesCurrentIndex++;
-                        break;
                     case ShapeType.Circle:
                         circles[circlesCurrentIndex].Draw(graphics);
                         circlesCurrentIndex++;
                         break;
+                    case ShapeType.Rectangle:
+                        rectangles[rectanglesCurrentIndex].Draw(graphics);
+                        rectanglesCurrentIndex++;
+                        break;
                     case ShapeType.Polygon:
+                        polygons[polygonsCurrentIndex].Draw(graphics);
+                        polygonsCurrentIndex++;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(circlesCurrentIndex), circlesCurrentIndex, null);
                 }
             }
         }
@@ -72,6 +77,12 @@ namespace Paint
             addedShapesStack.Push(ShapeType.Rectangle);
         }
 
+        public void AddPolygon(Polygon polygon)
+        {
+            polygons.Add(polygon);
+            addedShapesStack.Push(ShapeType.Polygon);
+        }
+
         public void DeleteLastShape()
         {
             if (!addedShapesStack.Any())
@@ -81,16 +92,16 @@ namespace Paint
 
             switch (lastShapeType)
             {
-                case ShapeType.Rectangle:
-                    rectangles.RemoveAt(rectangles.Count - 1);
-                    break;
                 case ShapeType.Circle:
                     circles.RemoveAt(circles.Count - 1);
+                    break;
+                case ShapeType.Rectangle:
+                    rectangles.RemoveAt(rectangles.Count - 1);
                     break;
                 case ShapeType.Polygon:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(lastShapeType), lastShapeType, null);
             }
         }
 
@@ -98,6 +109,7 @@ namespace Paint
         {
             circles.Clear();
             rectangles.Clear();
+            polygons.Clear();
             addedShapesStack.Clear();
         }
     }

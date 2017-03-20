@@ -68,6 +68,11 @@ namespace Paint
             currentShapeType = ShapeType.Rectangle;
         }
 
+        private void drawPolygonButton_Click(object sender, EventArgs e)
+        {
+            currentShapeType = ShapeType.Polygon;
+        }
+
         // рисовние фигруы на доске
         private void drawingPictureBox_Paint(object sender, PaintEventArgs e)
         {
@@ -123,6 +128,7 @@ namespace Paint
                     break;
 
                 case ShapeType.Polygon:
+
                     break;
 
                 default:

@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    public class Circle : ShapeForDrawing
+    public class Circle : DrawingShape
     {
         private readonly int radius;
         private readonly Point middlePoint;

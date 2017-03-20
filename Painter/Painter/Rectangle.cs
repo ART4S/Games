@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    public class Rectangle : ShapeForDrawing
+    public class Rectangle : DrawingShape
     {
         private readonly Point topLeftPoint;
         private readonly int width;

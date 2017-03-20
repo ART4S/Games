@@ -2,7 +2,7 @@
 
 namespace Paint
 {
-    public class Polygon : ShapeForDrawing
+    public class Polygon : DrawingShape
     {
         private readonly PointF[] points;
 
