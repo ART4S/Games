@@ -215,11 +215,34 @@ namespace Paint
         // Клавиши
         private void drawingForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Z)
+            Keys pressedKey = e.KeyCode;
+
+            if (pressedKey == Keys.Z && e.Control)
                 EraseLastShape();
 
-            if (e.KeyCode == Keys.Delete)
+            if (pressedKey == Keys.Delete)
                 ClearDrawingBoard();
+
+            if (drawingState != DrawingState.Waiting)
+                return;
+                                             
+            switch (pressedKey)
+            {
+                case Keys.Up:
+                    shapesPainter.MoveLastShape(MoveDirrection.Up, 3);
+                    break;
+                case Keys.Down:
+                    shapesPainter.MoveLastShape(MoveDirrection.Down, 3);
+                    break;
+                case Keys.Left:
+                    shapesPainter.MoveLastShape(MoveDirrection.Left, 3);
+                    break;
+                case Keys.Right:
+                    shapesPainter.MoveLastShape(MoveDirrection.Right, 3);
+                    break;
+            }
+
+            drawingPictureBox.Refresh();
         }
 
         private void EraseLastShape()

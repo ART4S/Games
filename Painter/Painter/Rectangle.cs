@@ -1,10 +1,12 @@
+using System;
 using System.Drawing;
 
 namespace Paint
 {
     public class Rectangle : DrawingShape
     {
-        private readonly Point topLeftPoint;
+        private Point topLeftPoint;
+
         private readonly int width;
         private readonly int height;
 
@@ -19,6 +21,13 @@ namespace Paint
         {
             graphics.DrawRectangle(pen, topLeftPoint.X, topLeftPoint.Y, width, height);
             graphics.FillRectangle(textureBrush, topLeftPoint.X, topLeftPoint.Y, width, height);
+        }
+
+        public override void Move(MoveDirrection dirrection, int moveRange)
+        {
+            Point dirrectionPoint = dirrection.ToPoint();
+
+            topLeftPoint = new Point(topLeftPoint.X + moveRange * dirrectionPoint.X, topLeftPoint.Y + moveRange * dirrectionPoint.Y);
         }
     }
 }

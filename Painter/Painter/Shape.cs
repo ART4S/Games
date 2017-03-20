@@ -2,8 +2,8 @@ namespace Paint
 {
     public enum Shape
     {
-        Rectangle,
         Circle,
+        Rectangle,
         Polygon
     }
 }

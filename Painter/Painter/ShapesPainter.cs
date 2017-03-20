@@ -99,6 +99,7 @@ namespace Paint
                     rectangles.RemoveAt(rectangles.Count - 1);
                     break;
                 case Shape.Polygon:
+                    polygons.RemoveAt(polygons.Count - 1);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(lastShape), lastShape, null);
@@ -113,10 +114,27 @@ namespace Paint
             addedShapesStack.Clear();
         }
 
-        public void MoveLastShape(MoveDirrection dirrection)
+        public void MoveLastShape(MoveDirrection dirrection, int moveRange)
         {
-            //int distanceToMove = 2;
+            if (!addedShapesStack.Any())
+                return;
 
+            Shape lastShape = addedShapesStack.Peek();
+
+            switch (lastShape)
+            {
+                case Shape.Circle:
+                    circles.Last().Move(dirrection, moveRange);
+                    break;
+                case Shape.Rectangle:
+                    rectangles.Last().Move(dirrection, moveRange);
+                    break;
+                case Shape.Polygon:
+                    polygons.Last().Move(dirrection, moveRange);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(lastShape), lastShape, null);
+            }
         }
     }
 }

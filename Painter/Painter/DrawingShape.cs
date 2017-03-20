@@ -14,5 +14,6 @@ namespace Paint
         }
 
         public abstract void Draw(Graphics graphics);
+        public abstract void Move(MoveDirrection dirrection, int moveRange);
     }
 }
