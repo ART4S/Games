@@ -54,6 +54,7 @@
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawingState.cs" />
+    <Compile Include="MoveDirrection.cs" />
     <Compile Include="PagePropertyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,7 +64,7 @@
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="DrawingShape.cs" />
-    <Compile Include="ShapeType.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="ShapesPainter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

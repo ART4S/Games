@@ -1,6 +1,6 @@
 namespace Paint
 {
-    public enum ShapeType
+    public enum Shape
     {
         Rectangle,
         Circle,

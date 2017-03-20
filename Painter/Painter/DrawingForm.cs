@@ -12,7 +12,7 @@ namespace Paint
         private readonly ShapesPainter shapesPainter;
         private Image selectedImageForFilling;
 
-        private ShapeType currentShapeType;
+        private Shape currentShape;
         private DrawingState drawingState;
 
         private Point selectedFirstPoint;
@@ -25,7 +25,7 @@ namespace Paint
 
             shapesPainter = new ShapesPainter();
             selectedImageForFilling = new Bitmap(patternsList.Images[0]);
-            currentShapeType = ShapeType.Circle;
+            currentShape = Shape.Circle;
             drawingState = DrawingState.Waiting;
 
             cursorPoint = new Point(0, 0);
@@ -57,20 +57,20 @@ namespace Paint
             }
         }
 
-        // изменить currentShapeType
+        // изменить currentShape
         private void drawCircleButton_Click(object sender, EventArgs e)
         {
-            currentShapeType = ShapeType.Circle;
+            currentShape = Shape.Circle;
         }
 
         private void drawRectangleButton_Click(object sender, EventArgs e)
         {
-            currentShapeType = ShapeType.Rectangle;
+            currentShape = Shape.Rectangle;
         }
 
         private void drawPolygonButton_Click(object sender, EventArgs e)
         {
-            currentShapeType = ShapeType.Polygon;
+            currentShape = Shape.Polygon;
         }
 
         // рисовние фигруы на доске
@@ -110,16 +110,16 @@ namespace Paint
                 (int) Math.Sqrt(Math.Pow(selectedFirstPoint.X - selectedSecondPoint.X, 2)
                 + Math.Pow(selectedFirstPoint.Y - selectedSecondPoint.Y, 2));
 
-            switch (currentShapeType)
+            switch (currentShape)
             {
-                case ShapeType.Circle:
+                case Shape.Circle:
                     shapesPainter.AddCircle(new Circle(selectedFirstPoint,
                         distanceBetweenFirstPointAndSecondPoint,
                         pen,
                         textureBrush));
                     break;
 
-                case ShapeType.Rectangle:
+                case Shape.Rectangle:
                     shapesPainter.AddRectangle(new Rectangle(selectedFirstPoint,
                         2 * distanceBetweenFirstPointAndSecondPoint,
                         2 * distanceBetweenFirstPointAndSecondPoint,
@@ -127,12 +127,12 @@ namespace Paint
                         textureBrush));
                     break;
 
-                case ShapeType.Polygon:
-
+                case Shape.Polygon:
+                    shapesPainter.AddPolygon(Polygon12(pen, textureBrush));
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(currentShapeType), currentShapeType, null);
+                    throw new ArgumentOutOfRangeException(nameof(currentShape), currentShape, null);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Paint
 
         private void ClearDrawingBoard()
         {
-            shapesPainter.ClearFigures();
+            shapesPainter.ClearShapes();
             drawingPictureBox.Refresh();
         }
 
@@ -243,5 +243,23 @@ namespace Paint
         {
             Close();
         }
+
+        // полигон 12-го варианта
+
+        private Polygon Polygon12(Pen pen, TextureBrush textureBrush)
+        {
+            PointF[] points =
+            {
+                new PointF(selectedFirstPoint.X + 10, selectedFirstPoint.Y - 10),
+                new PointF(selectedFirstPoint.X - 10, selectedFirstPoint.Y + 10),
+                new PointF(selectedFirstPoint.X - 60, selectedFirstPoint.Y - 40),
+                new PointF(selectedFirstPoint.X - 80, selectedFirstPoint.Y - 20),
+                new PointF(selectedFirstPoint.X - 80, selectedFirstPoint.Y - 80),
+                new PointF(selectedFirstPoint.X - 20, selectedFirstPoint.Y - 80),
+                new PointF(selectedFirstPoint.X - 40, selectedFirstPoint.Y - 60)
+            };
+
+            return new Polygon(points, pen, textureBrush);
+        } 
     }
 }

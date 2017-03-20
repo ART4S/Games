@@ -12,7 +12,7 @@ namespace Paint
         private readonly List<Rectangle> rectangles;
         private readonly List<Polygon> polygons;
 
-        private readonly Stack<ShapeType> addedShapesStack;
+        private readonly Stack<Shape> addedShapesStack;
 
         public ShapesPainter(List<Circle> circles, List<Rectangle> rectangles, List<Polygon> polygons)
         {
@@ -20,7 +20,7 @@ namespace Paint
             this.rectangles = rectangles;
             this.polygons = polygons;
 
-            addedShapesStack = new Stack<ShapeType>();
+            addedShapesStack = new Stack<Shape>();
         }
 
         public ShapesPainter() : this(new List<Circle>(), new List<Rectangle>(), new List<Polygon>())
@@ -35,7 +35,7 @@ namespace Paint
 
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            Queue<ShapeType> drawingQueue = new Queue<ShapeType>(addedShapesStack.Reverse());
+            Queue<Shape> drawingQueue = new Queue<Shape>(addedShapesStack.Reverse());
 
             int circlesCurrentIndex = 0;
             int rectanglesCurrentIndex = 0;
@@ -43,19 +43,19 @@ namespace Paint
 
             while (drawingQueue.Any())
             {
-                ShapeType currentShapeType = drawingQueue.Dequeue();
+                Shape currentShape = drawingQueue.Dequeue();
 
-                switch (currentShapeType)
+                switch (currentShape)
                 {
-                    case ShapeType.Circle:
+                    case Shape.Circle:
                         circles[circlesCurrentIndex].Draw(graphics);
                         circlesCurrentIndex++;
                         break;
-                    case ShapeType.Rectangle:
+                    case Shape.Rectangle:
                         rectangles[rectanglesCurrentIndex].Draw(graphics);
                         rectanglesCurrentIndex++;
                         break;
-                    case ShapeType.Polygon:
+                    case Shape.Polygon:
                         polygons[polygonsCurrentIndex].Draw(graphics);
                         polygonsCurrentIndex++;
                         break;
@@ -68,19 +68,19 @@ namespace Paint
         public void AddCircle(Circle circle)
         {
             circles.Add(circle);
-            addedShapesStack.Push(ShapeType.Circle);
+            addedShapesStack.Push(Shape.Circle);
         }
 
         public void AddRectangle(Rectangle rectangle)
         {
             rectangles.Add(rectangle);
-            addedShapesStack.Push(ShapeType.Rectangle);
+            addedShapesStack.Push(Shape.Rectangle);
         }
 
         public void AddPolygon(Polygon polygon)
         {
             polygons.Add(polygon);
-            addedShapesStack.Push(ShapeType.Polygon);
+            addedShapesStack.Push(Shape.Polygon);
         }
 
         public void DeleteLastShape()
@@ -88,29 +88,35 @@ namespace Paint
             if (!addedShapesStack.Any())
                 return;
 
-            ShapeType lastShapeType = addedShapesStack.Pop();
+            Shape lastShape = addedShapesStack.Pop();
 
-            switch (lastShapeType)
+            switch (lastShape)
             {
-                case ShapeType.Circle:
+                case Shape.Circle:
                     circles.RemoveAt(circles.Count - 1);
                     break;
-                case ShapeType.Rectangle:
+                case Shape.Rectangle:
                     rectangles.RemoveAt(rectangles.Count - 1);
                     break;
-                case ShapeType.Polygon:
+                case Shape.Polygon:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(lastShapeType), lastShapeType, null);
+                    throw new ArgumentOutOfRangeException(nameof(lastShape), lastShape, null);
             }
         }
 
-        public void ClearFigures()
+        public void ClearShapes()
         {
             circles.Clear();
             rectangles.Clear();
             polygons.Clear();
             addedShapesStack.Clear();
+        }
+
+        public void MoveLastShape(MoveDirrection dirrection)
+        {
+            //int distanceToMove = 2;
+
         }
     }
 }
