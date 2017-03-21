@@ -136,5 +136,31 @@ namespace Paint
                     throw new ArgumentOutOfRangeException(nameof(lastShape), lastShape, null);
             }
         }
+
+        public void RotateClockwiseLastPolygon()
+        {
+            if (!addedShapesStack.Any())
+                return;
+
+            Shape lastShape = addedShapesStack.Peek();
+
+            if (lastShape != Shape.Polygon)
+                return;
+
+            polygons.Last().RotateClockwise();
+        }
+
+        public void RotateCounter—lockwiseLastPolygon()
+        {
+            if (!addedShapesStack.Any())
+                return;
+
+            Shape lastShape = addedShapesStack.Peek();
+
+            if (lastShape != Shape.Polygon)
+                return;
+
+            polygons.Last().RotateCounter—lockwise();
+        }
     }
 }

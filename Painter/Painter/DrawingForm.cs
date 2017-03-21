@@ -240,6 +240,12 @@ namespace Paint
                 case Keys.Right:
                     shapesPainter.MoveLastShape(MoveDirrection.Right, 3);
                     break;
+                case Keys.Q:
+                    shapesPainter.RotateCounterСlockwiseLastPolygon();
+                    break;
+                case Keys.E:
+                    shapesPainter.RotateClockwiseLastPolygon();
+                    break;
             }
 
             drawingPictureBox.Refresh();
@@ -282,7 +288,9 @@ namespace Paint
                 new PointF(selectedFirstPoint.X - 40, selectedFirstPoint.Y - 60)
             };
 
-            return new Polygon(points, pen, textureBrush);
+            Point middlePoint = new Point(selectedFirstPoint.X - 50, selectedFirstPoint.Y - 50);
+
+            return new Polygon(points, middlePoint, pen, textureBrush);
         } 
     }
 }

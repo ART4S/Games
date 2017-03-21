@@ -5,10 +5,10 @@ namespace Paint
 {
     public class Rectangle : DrawingShape
     {
-        private Point topLeftPoint;
-
         private readonly int width;
         private readonly int height;
+
+        private Point topLeftPoint;
 
         public Rectangle(Point topLeftPoint, int width, int height, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
         {
