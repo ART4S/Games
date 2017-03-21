@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Paint
+namespace Painter
 {
     public abstract class DrawingShape
     {

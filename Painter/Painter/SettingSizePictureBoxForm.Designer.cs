@@ -1,6 +1,6 @@
 ﻿namespace Painter
 {
-    partial class PagePropertyForm
+    partial class SettingSizePictureBoxForm
     {
         /// <summary>
         /// Required designer variable.
@@ -102,7 +102,7 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // PagePropertyForm
+            // SettingSizePictureBoxForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -118,7 +118,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "PagePropertyForm";
+            this.Name = "SettingSizePictureBoxForm";
             this.ShowIcon = false;
             this.Text = "Page property";
             ((System.ComponentModel.ISupportInitialize)(this.widthNumericUpDown)).EndInit();

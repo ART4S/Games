@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Paint
+namespace Painter
 {
     public enum MoveDirrection
     {

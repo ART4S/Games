@@ -3,7 +3,7 @@ using System.CodeDom;
 using System.Drawing;
 using System.Linq;
 
-namespace Paint
+namespace Painter
 {
     public class Polygon : DrawingShape
     {

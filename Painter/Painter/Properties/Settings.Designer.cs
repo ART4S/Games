@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Paint.Properties
+namespace Painter.Properties
 {
 
 

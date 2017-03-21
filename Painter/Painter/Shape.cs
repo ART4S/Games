@@ -1,4 +1,4 @@
-namespace Paint
+namespace Painter
 {
     public enum Shape
     {

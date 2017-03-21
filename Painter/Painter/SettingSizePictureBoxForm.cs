@@ -3,11 +3,11 @@ using System.Windows.Forms;
 
 namespace Painter
 {
-    public partial class PagePropertyForm : Form
+    public partial class SettingSizePictureBoxForm : Form
     {
         private readonly PictureBox pictureBox;
 
-        public PagePropertyForm(PictureBox pictureBox)
+        public SettingSizePictureBoxForm(PictureBox pictureBox)
         {
             InitializeComponent();
 

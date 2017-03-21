@@ -54,12 +54,13 @@
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawingState.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="MoveDirrection.cs" />
-    <Compile Include="PagePropertyForm.cs">
+    <Compile Include="SettingSizePictureBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PagePropertyForm.Designer.cs">
-      <DependentUpon>PagePropertyForm.cs</DependentUpon>
+    <Compile Include="SettingSizePictureBoxForm.Designer.cs">
+      <DependentUpon>SettingSizePictureBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
@@ -71,8 +72,8 @@
     <EmbeddedResource Include="DrawingForm.resx">
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PagePropertyForm.resx">
-      <DependentUpon>PagePropertyForm.cs</DependentUpon>
+    <EmbeddedResource Include="SettingSizePictureBoxForm.resx">
+      <DependentUpon>SettingSizePictureBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

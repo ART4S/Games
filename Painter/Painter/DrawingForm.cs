@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Painter;
 using Painter.Properties;
 
-namespace Paint
+namespace Painter
 {
     public partial class drawingForm : Form
     {
@@ -128,7 +129,7 @@ namespace Paint
                     break;
 
                 case Shape.Polygon:
-                    shapesPainter.AddPolygon(Polygon12(pen, textureBrush));
+                    shapesPainter.AddPolygon(GetPolygon12(selectedFirstPoint, pen, textureBrush));
                     break;
 
                 default:
@@ -209,7 +210,7 @@ namespace Paint
         // Удалить последнюю нарисованную фигуру
         private void undoMenuItem_Click(object sender, EventArgs e)
         {
-            EraseLastShape();
+            RemoveLastShape();
         }
 
         // Клавиши
@@ -218,27 +219,29 @@ namespace Paint
             Keys pressedKey = e.KeyCode;
 
             if (pressedKey == Keys.Z && e.Control)
-                EraseLastShape();
+                RemoveLastShape();
 
             if (pressedKey == Keys.Delete)
                 ClearDrawingBoard();
 
             if (drawingState != DrawingState.Waiting)
                 return;
+
+            const int moveRange = 3;
                                              
             switch (pressedKey)
             {
                 case Keys.Up:
-                    shapesPainter.MoveLastShape(MoveDirrection.Up, 3);
+                    shapesPainter.MoveLastShape(MoveDirrection.Up, moveRange);
                     break;
                 case Keys.Down:
-                    shapesPainter.MoveLastShape(MoveDirrection.Down, 3);
+                    shapesPainter.MoveLastShape(MoveDirrection.Down, moveRange);
                     break;
                 case Keys.Left:
-                    shapesPainter.MoveLastShape(MoveDirrection.Left, 3);
+                    shapesPainter.MoveLastShape(MoveDirrection.Left, moveRange);
                     break;
                 case Keys.Right:
-                    shapesPainter.MoveLastShape(MoveDirrection.Right, 3);
+                    shapesPainter.MoveLastShape(MoveDirrection.Right, moveRange);
                     break;
                 case Keys.Q:
                     shapesPainter.RotateCounterСlockwiseLastPolygon();
@@ -251,9 +254,9 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
-        private void EraseLastShape()
+        private void RemoveLastShape()
         {
-            shapesPainter.DeleteLastShape();
+            shapesPainter.RemoveLastShape();
             drawingPictureBox.Refresh();
         }
 
@@ -265,7 +268,7 @@ namespace Paint
 
         private void pagePropertyMenuItem_Click(object sender, EventArgs e)
         {
-            new PagePropertyForm(drawingPictureBox).ShowDialog();
+            new SettingSizePictureBoxForm(drawingPictureBox).ShowDialog();
         }
 
         private void exitMenuItem_Click(object sender, EventArgs e)
@@ -275,22 +278,20 @@ namespace Paint
 
         // полигон 12-го варианта
 
-        private Polygon Polygon12(Pen pen, TextureBrush textureBrush)
+        private Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
-            PointF[] points =
+            PointF[] polygonPoints =
             {
-                new PointF(selectedFirstPoint.X + 10, selectedFirstPoint.Y - 10),
-                new PointF(selectedFirstPoint.X - 10, selectedFirstPoint.Y + 10),
-                new PointF(selectedFirstPoint.X - 60, selectedFirstPoint.Y - 40),
-                new PointF(selectedFirstPoint.X - 80, selectedFirstPoint.Y - 20),
-                new PointF(selectedFirstPoint.X - 80, selectedFirstPoint.Y - 80),
-                new PointF(selectedFirstPoint.X - 20, selectedFirstPoint.Y - 80),
-                new PointF(selectedFirstPoint.X - 40, selectedFirstPoint.Y - 60)
+                new PointF(middlePoint.X - 10, middlePoint.Y + 10),
+                new PointF(middlePoint.X - 20, middlePoint.Y + 20),
+                new PointF(middlePoint.X - 20, middlePoint.Y - 20),
+                new PointF(middlePoint.X + 20, middlePoint.Y - 20),
+                new PointF(middlePoint.X + 10, middlePoint.Y - 10),
+                new PointF(middlePoint.X + 50, middlePoint.Y + 30),
+                new PointF(middlePoint.X + 30, middlePoint.Y + 50)
             };
 
-            Point middlePoint = new Point(selectedFirstPoint.X - 50, selectedFirstPoint.Y - 50);
-
-            return new Polygon(points, middlePoint, pen, textureBrush);
+            return new Polygon(polygonPoints, middlePoint, pen, textureBrush);
         } 
     }
 }
