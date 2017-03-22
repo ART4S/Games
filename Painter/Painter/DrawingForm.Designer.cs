@@ -1,4 +1,4 @@
-﻿namespace Painter
+﻿namespace SimplePainter
 {
     partial class DrawingForm
     {
@@ -65,6 +65,7 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.displayImageButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -210,6 +211,7 @@
             this.openFileButton,
             this.saveFileButton,
             this.toolStripSeparator4,
+            this.displayImageButton,
             this.drawCircleButton,
             this.drawRectangleButton,
             this.drawPolygonButton,
@@ -296,8 +298,8 @@
             this.drawBezierShapeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.drawBezierShapeButton.Name = "drawBezierShapeButton";
             this.drawBezierShapeButton.Size = new System.Drawing.Size(23, 22);
-            this.drawBezierShapeButton.Text = "Bezier shape";
-            this.drawBezierShapeButton.ToolTipText = "Bezier shape";
+            this.drawBezierShapeButton.Text = "BezierShape shape";
+            this.drawBezierShapeButton.ToolTipText = "BezierShape shape";
             this.drawBezierShapeButton.Click += new System.EventHandler(this.drawBezierShapeButton_Click);
             // 
             // toolStripSeparator5
@@ -319,7 +321,7 @@
             // fToolStripMenuItem
             // 
             this.fToolStripMenuItem.Name = "fToolStripMenuItem";
-            this.fToolStripMenuItem.Size = new System.Drawing.Size(78, 22);
+            this.fToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fToolStripMenuItem.Text = "f";
             // 
             // toolStripSeparator3
@@ -394,6 +396,16 @@
             this.drawingPanel.Size = new System.Drawing.Size(517, 290);
             this.drawingPanel.TabIndex = 4;
             // 
+            // displayImageButton
+            // 
+            this.displayImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.displayImageButton.Image = ((System.Drawing.Image)(resources.GetObject("displayImageButton.Image")));
+            this.displayImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.displayImageButton.Name = "displayImageButton";
+            this.displayImageButton.Size = new System.Drawing.Size(23, 22);
+            this.displayImageButton.Text = "Loag image";
+            this.displayImageButton.Click += new System.EventHandler(this.displayImageButton_Click);
+            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -460,6 +472,7 @@
         private System.Windows.Forms.ToolStripMenuItem fToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton drawBezierShapeButton;
+        private System.Windows.Forms.ToolStripButton displayImageButton;
     }
 }
 

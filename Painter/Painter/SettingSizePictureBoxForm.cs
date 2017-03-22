@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Painter
+namespace SimplePainter
 {
     public partial class SettingSizePictureBoxForm : Form
     {

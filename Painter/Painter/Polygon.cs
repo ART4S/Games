@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Linq;
 
-namespace Painter
+namespace SimplePainter
 {
     public class Polygon : DrawingShape
     {

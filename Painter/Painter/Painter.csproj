@@ -55,6 +55,7 @@
     <Compile Include="DrawingForm.Designer.cs">
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DrawingImage.cs" />
     <Compile Include="DrawingState.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="MoveDirrection.cs" />
@@ -68,8 +69,8 @@
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="DrawingShape.cs" />
-    <Compile Include="Shape.cs" />
-    <Compile Include="ShapesPainter.cs" />
+    <Compile Include="GraphicObject.cs" />
+    <Compile Include="Painter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="DrawingForm.resx">

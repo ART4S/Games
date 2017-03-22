@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Painter
+namespace SimplePainter
 {
     public class BezierShape : DrawingShape
     {
         private readonly PointMover pointMover;
 
-        private List<BezierCurve> curves;
+        private BezierCurve[] curves;
         private PointF middlePoint;
 
-        public BezierShape(List<BezierCurve> curves, PointF middlePoint, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
+        public BezierShape(BezierCurve[] curves, PointF middlePoint, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
         {
             this.curves = curves;
             this.middlePoint = middlePoint;
@@ -33,7 +33,7 @@ namespace Painter
                 pointMover.GetMovedPoint(curve.secondPoint, dirrection, moveRange),
                 pointMover.GetMovedPoint(curve.firstBendingPoint, dirrection, moveRange),
                 pointMover.GetMovedPoint(curve.secondBendingPoint, dirrection, moveRange)))
-                .ToList();
+                .ToArray();
 
             middlePoint = pointMover.GetMovedPoint(middlePoint, dirrection, moveRange);
         }
@@ -46,7 +46,7 @@ namespace Painter
                 pointMover.GetFirstPointAfterRotateRelativeSecondPoint(curve.secondPoint, middlePoint, angle),
                 pointMover.GetFirstPointAfterRotateRelativeSecondPoint(curve.firstBendingPoint, middlePoint, angle),
                 pointMover.GetFirstPointAfterRotateRelativeSecondPoint(curve.secondBendingPoint, middlePoint, angle)
-                )).ToList();
+                )).ToArray();
         }
     }
 }

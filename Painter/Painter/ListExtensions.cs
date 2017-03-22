@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Painter
+namespace SimplePainter
 {
     public static class ListExtensions
     {

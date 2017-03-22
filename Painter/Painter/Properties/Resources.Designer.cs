@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Painter.Properties {
+namespace SimplePainter.Properties {
     using System;
     
     
@@ -72,7 +72,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern0 {
             get {
@@ -82,7 +82,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern1 {
             get {
@@ -92,7 +92,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern2 {
             get {
@@ -102,7 +102,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap pattern3 {
             get {
@@ -112,7 +112,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern4 {
             get {
@@ -122,7 +122,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern5 {
             get {
@@ -132,7 +132,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern6 {
             get {
@@ -142,7 +142,7 @@ namespace Painter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern7 {
             get {

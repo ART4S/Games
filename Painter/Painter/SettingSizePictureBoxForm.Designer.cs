@@ -1,4 +1,4 @@
-﻿namespace Painter
+﻿namespace SimplePainter
 {
     partial class SettingSizePictureBoxForm
     {

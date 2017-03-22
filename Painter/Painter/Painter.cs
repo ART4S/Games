@@ -4,28 +4,30 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
-namespace Painter
+namespace SimplePainter
 {
-    public class ShapesPainter
+    public class Painter
     {
         private readonly List<Circle> circles;
         private readonly List<Rectangle> rectangles;
         private readonly List<Polygon> polygons;
         private readonly List<BezierShape> bezierShapes;
-        private readonly List<Shape> addedShapes;
+        private readonly List<DrawingImage> images;
+        private readonly List<GraphicObject> addedGraphicObjects;
 
-        public ShapesPainter()
+        public Painter()
         {
             circles = new List<Circle>();
             rectangles = new List<Rectangle>();
             polygons = new List<Polygon>();
             bezierShapes = new List<BezierShape>();
-            addedShapes = new List<Shape>();
+            images = new List<DrawingImage>();
+            addedGraphicObjects = new List<GraphicObject>();
         }
 
-        public void DrawShapes(Graphics graphics)
+        public void DrawGraphicObjects(Graphics graphics)
         {
-            if (!addedShapes.Any())
+            if (!addedGraphicObjects.Any())
                 return;
 
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -34,29 +36,34 @@ namespace Painter
             int rectanglesCurrentIndex = 0;
             int polygonsCurrentIndex = 0;
             int bezierShapesCurrentIndex = 0;
+            int imagesCurrentIndex = 0;
 
-            foreach (Shape shape in addedShapes)
+            foreach (GraphicObject graphicObject in addedGraphicObjects)
             {
-                switch (shape)
+                switch (graphicObject)
                 {
-                    case Shape.Circle:
+                    case GraphicObject.Circle:
                         circles[circlesCurrentIndex].Draw(graphics);
                         circlesCurrentIndex++;
                         break;
-                    case Shape.Rectangle:
+                    case GraphicObject.Rectangle:
                         rectangles[rectanglesCurrentIndex].Draw(graphics);
                         rectanglesCurrentIndex++;
                         break;
-                    case Shape.Polygon:
+                    case GraphicObject.Polygon:
                         polygons[polygonsCurrentIndex].Draw(graphics);
                         polygonsCurrentIndex++;
                         break;
-                    case Shape.Bezier:
+                    case GraphicObject.BezierShape:
                         bezierShapes[bezierShapesCurrentIndex].Draw(graphics);
                         bezierShapesCurrentIndex++;
                         break;
+                    case GraphicObject.Image:
+                        images[imagesCurrentIndex].Display(graphics);
+                        imagesCurrentIndex++;
+                        break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(shape), shape, null);
+                        throw new ArgumentOutOfRangeException(nameof(graphicObject), graphicObject, null);
                 }
             }
         }
@@ -64,97 +71,111 @@ namespace Painter
         public void AddCircle(Circle circle)
         {
             circles.Add(circle);
-            addedShapes.Add(Shape.Circle);
+            addedGraphicObjects.Add(GraphicObject.Circle);
         }
 
         public void AddRectangle(Rectangle rectangle)
         {
             rectangles.Add(rectangle);
-            addedShapes.Add(Shape.Rectangle);
+            addedGraphicObjects.Add(GraphicObject.Rectangle);
         }
 
         public void AddPolygon(Polygon polygon)
         {
             polygons.Add(polygon);
-            addedShapes.Add(Shape.Polygon);
+            addedGraphicObjects.Add(GraphicObject.Polygon);
         }
 
         public void AddBezierShape(BezierShape bezierShape)
         {
             bezierShapes.Add(bezierShape);
-            addedShapes.Add(Shape.Bezier);
+            addedGraphicObjects.Add(GraphicObject.BezierShape);
         }
 
-        public void RemoveLastShape()
+        public void AddDrawingImage(DrawingImage drawingImage)
         {
-            if (!addedShapes.Any())
+            images.Add(drawingImage);
+            addedGraphicObjects.Add(GraphicObject.Image);
+        }
+
+        public void RemoveLastAddedGraphicObject()
+        {
+            if (!addedGraphicObjects.Any())
                 return;
 
-            switch (addedShapes.Last())
+            switch (addedGraphicObjects.Last())
             {
-                case Shape.Circle:
+                case GraphicObject.Circle:
                     circles.RemoveLast();
                     break;
-                case Shape.Rectangle:
+                case GraphicObject.Rectangle:
                     rectangles.RemoveLast();
                     break;
-                case Shape.Polygon:
+                case GraphicObject.Polygon:
                     polygons.RemoveLast();
                     break;
-                case Shape.Bezier:
+                case GraphicObject.BezierShape:
                     bezierShapes.RemoveLast();
+                    break;
+                case GraphicObject.Image:
+                    images.RemoveLast();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(null);
             }
 
-            addedShapes.RemoveLast();
+            addedGraphicObjects.RemoveLast();
         }
 
-        public void ClearShapes()
+        public void ClearGraphicObjects()
         {
             circles.Clear();
             rectangles.Clear();
             polygons.Clear();
             bezierShapes.Clear();
-            addedShapes.Clear();
+            images.Clear();
+            addedGraphicObjects.Clear();
         }
 
-        public void MoveLastShape(MoveDirrection dirrection, int moveRange)
+        public void MoveLastAddedGraphicObject(MoveDirrection dirrection, int moveRange)
         {
-            if (!addedShapes.Any())
+            if (!addedGraphicObjects.Any())
                 return;
 
-            switch (addedShapes.Last())
+            switch (addedGraphicObjects.Last())
             {
-                case Shape.Circle:
+                case GraphicObject.Circle:
                     circles.Last().Move(dirrection, moveRange);
                     break;
-                case Shape.Rectangle:
+                case GraphicObject.Rectangle:
                     rectangles.Last().Move(dirrection, moveRange);
                     break;
-                case Shape.Polygon:
+                case GraphicObject.Polygon:
                     polygons.Last().Move(dirrection, moveRange);
                     break;
-                case Shape.Bezier:
+                case GraphicObject.BezierShape:
                     bezierShapes.Last().Move(dirrection, moveRange);
+                    break;
+                case GraphicObject.Image:
+                    images.Last().Move(dirrection, moveRange);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(null);
             }
         }
 
-        public void RotateClockwiseLastShape(double angle)
+        public void RotateClockwiseLastAddedGraphicObject(double angle)
         {
-            if (!addedShapes.Any())
+            if (!addedGraphicObjects.Any())
                 return;
 
-            switch (addedShapes.Last())
+            switch (addedGraphicObjects.Last())
             {
-                case Shape.Polygon:
+                case GraphicObject.Polygon:
                     polygons.Last().RotateClockwise(angle);
                     break;
-                case Shape.Bezier:
+                case GraphicObject.BezierShape:
+                    bezierShapes.Last().RotateClockwise(angle);
                     break;
             }
         }

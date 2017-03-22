@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Painter.Properties;
+using SimplePainter.Properties;
 
-namespace Painter
+namespace SimplePainter
 {
     public partial class DrawingForm : Form
     {
-        private readonly ShapesPainter shapesPainter;
+        private readonly Painter painter;
         private Image selectedImageForFilling;
 
-        private Shape currentShape;
+        private GraphicObject selectedGraphicObject;
         private DrawingState drawingState;
 
         private Point selectedFirstPoint;
@@ -23,9 +22,9 @@ namespace Painter
         {
             InitializeComponent();
 
-            shapesPainter = new ShapesPainter();
+            painter = new Painter();
             selectedImageForFilling = new Bitmap(patternsList.Images[0]);
-            currentShape = Shape.Circle;
+            selectedGraphicObject = GraphicObject.Circle;
             drawingState = DrawingState.Waiting;
 
             cursorPoint = new Point(0, 0);
@@ -57,42 +56,59 @@ namespace Painter
             }
         }
 
-        // изменить currentShape
+        // изменить selectedGraphicObject
         private void drawCircleButton_Click(object sender, EventArgs e)
         {
-            currentShape = Shape.Circle;
+            selectedGraphicObject = GraphicObject.Circle;
         }
 
         private void drawRectangleButton_Click(object sender, EventArgs e)
         {
-            currentShape = Shape.Rectangle;
+            selectedGraphicObject = GraphicObject.Rectangle;
         }
 
         private void drawPolygonButton_Click(object sender, EventArgs e)
         {
-            currentShape = Shape.Polygon;
+            selectedGraphicObject = GraphicObject.Polygon;
         }
 
         private void drawBezierShapeButton_Click(object sender, EventArgs e)
         {
-            currentShape = Shape.Bezier;
+            selectedGraphicObject = GraphicObject.BezierShape;
+        }
+
+        private void displayImageButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Image selectedImage = new Bitmap(openFileDialog.FileName);
+
+                painter.AddDrawingImage(new DrawingImage(selectedImage, selectedFirstPoint));
+
+                drawingPictureBox.Refresh();
+            }
         }
 
         // рисовние фигруы на доске
         private void drawingPictureBox_Paint(object sender, PaintEventArgs e)
         {
-            shapesPainter.DrawShapes(e.Graphics);
+            painter.DrawGraphicObjects(e.Graphics);
 
-            if (drawingState == DrawingState.Drawing)
+            if (drawingState == DrawingState.ShapeDrawing)
                 e.Graphics.DrawLine(new Pen(Color.Black, 3), selectedFirstPoint, cursorPoint);
         }
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (drawingState == DrawingState.Drawing)
+            if (drawingState == DrawingState.ShapeDrawing)
                 return;
 
-            drawingState = DrawingState.Drawing;
+            drawingState = DrawingState.ShapeDrawing;
             selectedFirstPoint = cursorPoint;
         }
 
@@ -103,10 +119,10 @@ namespace Painter
 
             drawingState = DrawingState.Waiting;
             selectedSecondPoint = cursorPoint;
-            AddCurrentShapeInShapesPainter();
+            AddSelectedGraphicObjectInPainter();
         }
 
-        private void AddCurrentShapeInShapesPainter()
+        private void AddSelectedGraphicObjectInPainter()
         {
             TextureBrush textureBrush = new TextureBrush(selectedImageForFilling);
             Pen pen = new Pen(Color.Black, 3);
@@ -115,10 +131,10 @@ namespace Painter
                 (int) Math.Sqrt(Math.Pow(selectedFirstPoint.X - selectedSecondPoint.X, 2)
                 + Math.Pow(selectedFirstPoint.Y - selectedSecondPoint.Y, 2));
 
-            switch (currentShape)
+            switch (selectedGraphicObject)
             {
-                case Shape.Circle:
-                    shapesPainter.AddCircle(
+                case GraphicObject.Circle:
+                    painter.AddCircle(
                         new Circle(
                             selectedFirstPoint,
                             distanceBetweenFirstPointAndSecondPoint,
@@ -126,8 +142,8 @@ namespace Painter
                             textureBrush));
                     break;
 
-                case Shape.Rectangle:
-                    shapesPainter.AddRectangle(
+                case GraphicObject.Rectangle:
+                    painter.AddRectangle(
                         new Rectangle(
                             selectedFirstPoint,
                             2 * distanceBetweenFirstPointAndSecondPoint,
@@ -136,16 +152,16 @@ namespace Painter
                             textureBrush));
                     break;
 
-                case Shape.Polygon:
-                    shapesPainter.AddPolygon(GetPolygon12(selectedFirstPoint, pen, textureBrush));
+                case GraphicObject.Polygon:
+                    painter.AddPolygon(GetPolygon12(selectedFirstPoint, pen, textureBrush));
                     break;
 
-                case Shape.Bezier:
-                    shapesPainter.AddBezierShape(GetBezierShape12(selectedFirstPoint, pen, textureBrush));
+                case GraphicObject.BezierShape:
+                    painter.AddBezierShape(GetBezierShape12(selectedFirstPoint, pen, textureBrush));
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(currentShape), currentShape, null);
+                    throw new ArgumentOutOfRangeException(nameof(selectedGraphicObject), selectedGraphicObject, null);
             }
         }
 
@@ -189,7 +205,7 @@ namespace Painter
             SaveFile();
         }
 
-        private void SaveFile()
+        private static void SaveFile()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -245,22 +261,22 @@ namespace Painter
             switch (pressedKey)
             {
                 case Keys.Up:
-                    shapesPainter.MoveLastShape(MoveDirrection.Up, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirrection.Up, moveRange);
                     break;
                 case Keys.Down:
-                    shapesPainter.MoveLastShape(MoveDirrection.Down, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirrection.Down, moveRange);
                     break;
                 case Keys.Left:
-                    shapesPainter.MoveLastShape(MoveDirrection.Left, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirrection.Left, moveRange);
                     break;
                 case Keys.Right:
-                    shapesPainter.MoveLastShape(MoveDirrection.Right, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirrection.Right, moveRange);
                     break;
                 case Keys.Q:
-                    shapesPainter.RotateClockwiseLastShape(-rotationAngle);
+                    painter.RotateClockwiseLastAddedGraphicObject(-rotationAngle);
                     break;
                 case Keys.E:
-                    shapesPainter.RotateClockwiseLastShape(rotationAngle);
+                    painter.RotateClockwiseLastAddedGraphicObject(rotationAngle);
                     break;
             }
 
@@ -269,13 +285,13 @@ namespace Painter
 
         private void RemoveLastShape()
         {
-            shapesPainter.RemoveLastShape();
+            painter.RemoveLastAddedGraphicObject();
             drawingPictureBox.Refresh();
         }
 
         private void ClearDrawingBoard()
         {
-            shapesPainter.ClearShapes();
+            painter.ClearGraphicObjects();
             drawingPictureBox.Refresh();
         }
 
@@ -289,7 +305,8 @@ namespace Painter
             Close();
         }
 
-        // полигон и полигон через кривые безье 12-го варианта
+        // 12-й вариант
+        // полигон и фигура, построенная из кривых безье
 
         private static Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
@@ -309,7 +326,7 @@ namespace Painter
 
         private static BezierShape GetBezierShape12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
-            List<BezierCurve> curves = new List<BezierCurve>
+            BezierCurve[] curves =
             {
                 new BezierCurve(
                     new PointF(middlePoint.X - 10, middlePoint.Y + 10),

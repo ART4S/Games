@@ -1,9 +1,10 @@
-namespace Painter
+namespace SimplePainter
 {
     public enum DrawingState
     {
         Start,
-        Drawing,
+        ShapeDrawing,
+        ImageDrawing,
         Waiting
     }
 }
