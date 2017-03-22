@@ -10,7 +10,7 @@ namespace Painter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new drawingForm());
+            Application.Run(new DrawingForm());
         }
     }
 }

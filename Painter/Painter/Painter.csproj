@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BezierShape.cs" />
+    <Compile Include="BezierCurve.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="DrawingForm.cs">
       <SubType>Form</SubType>
@@ -56,6 +58,7 @@
     <Compile Include="DrawingState.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="MoveDirrection.cs" />
+    <Compile Include="PointMover.cs" />
     <Compile Include="SettingSizePictureBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>

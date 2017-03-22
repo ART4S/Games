@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Painter;
 using Painter.Properties;
 
 namespace Painter
 {
-    public partial class drawingForm : Form
+    public partial class DrawingForm : Form
     {
         private readonly ShapesPainter shapesPainter;
         private Image selectedImageForFilling;
@@ -20,7 +19,7 @@ namespace Painter
         private Point selectedSecondPoint;
         private Point cursorPoint;
 
-        public drawingForm()
+        public DrawingForm()
         {
             InitializeComponent();
 
@@ -74,6 +73,11 @@ namespace Painter
             currentShape = Shape.Polygon;
         }
 
+        private void drawBezierShapeButton_Click(object sender, EventArgs e)
+        {
+            currentShape = Shape.Bezier;
+        }
+
         // рисовние фигруы на доске
         private void drawingPictureBox_Paint(object sender, PaintEventArgs e)
         {
@@ -114,22 +118,30 @@ namespace Painter
             switch (currentShape)
             {
                 case Shape.Circle:
-                    shapesPainter.AddCircle(new Circle(selectedFirstPoint,
-                        distanceBetweenFirstPointAndSecondPoint,
-                        pen,
-                        textureBrush));
+                    shapesPainter.AddCircle(
+                        new Circle(
+                            selectedFirstPoint,
+                            distanceBetweenFirstPointAndSecondPoint,
+                            pen,
+                            textureBrush));
                     break;
 
                 case Shape.Rectangle:
-                    shapesPainter.AddRectangle(new Rectangle(selectedFirstPoint,
-                        2 * distanceBetweenFirstPointAndSecondPoint,
-                        2 * distanceBetweenFirstPointAndSecondPoint,
-                        pen,
-                        textureBrush));
+                    shapesPainter.AddRectangle(
+                        new Rectangle(
+                            selectedFirstPoint,
+                            2 * distanceBetweenFirstPointAndSecondPoint,
+                            2 * distanceBetweenFirstPointAndSecondPoint,
+                            pen,
+                            textureBrush));
                     break;
 
                 case Shape.Polygon:
                     shapesPainter.AddPolygon(GetPolygon12(selectedFirstPoint, pen, textureBrush));
+                    break;
+
+                case Shape.Bezier:
+                    shapesPainter.AddBezierShape(GetBezierShape12(selectedFirstPoint, pen, textureBrush));
                     break;
 
                 default:
@@ -202,7 +214,7 @@ namespace Painter
             ShowHelpDialog();
         }
 
-        private void ShowHelpDialog()
+        private static void ShowHelpDialog()
         {
             MessageBox.Show(Resources.InfoAboutProgram, "About program");
         }
@@ -227,6 +239,7 @@ namespace Painter
             if (drawingState != DrawingState.Waiting)
                 return;
 
+            const double rotationAngle = 0.05;
             const int moveRange = 3;
                                              
             switch (pressedKey)
@@ -244,10 +257,10 @@ namespace Painter
                     shapesPainter.MoveLastShape(MoveDirrection.Right, moveRange);
                     break;
                 case Keys.Q:
-                    shapesPainter.RotateCounterСlockwiseLastPolygon();
+                    shapesPainter.RotateClockwiseLastShape(-rotationAngle);
                     break;
                 case Keys.E:
-                    shapesPainter.RotateClockwiseLastPolygon();
+                    shapesPainter.RotateClockwiseLastShape(rotationAngle);
                     break;
             }
 
@@ -276,9 +289,9 @@ namespace Painter
             Close();
         }
 
-        // полигон 12-го варианта
+        // полигон и полигон через кривые безье 12-го варианта
 
-        private Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
+        private static Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
             PointF[] polygonPoints =
             {
@@ -292,6 +305,56 @@ namespace Painter
             };
 
             return new Polygon(polygonPoints, middlePoint, pen, textureBrush);
-        } 
+        }
+
+        private static BezierShape GetBezierShape12(Point middlePoint, Pen pen, TextureBrush textureBrush)
+        {
+            List<BezierCurve> curves = new List<BezierCurve>
+            {
+                new BezierCurve(
+                    new PointF(middlePoint.X - 10, middlePoint.Y + 10),
+                    new PointF(middlePoint.X - 20, middlePoint.Y + 20),
+                    new PointF(middlePoint.X - 15, middlePoint.Y + 15),
+                    new PointF(middlePoint.X - 15, middlePoint.Y + 15)),
+
+                new BezierCurve(
+                    new PointF(middlePoint.X - 20, middlePoint.Y + 20),
+                    new PointF(middlePoint.X - 20, middlePoint.Y - 20),
+                    new PointF(middlePoint.X - 20, middlePoint.Y),
+                    new PointF(middlePoint.X - 20, middlePoint.Y)),
+
+                new BezierCurve(                
+                    new PointF(middlePoint.X - 20, middlePoint.Y - 20),
+                    new PointF(middlePoint.X + 20, middlePoint.Y - 20),
+                    new PointF(middlePoint.X, middlePoint.Y - 20),
+                    new PointF(middlePoint.X, middlePoint.Y - 20)),
+
+                new BezierCurve(
+                    new PointF(middlePoint.X + 20, middlePoint.Y - 20),
+                    new PointF(middlePoint.X + 10, middlePoint.Y - 10),
+                    new PointF(middlePoint.X + 15, middlePoint.Y - 15),
+                    new PointF(middlePoint.X + 15, middlePoint.Y - 15)),
+
+                new BezierCurve(                
+                    new PointF(middlePoint.X + 10, middlePoint.Y - 10),
+                    new PointF(middlePoint.X + 50, middlePoint.Y + 30),
+                    new PointF(middlePoint.X, middlePoint.Y),
+                    new PointF(middlePoint.X, middlePoint.Y)),
+
+                new BezierCurve(                
+                    new PointF(middlePoint.X + 50, middlePoint.Y + 30),
+                    new PointF(middlePoint.X + 30, middlePoint.Y + 50),
+                    new PointF(middlePoint.X + 30, middlePoint.Y + 30),
+                    new PointF(middlePoint.X + 30, middlePoint.Y + 30)),
+
+                new BezierCurve(                
+                    new PointF(middlePoint.X + 30, middlePoint.Y + 50),
+                    new PointF(middlePoint.X - 10, middlePoint.Y + 10),
+                    new PointF(middlePoint.X, middlePoint.Y),
+                    new PointF(middlePoint.X, middlePoint.Y))
+            };
+
+            return new BezierShape(curves, middlePoint, pen, textureBrush);
+        }
     }
 }

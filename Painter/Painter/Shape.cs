@@ -4,6 +4,7 @@ namespace Painter
     {
         Circle,
         Rectangle,
-        Polygon
+        Polygon,
+        Bezier
     }
 }

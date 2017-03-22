@@ -1,6 +1,6 @@
 ﻿namespace Painter
 {
-    partial class drawingForm
+    partial class DrawingForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(drawingForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DrawingForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,15 +55,16 @@
             this.drawCircleButton = new System.Windows.Forms.ToolStripButton();
             this.drawRectangleButton = new System.Windows.Forms.ToolStripButton();
             this.drawPolygonButton = new System.Windows.Forms.ToolStripButton();
+            this.drawBezierShapeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.fToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.helpButton = new System.Windows.Forms.ToolStripButton();
             this.patternsList = new System.Windows.Forms.ImageList(this.components);
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.fToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -212,6 +213,7 @@
             this.drawCircleButton,
             this.drawRectangleButton,
             this.drawPolygonButton,
+            this.drawBezierShapeButton,
             this.toolStripSeparator5,
             this.toolStripDropDownButton1,
             this.toolStripSeparator3,
@@ -287,10 +289,43 @@
             this.drawPolygonButton.Text = "Polygon";
             this.drawPolygonButton.Click += new System.EventHandler(this.drawPolygonButton_Click);
             // 
+            // drawBezierShapeButton
+            // 
+            this.drawBezierShapeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawBezierShapeButton.Image = ((System.Drawing.Image)(resources.GetObject("drawBezierShapeButton.Image")));
+            this.drawBezierShapeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawBezierShapeButton.Name = "drawBezierShapeButton";
+            this.drawBezierShapeButton.Size = new System.Drawing.Size(23, 22);
+            this.drawBezierShapeButton.Text = "Bezier shape";
+            this.drawBezierShapeButton.ToolTipText = "Bezier shape";
+            this.drawBezierShapeButton.Click += new System.EventHandler(this.drawBezierShapeButton_Click);
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+            // 
+            // fToolStripMenuItem
+            // 
+            this.fToolStripMenuItem.Name = "fToolStripMenuItem";
+            this.fToolStripMenuItem.Size = new System.Drawing.Size(78, 22);
+            this.fToolStripMenuItem.Text = "f";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // helpButton
             // 
@@ -359,29 +394,7 @@
             this.drawingPanel.Size = new System.Drawing.Size(517, 290);
             this.drawingPanel.TabIndex = 4;
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fToolStripMenuItem});
-            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-            // 
-            // fToolStripMenuItem
-            // 
-            this.fToolStripMenuItem.Name = "fToolStripMenuItem";
-            this.fToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.fToolStripMenuItem.Text = "f";
-            // 
-            // drawingForm
+            // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -395,7 +408,7 @@
             this.HelpButton = true;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
-            this.Name = "drawingForm";
+            this.Name = "DrawingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple Painter";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.drawingForm_KeyDown);
@@ -446,6 +459,7 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem fToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton drawBezierShapeButton;
     }
 }
 

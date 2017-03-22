@@ -11,7 +11,7 @@ namespace Painter
         Right
     }
 
-    public static class DirectionExtensions
+    public static class MoveDirectionExtensions
     {
         public static Point ToPoint(this MoveDirrection direction)
         {
