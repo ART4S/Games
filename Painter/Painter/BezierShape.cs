@@ -1,31 +1,33 @@
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace SimplePainter
+namespace Paint
 {
-    public class BezierShape : DrawingShape
+    public class BezierShape : IGraphicObject
     {
-        private readonly PointMover pointMover;
-
         private BezierCurve[] curves;
         private PointF middlePoint;
 
-        public BezierShape(BezierCurve[] curves, PointF middlePoint, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
+        private readonly Pen pen;
+
+        private readonly PointMover pointMover;
+
+        public BezierShape(BezierCurve[] curves, PointF middlePoint, Pen pen)
         {
             this.curves = curves;
             this.middlePoint = middlePoint;
+            this.pen = pen;
 
             pointMover = new PointMover();
         }
 
-        public override void Draw(Graphics graphics)
+        public void Draw(Graphics graphics)
         {
             foreach (BezierCurve curve in curves)
                 graphics.DrawBezier(pen, curve.firstPoint, curve.firstBendingPoint, curve.secondBendingPoint, curve.secondPoint);
         }
 
-        public override void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirrection dirrection, int moveRange)
         {
             curves = curves.Select(curve =>
             new BezierCurve(

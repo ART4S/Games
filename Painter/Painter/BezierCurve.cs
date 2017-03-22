@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace SimplePainter
+namespace Paint
 {
     public class BezierCurve
     {

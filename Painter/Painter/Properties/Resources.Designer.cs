@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SimplePainter.Properties {
+namespace Paint.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SimplePainter.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Painter.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Paint.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,6 +61,15 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG.
+        /// </summary>
+        internal static string ImageFilterPattern {
+            get {
+                return ResourceManager.GetString("ImageFilterPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Program name: Simple Painter
         ///Developer: Chulets Vyacheslav
         ///Year: 2017.
@@ -72,7 +81,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern0 {
             get {
@@ -82,7 +91,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern1 {
             get {
@@ -92,7 +101,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern2 {
             get {
@@ -102,7 +111,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap pattern3 {
             get {
@@ -112,7 +121,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern4 {
             get {
@@ -122,7 +131,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern5 {
             get {
@@ -132,7 +141,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern6 {
             get {
@@ -142,7 +151,7 @@ namespace SimplePainter.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.ShapeDrawing.Bitmap.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pattern7 {
             get {

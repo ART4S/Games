@@ -1,12 +1,13 @@
 using System.Drawing;
 
-namespace SimplePainter
+namespace Paint
 {
-    public class DrawingImage
+    public class DrawingImage : IGraphicObject
     {
-        private readonly PointMover pointMover;
         private readonly Image image;
         private PointF topLeftPoint;
+
+        private readonly PointMover pointMover;
 
         public DrawingImage(Image image, PointF topLeftPoint)
         {
@@ -16,7 +17,7 @@ namespace SimplePainter
             pointMover = new PointMover();
         }
 
-        public void Display(Graphics graphics)
+        public void Draw(Graphics graphics)
         {
             graphics.DrawImage(image, topLeftPoint);
         }

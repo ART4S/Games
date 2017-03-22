@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SimplePainter.Properties;
+using Paint.Properties;
 
-namespace SimplePainter
+namespace Paint
 {
     public partial class DrawingForm : Form
     {
@@ -77,18 +77,18 @@ namespace SimplePainter
             selectedGraphicObject = GraphicObject.BezierShape;
         }
 
-        private void displayImageButton_Click(object sender, EventArgs e)
+        private void drawImageButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG"
+                Filter = Resources.ImageFilterPattern
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 Image selectedImage = new Bitmap(openFileDialog.FileName);
 
-                painter.AddDrawingImage(new DrawingImage(selectedImage, selectedFirstPoint));
+                painter.AddGraphicObject(new DrawingImage(selectedImage, selectedFirstPoint));
 
                 drawingPictureBox.Refresh();
             }
@@ -129,12 +129,12 @@ namespace SimplePainter
 
             int distanceBetweenFirstPointAndSecondPoint =
                 (int) Math.Sqrt(Math.Pow(selectedFirstPoint.X - selectedSecondPoint.X, 2)
-                + Math.Pow(selectedFirstPoint.Y - selectedSecondPoint.Y, 2));
+                              + Math.Pow(selectedFirstPoint.Y - selectedSecondPoint.Y, 2));
 
             switch (selectedGraphicObject)
             {
                 case GraphicObject.Circle:
-                    painter.AddCircle(
+                    painter.AddGraphicObject(
                         new Circle(
                             selectedFirstPoint,
                             distanceBetweenFirstPointAndSecondPoint,
@@ -143,7 +143,7 @@ namespace SimplePainter
                     break;
 
                 case GraphicObject.Rectangle:
-                    painter.AddRectangle(
+                    painter.AddGraphicObject(
                         new Rectangle(
                             selectedFirstPoint,
                             2 * distanceBetweenFirstPointAndSecondPoint,
@@ -153,11 +153,11 @@ namespace SimplePainter
                     break;
 
                 case GraphicObject.Polygon:
-                    painter.AddPolygon(GetPolygon12(selectedFirstPoint, pen, textureBrush));
+                    painter.AddGraphicObject(GetPolygon12(selectedFirstPoint, pen, textureBrush));
                     break;
 
                 case GraphicObject.BezierShape:
-                    painter.AddBezierShape(GetBezierShape12(selectedFirstPoint, pen, textureBrush));
+                    painter.AddGraphicObject(GetBezierShape12(selectedFirstPoint, pen));
                     break;
 
                 default:
@@ -230,7 +230,7 @@ namespace SimplePainter
             ShowHelpDialog();
         }
 
-        private static void ShowHelpDialog()
+        private void ShowHelpDialog()
         {
             MessageBox.Show(Resources.InfoAboutProgram, "About program");
         }
@@ -238,7 +238,7 @@ namespace SimplePainter
         // Удалить последнюю нарисованную фигуру
         private void undoMenuItem_Click(object sender, EventArgs e)
         {
-            RemoveLastShape();
+            RemoveLastAddedGraphicObject();
         }
 
         // Клавиши
@@ -247,7 +247,7 @@ namespace SimplePainter
             Keys pressedKey = e.KeyCode;
 
             if (pressedKey == Keys.Z && e.Control)
-                RemoveLastShape();
+                RemoveLastAddedGraphicObject();
 
             if (pressedKey == Keys.Delete)
                 ClearDrawingBoard();
@@ -283,7 +283,7 @@ namespace SimplePainter
             drawingPictureBox.Refresh();
         }
 
-        private void RemoveLastShape()
+        private void RemoveLastAddedGraphicObject()
         {
             painter.RemoveLastAddedGraphicObject();
             drawingPictureBox.Refresh();
@@ -308,7 +308,7 @@ namespace SimplePainter
         // 12-й вариант
         // полигон и фигура, построенная из кривых безье
 
-        private static Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
+        private Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
             PointF[] polygonPoints =
             {
@@ -324,7 +324,7 @@ namespace SimplePainter
             return new Polygon(polygonPoints, middlePoint, pen, textureBrush);
         }
 
-        private static BezierShape GetBezierShape12(Point middlePoint, Pen pen, TextureBrush textureBrush)
+        private BezierShape GetBezierShape12(Point middlePoint, Pen pen)
         {
             BezierCurve[] curves =
             {
@@ -371,7 +371,7 @@ namespace SimplePainter
                     new PointF(middlePoint.X, middlePoint.Y))
             };
 
-            return new BezierShape(curves, middlePoint, pen, textureBrush);
+            return new BezierShape(curves, middlePoint, pen);
         }
     }
 }

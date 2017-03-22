@@ -1,4 +1,4 @@
-﻿namespace SimplePainter
+﻿namespace Paint
 {
     partial class DrawingForm
     {
@@ -52,6 +52,7 @@
             this.openFileButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.drawImageButton = new System.Windows.Forms.ToolStripButton();
             this.drawCircleButton = new System.Windows.Forms.ToolStripButton();
             this.drawRectangleButton = new System.Windows.Forms.ToolStripButton();
             this.drawPolygonButton = new System.Windows.Forms.ToolStripButton();
@@ -65,7 +66,6 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
-            this.displayImageButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -211,7 +211,7 @@
             this.openFileButton,
             this.saveFileButton,
             this.toolStripSeparator4,
-            this.displayImageButton,
+            this.drawImageButton,
             this.drawCircleButton,
             this.drawRectangleButton,
             this.drawPolygonButton,
@@ -260,6 +260,16 @@
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // drawImageButton
+            // 
+            this.drawImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawImageButton.Image = ((System.Drawing.Image)(resources.GetObject("drawImageButton.Image")));
+            this.drawImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawImageButton.Name = "drawImageButton";
+            this.drawImageButton.Size = new System.Drawing.Size(23, 22);
+            this.drawImageButton.Text = "Loag image";
+            this.drawImageButton.Click += new System.EventHandler(this.drawImageButton_Click);
             // 
             // drawCircleButton
             // 
@@ -321,7 +331,7 @@
             // fToolStripMenuItem
             // 
             this.fToolStripMenuItem.Name = "fToolStripMenuItem";
-            this.fToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fToolStripMenuItem.Size = new System.Drawing.Size(78, 22);
             this.fToolStripMenuItem.Text = "f";
             // 
             // toolStripSeparator3
@@ -396,16 +406,6 @@
             this.drawingPanel.Size = new System.Drawing.Size(517, 290);
             this.drawingPanel.TabIndex = 4;
             // 
-            // displayImageButton
-            // 
-            this.displayImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.displayImageButton.Image = ((System.Drawing.Image)(resources.GetObject("displayImageButton.Image")));
-            this.displayImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.displayImageButton.Name = "displayImageButton";
-            this.displayImageButton.Size = new System.Drawing.Size(23, 22);
-            this.displayImageButton.Text = "Loag image";
-            this.displayImageButton.Click += new System.EventHandler(this.displayImageButton_Click);
-            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -472,7 +472,7 @@
         private System.Windows.Forms.ToolStripMenuItem fToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton drawBezierShapeButton;
-        private System.Windows.Forms.ToolStripButton displayImageButton;
+        private System.Windows.Forms.ToolStripButton drawImageButton;
     }
 }
 

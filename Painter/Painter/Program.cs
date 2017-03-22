@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace SimplePainter
+namespace Paint
 {
     static class Program
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace SimplePainter
+namespace Paint
 {
     public class PointMover
     {

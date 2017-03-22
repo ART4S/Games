@@ -1,29 +1,36 @@
 using System.Drawing;
 
-namespace SimplePainter
+namespace Paint
 {
-    public class Circle : DrawingShape
+    public class Circle : IGraphicObject
     {
+        private PointF middlePoint;
         private readonly int radius;
-        private Point middlePoint;
 
-        public Circle(Point middlePoint, int radius, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
+        private readonly Pen pen;
+        private readonly TextureBrush textureBrush;
+
+        private readonly PointMover pointMover;
+
+        public Circle(PointF middlePoint, int radius, Pen pen, TextureBrush textureBrush)
         {
             this.middlePoint = middlePoint;
             this.radius = radius;
+            this.pen = pen;
+            this.textureBrush = textureBrush;
+
+            pointMover = new PointMover();
         }
 
-        public override void Draw(Graphics graphics)
+        public void Draw(Graphics graphics)
         {
             graphics.DrawEllipse(pen, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
             graphics.FillEllipse(textureBrush, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
         }
 
-        public override void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirrection dirrection, int moveRange)
         {
-            Point dirrectionPoint = dirrection.ToPoint();
-
-            middlePoint = new Point(middlePoint.X + moveRange * dirrectionPoint.X, middlePoint.Y + moveRange * dirrectionPoint.Y);
+            middlePoint = pointMover.GetMovedPoint(middlePoint, dirrection, moveRange);
         }
     }
 }

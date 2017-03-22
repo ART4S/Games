@@ -147,4 +147,7 @@
 Developer: Chulets Vyacheslav
 Year: 2017</value>
   </data>
+  <data name="ImageFilterPattern" xml:space="preserve">
+    <value>Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG</value>
+  </data>
 </root>

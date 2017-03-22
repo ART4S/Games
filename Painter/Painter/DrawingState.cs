@@ -1,4 +1,4 @@
-namespace SimplePainter
+namespace Paint
 {
     public enum DrawingState
     {

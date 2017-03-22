@@ -1,30 +1,35 @@
 ﻿using System.Drawing;
 using System.Linq;
 
-namespace SimplePainter
+namespace Paint
 {
-    public class Polygon : DrawingShape
+    public class Polygon : IGraphicObject
     {
-        private readonly PointMover pointMover;
-
         private PointF[] points;
         private PointF middlePoint;
 
-        public Polygon(PointF[] points, PointF middlePoint, Pen pen, TextureBrush textureBrush) : base(pen, textureBrush)
+        private readonly Pen pen;
+        private readonly TextureBrush textureBrush;
+
+        private readonly PointMover pointMover;
+
+        public Polygon(PointF[] points, PointF middlePoint, Pen pen, TextureBrush textureBrush)
         {
             this.points = points;
             this.middlePoint = middlePoint;
+            this.pen = pen;
+            this.textureBrush = textureBrush;
 
             pointMover = new PointMover();
         }
 
-        public override void Draw(Graphics graphics)
+        public void Draw(Graphics graphics)
         {
             graphics.DrawPolygon(pen, points);
             graphics.FillPolygon(textureBrush, points);
         }
 
-        public override void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirrection dirrection, int moveRange)
         {
             points = points.Select(point => pointMover.GetMovedPoint(point, dirrection, moveRange)).ToArray();
             middlePoint = pointMover.GetMovedPoint(middlePoint, dirrection, moveRange);

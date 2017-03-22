@@ -1,4 +1,4 @@
-namespace SimplePainter
+﻿namespace Paint
 {
     public enum GraphicObject
     {
@@ -6,6 +6,6 @@ namespace SimplePainter
         Rectangle,
         Polygon,
         BezierShape,
-        Image
+        DrawingImage
     }
 }
