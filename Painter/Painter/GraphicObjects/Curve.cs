@@ -10,11 +10,16 @@ namespace Paint
         private List<PointF> points;
         private readonly PointMover pointMover;
 
-        public Curve(Pen pen)
+        public Curve(PointF startingFirstPoint, PointF startingSecondPoint, Pen pen)
         {
             this.pen = pen;
 
-            points = new List<PointF>();
+            points = new List<PointF>
+            {
+                startingFirstPoint,
+                startingSecondPoint
+            };
+
             pointMover = new PointMover();
         }
 

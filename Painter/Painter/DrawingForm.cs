@@ -174,12 +174,12 @@ namespace Paint
             if (mouseState == MouseState.MouseKeyDepressed)
                 return;
 
-            mouseState = MouseState.MouseKeyDepressed;
-
             selectedSecondPoint = cursorPoint;
 
             if (selectedGraphicObject != GraphicObject.Curve)
                 AddSelectedGraphicObjectInPainter();
+
+            mouseState = MouseState.MouseKeyDepressed;
         }
 
         private void AddSelectedGraphicObjectInPainter()
@@ -220,8 +220,7 @@ namespace Paint
                     painter.AddGraphicObject(GetBezierShape12(selectedFirstPoint, pen));
                     break;
                 case GraphicObject.Curve:
-                    painter.AddGraphicObject(new Curve(pen));
-                    painter.AddPointToLastAddedCurve(selectedFirstPoint);
+                    painter.AddGraphicObject(new Curve(selectedFirstPoint, selectedFirstPoint, pen));
                     break;
                 case GraphicObject.Empty:
                     break;
