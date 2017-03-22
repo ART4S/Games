@@ -5,9 +5,9 @@ namespace Paint
 {
     public class PointMover
     {
-        public PointF GetMovedPoint(PointF point, MoveDirrection dirrection, int moveRange)
+        public PointF GetMovedPoint(PointF point, MoveDirection direction, int moveRange)
         {
-            return new PointF(point.X + moveRange * dirrection.ToPoint().X, point.Y + moveRange * dirrection.ToPoint().Y);
+            return new PointF(point.X + moveRange * direction.ToPoint().X, point.Y + moveRange * direction.ToPoint().Y);
         }
 
         public PointF GetFirstPointAfterRotateRelativeSecondPoint(PointF firstPoint, PointF secondPoint, double angle)

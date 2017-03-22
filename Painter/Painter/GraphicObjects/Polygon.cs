@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Paint
 {
-    public class Polygon : IGraphicObject
+    public class Polygon : IGraphicObject, IRotatable
     {
         private PointF[] points;
         private PointF middlePoint;
@@ -29,10 +29,10 @@ namespace Paint
             graphics.FillPolygon(textureBrush, points);
         }
 
-        public void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirection direction, int moveRange)
         {
-            points = points.Select(point => pointMover.GetMovedPoint(point, dirrection, moveRange)).ToArray();
-            middlePoint = pointMover.GetMovedPoint(middlePoint, dirrection, moveRange);
+            points = points.Select(point => pointMover.GetMovedPoint(point, direction, moveRange)).ToArray();
+            middlePoint = pointMover.GetMovedPoint(middlePoint, direction, moveRange);
         }
 
         public void RotateClockwise(double angle)

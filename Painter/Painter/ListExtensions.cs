@@ -5,7 +5,7 @@ namespace Paint
 {
     public static class ListExtensions
     {
-        public static void RemoveLast<Type>(this List<Type> list)
+        public static void RemoveLast<T>(this List<T> list)
         {
             if (!list.Any())
                 return;

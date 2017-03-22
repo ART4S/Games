@@ -52,15 +52,19 @@
             this.openFileButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.selectColorButton = new System.Windows.Forms.ToolStripButton();
+            this.selectPenSizeButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.littlePenSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.averagePenSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bigPenSizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawCurveButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.drawImageButton = new System.Windows.Forms.ToolStripButton();
             this.drawCircleButton = new System.Windows.Forms.ToolStripButton();
             this.drawRectangleButton = new System.Windows.Forms.ToolStripButton();
             this.drawPolygonButton = new System.Windows.Forms.ToolStripButton();
             this.drawBezierShapeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.fToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.helpButton = new System.Windows.Forms.ToolStripButton();
             this.patternsList = new System.Windows.Forms.ImageList(this.components);
             this.patternsListView = new System.Windows.Forms.ListView();
@@ -211,17 +215,20 @@
             this.openFileButton,
             this.saveFileButton,
             this.toolStripSeparator4,
+            this.selectColorButton,
+            this.selectPenSizeButton,
+            this.drawCurveButton,
+            this.toolStripSeparator3,
             this.drawImageButton,
             this.drawCircleButton,
             this.drawRectangleButton,
             this.drawPolygonButton,
             this.drawBezierShapeButton,
             this.toolStripSeparator5,
-            this.toolStripDropDownButton1,
-            this.toolStripSeparator3,
             this.helpButton});
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
             this.toolStrip.Name = "toolStrip";
+            this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip.Size = new System.Drawing.Size(517, 25);
             this.toolStrip.TabIndex = 1;
             // 
@@ -260,6 +267,74 @@
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // selectColorButton
+            // 
+            this.selectColorButton.BackColor = System.Drawing.Color.Black;
+            this.selectColorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.selectColorButton.ForeColor = System.Drawing.Color.Transparent;
+            this.selectColorButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.selectColorButton.Name = "selectColorButton";
+            this.selectColorButton.Size = new System.Drawing.Size(23, 22);
+            this.selectColorButton.Text = "Select color";
+            this.selectColorButton.ToolTipText = "Color";
+            this.selectColorButton.Click += new System.EventHandler(this.selectColorButton_Click);
+            // 
+            // selectPenSizeButton
+            // 
+            this.selectPenSizeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.selectPenSizeButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.littlePenSizeMenuItem,
+            this.averagePenSizeMenuItem,
+            this.bigPenSizeMenuItem});
+            this.selectPenSizeButton.Image = ((System.Drawing.Image)(resources.GetObject("selectPenSizeButton.Image")));
+            this.selectPenSizeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.selectPenSizeButton.Name = "selectPenSizeButton";
+            this.selectPenSizeButton.Size = new System.Drawing.Size(29, 22);
+            this.selectPenSizeButton.Text = "Select pen size";
+            this.selectPenSizeButton.ToolTipText = "Pen size";
+            // 
+            // littlePenSizeMenuItem
+            // 
+            this.littlePenSizeMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("littlePenSizeMenuItem.Image")));
+            this.littlePenSizeMenuItem.Name = "littlePenSizeMenuItem";
+            this.littlePenSizeMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.littlePenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.littlePenSizeMenuItem.Text = "Little";
+            this.littlePenSizeMenuItem.Click += new System.EventHandler(this.littlePenSizeMenuItem_Click);
+            // 
+            // averagePenSizeMenuItem
+            // 
+            this.averagePenSizeMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("averagePenSizeMenuItem.Image")));
+            this.averagePenSizeMenuItem.Name = "averagePenSizeMenuItem";
+            this.averagePenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.averagePenSizeMenuItem.Text = "Average";
+            this.averagePenSizeMenuItem.Click += new System.EventHandler(this.averagePenSizeMenuItem_Click);
+            // 
+            // bigPenSizeMenuItem
+            // 
+            this.bigPenSizeMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("bigPenSizeMenuItem.Image")));
+            this.bigPenSizeMenuItem.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.bigPenSizeMenuItem.Name = "bigPenSizeMenuItem";
+            this.bigPenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.bigPenSizeMenuItem.Text = "Big";
+            this.bigPenSizeMenuItem.Click += new System.EventHandler(this.bigPenSizeMenuItem_Click);
+            // 
+            // drawCurveButton
+            // 
+            this.drawCurveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawCurveButton.Image = ((System.Drawing.Image)(resources.GetObject("drawCurveButton.Image")));
+            this.drawCurveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawCurveButton.Name = "drawCurveButton";
+            this.drawCurveButton.Size = new System.Drawing.Size(23, 22);
+            this.drawCurveButton.Text = "Pen";
+            this.drawCurveButton.ToolTipText = "Pen";
+            this.drawCurveButton.Click += new System.EventHandler(this.drawCurveButton_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // drawImageButton
             // 
@@ -309,35 +384,13 @@
             this.drawBezierShapeButton.Name = "drawBezierShapeButton";
             this.drawBezierShapeButton.Size = new System.Drawing.Size(23, 22);
             this.drawBezierShapeButton.Text = "BezierShape shape";
-            this.drawBezierShapeButton.ToolTipText = "BezierShape shape";
+            this.drawBezierShapeButton.ToolTipText = "Shape using Bezier curve";
             this.drawBezierShapeButton.Click += new System.EventHandler(this.drawBezierShapeButton_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fToolStripMenuItem});
-            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-            // 
-            // fToolStripMenuItem
-            // 
-            this.fToolStripMenuItem.Name = "fToolStripMenuItem";
-            this.fToolStripMenuItem.Size = new System.Drawing.Size(78, 22);
-            this.fToolStripMenuItem.Text = "f";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // helpButton
             // 
@@ -468,11 +521,15 @@
         private System.Windows.Forms.ImageList patternsList;
         private System.Windows.Forms.ListView patternsListView;
         private System.Windows.Forms.Panel drawingPanel;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-        private System.Windows.Forms.ToolStripMenuItem fToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton drawBezierShapeButton;
         private System.Windows.Forms.ToolStripButton drawImageButton;
+        private System.Windows.Forms.ToolStripButton selectColorButton;
+        private System.Windows.Forms.ToolStripDropDownButton selectPenSizeButton;
+        private System.Windows.Forms.ToolStripMenuItem littlePenSizeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem averagePenSizeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bigPenSizeMenuItem;
+        private System.Windows.Forms.ToolStripButton drawCurveButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

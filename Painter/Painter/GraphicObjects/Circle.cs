@@ -28,9 +28,9 @@ namespace Paint
             graphics.FillEllipse(textureBrush, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
         }
 
-        public void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirection direction, int moveRange)
         {
-            middlePoint = pointMover.GetMovedPoint(middlePoint, dirrection, moveRange);
+            middlePoint = pointMover.GetMovedPoint(middlePoint, direction, moveRange);
         }
     }
 }

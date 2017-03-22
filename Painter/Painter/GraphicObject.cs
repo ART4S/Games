@@ -6,6 +6,8 @@
         Rectangle,
         Polygon,
         BezierShape,
-        DrawingImage
+        DrawingImage,
+        Curve,
+        Empty
     }
 }

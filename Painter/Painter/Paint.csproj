@@ -46,20 +46,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BezierShape.cs" />
-    <Compile Include="BezierCurve.cs" />
-    <Compile Include="Circle.cs" />
+    <Compile Include="GraphicObjects\Curve.cs" />
+    <Compile Include="GraphicObjects\BezierShape.cs" />
+    <Compile Include="GraphicObjects\Circle.cs" />
     <Compile Include="DrawingForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DrawingForm.Designer.cs">
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DrawingImage.cs" />
-    <Compile Include="DrawingState.cs" />
+    <Compile Include="GraphicObjects\DrawingImage.cs" />
+    <Compile Include="MouseState.cs" />
     <Compile Include="GraphicObject.cs" />
+    <Compile Include="GraphicObjects\IRotatable.cs" />
     <Compile Include="ListExtensions.cs" />
-    <Compile Include="MoveDirrection.cs" />
+    <Compile Include="MoveDirection.cs" />
+    <Compile Include="PenSize.cs" />
     <Compile Include="PointMover.cs" />
     <Compile Include="SettingSizePictureBoxForm.cs">
       <SubType>Form</SubType>
@@ -67,9 +69,9 @@
     <Compile Include="SettingSizePictureBoxForm.Designer.cs">
       <DependentUpon>SettingSizePictureBoxForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Polygon.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="IGraphicObject.cs" />
+    <Compile Include="GraphicObjects\Polygon.cs" />
+    <Compile Include="GraphicObjects\Rectangle.cs" />
+    <Compile Include="GraphicObjects\IGraphicObject.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

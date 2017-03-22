@@ -22,9 +22,9 @@ namespace Paint
             graphics.DrawImage(image, topLeftPoint);
         }
 
-        public void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirection direction, int moveRange)
         {
-            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, dirrection, moveRange);
+            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
         }
     }
 }

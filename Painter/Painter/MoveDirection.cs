@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    public enum MoveDirrection
+    public enum MoveDirection
     {
         Up,
         Down,
@@ -13,20 +13,20 @@ namespace Paint
 
     public static class MoveDirectionExtensions
     {
-        public static Point ToPoint(this MoveDirrection direction)
+        public static Point ToPoint(this MoveDirection direction)
         {
             switch (direction)
             {
-                case MoveDirrection.Up:
+                case MoveDirection.Up:
                     return new Point(0, -1);
 
-                case MoveDirrection.Down:
+                case MoveDirection.Down:
                     return new Point(0, 1);
 
-                case MoveDirrection.Left:
+                case MoveDirection.Left:
                     return new Point(-1, 0);
 
-                case MoveDirrection.Right:
+                case MoveDirection.Right:
                     return new Point(1, 0);
 
                 default:

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 
 namespace Paint
@@ -21,8 +20,8 @@ namespace Paint
 
         public void DrawGraphicObjects(Graphics graphics)
         {
-            graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            graphicObjects.ForEach(graphicObject => graphicObject.Draw(graphics));
+            foreach (IGraphicObject graphicObject in graphicObjects)
+                graphicObject.Draw(graphics);
         }
 
         public void RemoveLastAddedGraphicObject()
@@ -35,12 +34,12 @@ namespace Paint
             graphicObjects.Clear();
         }
 
-        public void MoveLastAddedGraphicObject(MoveDirrection dirrection, int moveRange)
+        public void MoveLastAddedGraphicObject(MoveDirection direction, int moveRange)
         {
             if (!graphicObjects.Any())
                 return;
 
-            graphicObjects.Last().Move(dirrection, moveRange);
+            graphicObjects.Last().Move(direction, moveRange);
         }
 
         public void RotateClockwiseLastAddedGraphicObject(double angle)
@@ -48,21 +47,19 @@ namespace Paint
             if (!graphicObjects.Any())
                 return;
 
-            IGraphicObject lastAddedGraphicObject = graphicObjects.Last();
+            IRotatable rotatableGraphicObject = graphicObjects.Last() as IRotatable;
 
-            if (lastAddedGraphicObject is Polygon)
-            {
-                Polygon polygon = lastAddedGraphicObject as Polygon;
+            rotatableGraphicObject?.RotateClockwise(angle);
+        }
 
-                polygon.RotateClockwise(angle);
-            }
+        public void AddPointToLastAddedCurve(PointF point)
+        {
+            if (!graphicObjects.Any())
+                return;
 
-            if (lastAddedGraphicObject is BezierShape)
-            {
-                BezierShape bezierShape = lastAddedGraphicObject as BezierShape;
+            Curve lastGraphicObject = graphicObjects.Last() as Curve;
 
-                bezierShape.RotateClockwise(angle);
-            }
+            lastGraphicObject?.AddPoint(point);
         }
     }
 }

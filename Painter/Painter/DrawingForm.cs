@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Paint.Properties;
@@ -12,7 +13,10 @@ namespace Paint
         private Image selectedImageForFilling;
 
         private GraphicObject selectedGraphicObject;
-        private DrawingState drawingState;
+        private MouseState mouseState;
+        private PenSize selectedPenSize;
+
+        private Color selectedColor;
 
         private Point selectedFirstPoint;
         private Point selectedSecondPoint;
@@ -24,8 +28,11 @@ namespace Paint
 
             painter = new Painter();
             selectedImageForFilling = new Bitmap(patternsList.Images[0]);
-            selectedGraphicObject = GraphicObject.Circle;
-            drawingState = DrawingState.Waiting;
+            selectedPenSize = PenSize.Little;
+            selectedGraphicObject = GraphicObject.Empty;
+            mouseState = MouseState.MouseKeyDepressed;
+
+            selectedColor = Color.Black;
 
             cursorPoint = new Point(0, 0);
             selectedFirstPoint = new Point(0, 0);
@@ -77,6 +84,11 @@ namespace Paint
             selectedGraphicObject = GraphicObject.BezierShape;
         }
 
+        private void drawCurveButton_Click(object sender, EventArgs e)
+        {
+            selectedGraphicObject = GraphicObject.Curve;
+        }
+
         private void drawImageButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -94,38 +106,86 @@ namespace Paint
             }
         }
 
+        // изменить selectedPenSize
+        private void littlePenSizeMenuItem_Click(object sender, EventArgs e)
+        {
+            selectedPenSize = PenSize.Little;
+        }
+
+        private void averagePenSizeMenuItem_Click(object sender, EventArgs e)
+        {
+            selectedPenSize = PenSize.Average;
+        }
+
+        private void bigPenSizeMenuItem_Click(object sender, EventArgs e)
+        {
+            selectedPenSize = PenSize.Big;
+        }
+
+        // изменить selectedColor
+        private void selectColorButton_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                selectedColor = colorDialog.Color;
+                selectColorButton.BackColor = colorDialog.Color;
+            }
+        }
+
+        // изменить selectedImageForFilling
+        private void patternsListView_ItemActivate(object sender, EventArgs e)
+        {
+            if (patternsListView.SelectedItems.Count == 0)
+                return;
+
+            selectedImageForFilling = patternsList.Images[patternsListView.SelectedIndices[0]];
+        }
+
         // рисовние фигруы на доске
         private void drawingPictureBox_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
             painter.DrawGraphicObjects(e.Graphics);
 
-            if (drawingState == DrawingState.ShapeDrawing)
-                e.Graphics.DrawLine(new Pen(Color.Black, 3), selectedFirstPoint, cursorPoint);
+            if (mouseState == MouseState.MouseKeyPressed
+                && (selectedGraphicObject == GraphicObject.Circle
+                    || selectedGraphicObject == GraphicObject.Rectangle))
+                e.Graphics.DrawLine(new Pen(selectedColor, selectedPenSize.ToFloat()), selectedFirstPoint, cursorPoint);
         }
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (drawingState == DrawingState.ShapeDrawing)
+            if (mouseState == MouseState.MouseKeyPressed)
                 return;
 
-            drawingState = DrawingState.ShapeDrawing;
             selectedFirstPoint = cursorPoint;
+
+            if (selectedGraphicObject == GraphicObject.Curve)
+                AddSelectedGraphicObjectInPainter();
+
+            mouseState = MouseState.MouseKeyPressed;
         }
 
         private void drawingPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            if (drawingState == DrawingState.Waiting)
+            if (mouseState == MouseState.MouseKeyDepressed)
                 return;
 
-            drawingState = DrawingState.Waiting;
+            mouseState = MouseState.MouseKeyDepressed;
+
             selectedSecondPoint = cursorPoint;
-            AddSelectedGraphicObjectInPainter();
+
+            if (selectedGraphicObject != GraphicObject.Curve)
+                AddSelectedGraphicObjectInPainter();
         }
 
         private void AddSelectedGraphicObjectInPainter()
         {
             TextureBrush textureBrush = new TextureBrush(selectedImageForFilling);
-            Pen pen = new Pen(Color.Black, 3);
+            Pen pen = new Pen(selectedColor, selectedPenSize.ToFloat());
 
             int distanceBetweenFirstPointAndSecondPoint =
                 (int) Math.Sqrt(Math.Pow(selectedFirstPoint.X - selectedSecondPoint.X, 2)
@@ -159,7 +219,14 @@ namespace Paint
                 case GraphicObject.BezierShape:
                     painter.AddGraphicObject(GetBezierShape12(selectedFirstPoint, pen));
                     break;
-
+                case GraphicObject.Curve:
+                    painter.AddGraphicObject(new Curve(pen));
+                    painter.AddPointToLastAddedCurve(selectedFirstPoint);
+                    break;
+                case GraphicObject.Empty:
+                    break;
+                case GraphicObject.DrawingImage:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(selectedGraphicObject), selectedGraphicObject, null);
             }
@@ -169,6 +236,10 @@ namespace Paint
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             cursorPoint = new Point(e.X, e.Y);
+
+            if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObject.Curve)
+                painter.AddPointToLastAddedCurve(cursorPoint);
+
             drawingPictureBox.Refresh();
         }
 
@@ -183,15 +254,6 @@ namespace Paint
         {
             toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
             toolStrip.Visible = toolbarMenuItem.Checked;
-        }
-
-        // Установить выбранный паттерн в качестве заливки
-        private void patternsListView_ItemActivate(object sender, EventArgs e)
-        {
-            if (patternsListView.SelectedItems.Count == 0)
-                return;
-
-            selectedImageForFilling = patternsList.Images[patternsListView.SelectedIndices[0]];
         }
 
         // Сохранение файла
@@ -252,7 +314,7 @@ namespace Paint
             if (pressedKey == Keys.Delete)
                 ClearDrawingBoard();
 
-            if (drawingState != DrawingState.Waiting)
+            if (mouseState != MouseState.MouseKeyDepressed)
                 return;
 
             const double rotationAngle = 0.05;
@@ -261,16 +323,16 @@ namespace Paint
             switch (pressedKey)
             {
                 case Keys.Up:
-                    painter.MoveLastAddedGraphicObject(MoveDirrection.Up, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Up, moveRange);
                     break;
                 case Keys.Down:
-                    painter.MoveLastAddedGraphicObject(MoveDirrection.Down, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Down, moveRange);
                     break;
                 case Keys.Left:
-                    painter.MoveLastAddedGraphicObject(MoveDirrection.Left, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Left, moveRange);
                     break;
                 case Keys.Right:
-                    painter.MoveLastAddedGraphicObject(MoveDirrection.Right, moveRange);
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Right, moveRange);
                     break;
                 case Keys.Q:
                     painter.RotateClockwiseLastAddedGraphicObject(-rotationAngle);
@@ -326,52 +388,45 @@ namespace Paint
 
         private BezierShape GetBezierShape12(Point middlePoint, Pen pen)
         {
-            BezierCurve[] curves =
+            PointF[] curve =
             {
-                new BezierCurve(
-                    new PointF(middlePoint.X - 10, middlePoint.Y + 10),
-                    new PointF(middlePoint.X - 20, middlePoint.Y + 20),
-                    new PointF(middlePoint.X - 15, middlePoint.Y + 15),
-                    new PointF(middlePoint.X - 15, middlePoint.Y + 15)),
+                new PointF(middlePoint.X - 10, middlePoint.Y + 10),
+                new PointF(middlePoint.X - 15, middlePoint.Y + 15),
+                new PointF(middlePoint.X - 15, middlePoint.Y + 15),
+                new PointF(middlePoint.X - 20, middlePoint.Y + 20),
 
-                new BezierCurve(
-                    new PointF(middlePoint.X - 20, middlePoint.Y + 20),
-                    new PointF(middlePoint.X - 20, middlePoint.Y - 20),
-                    new PointF(middlePoint.X - 20, middlePoint.Y),
-                    new PointF(middlePoint.X - 20, middlePoint.Y)),
+                new PointF(middlePoint.X - 20, middlePoint.Y + 20),
+                new PointF(middlePoint.X - 20, middlePoint.Y),
+                new PointF(middlePoint.X - 20, middlePoint.Y),
+                new PointF(middlePoint.X - 20, middlePoint.Y - 20),
 
-                new BezierCurve(                
-                    new PointF(middlePoint.X - 20, middlePoint.Y - 20),
-                    new PointF(middlePoint.X + 20, middlePoint.Y - 20),
-                    new PointF(middlePoint.X, middlePoint.Y - 20),
-                    new PointF(middlePoint.X, middlePoint.Y - 20)),
+                new PointF(middlePoint.X - 20, middlePoint.Y - 20),
+                new PointF(middlePoint.X, middlePoint.Y - 20),
+                new PointF(middlePoint.X, middlePoint.Y - 20),
+                new PointF(middlePoint.X + 20, middlePoint.Y - 20),
 
-                new BezierCurve(
-                    new PointF(middlePoint.X + 20, middlePoint.Y - 20),
-                    new PointF(middlePoint.X + 10, middlePoint.Y - 10),
-                    new PointF(middlePoint.X + 15, middlePoint.Y - 15),
-                    new PointF(middlePoint.X + 15, middlePoint.Y - 15)),
+                new PointF(middlePoint.X + 20, middlePoint.Y - 20),
+                new PointF(middlePoint.X + 15, middlePoint.Y - 15),
+                new PointF(middlePoint.X + 15, middlePoint.Y - 15),
+                new PointF(middlePoint.X + 10, middlePoint.Y - 10),
 
-                new BezierCurve(                
-                    new PointF(middlePoint.X + 10, middlePoint.Y - 10),
-                    new PointF(middlePoint.X + 50, middlePoint.Y + 30),
-                    new PointF(middlePoint.X, middlePoint.Y),
-                    new PointF(middlePoint.X, middlePoint.Y)),
+                new PointF(middlePoint.X + 10, middlePoint.Y - 10),
+                new PointF(middlePoint.X, middlePoint.Y),
+                new PointF(middlePoint.X, middlePoint.Y),
+                new PointF(middlePoint.X + 60, middlePoint.Y + 30),
 
-                new BezierCurve(                
-                    new PointF(middlePoint.X + 50, middlePoint.Y + 30),
-                    new PointF(middlePoint.X + 30, middlePoint.Y + 50),
-                    new PointF(middlePoint.X + 30, middlePoint.Y + 30),
-                    new PointF(middlePoint.X + 30, middlePoint.Y + 30)),
+                new PointF(middlePoint.X + 60, middlePoint.Y + 30),
+                new PointF(middlePoint.X + 30, middlePoint.Y + 30),
+                new PointF(middlePoint.X + 30, middlePoint.Y + 30),
+                new PointF(middlePoint.X + 30, middlePoint.Y + 50),
 
-                new BezierCurve(                
-                    new PointF(middlePoint.X + 30, middlePoint.Y + 50),
-                    new PointF(middlePoint.X - 10, middlePoint.Y + 10),
-                    new PointF(middlePoint.X, middlePoint.Y),
-                    new PointF(middlePoint.X, middlePoint.Y))
+                new PointF(middlePoint.X + 30, middlePoint.Y + 50),
+                new PointF(middlePoint.X, middlePoint.Y),
+                new PointF(middlePoint.X, middlePoint.Y),
+                new PointF(middlePoint.X - 10, middlePoint.Y + 10)
             };
 
-            return new BezierShape(curves, middlePoint, pen);
+            return new BezierShape(curve, middlePoint, pen);
         }
     }
 }

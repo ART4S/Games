@@ -31,9 +31,9 @@ namespace Paint
             graphics.FillRectangle(textureBrush, topLeftPoint.X, topLeftPoint.Y, width, height);
         }
 
-        public void Move(MoveDirrection dirrection, int moveRange)
+        public void Move(MoveDirection direction, int moveRange)
         {
-            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, dirrection, moveRange);
+            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
         }
     }
 }
