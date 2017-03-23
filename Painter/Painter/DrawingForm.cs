@@ -295,7 +295,7 @@ namespace Paint
             Close();
         }
 
-        // Клавиши
+        // Нажатие на клавиши
         private void drawingForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (mouseState != MouseState.MouseKeyDepressed)
