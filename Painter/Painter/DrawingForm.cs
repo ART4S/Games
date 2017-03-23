@@ -260,13 +260,13 @@ namespace Paint
         // Отображение инструкции к программе
         private void helpButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Resources.HelpText, "Help");
+            MessageBox.Show(Resources.HelpText, @"Help");
         }
 
         // Отображение информации о программе и разработчиках
         private void aboutPainterMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Resources.InfoAboutProgram, "About program");
+            MessageBox.Show(Resources.InfoAboutProgram, @"About program");
         }
 
         // Удаление последнего нарисованного графического объекта
