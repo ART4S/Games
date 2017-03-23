@@ -3,13 +3,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Paint.Properties;
 
 namespace Paint
 {
     public partial class DrawingForm : Form
     {
-        private readonly Painter painter;
+        private Painter painter;
         private Image selectedImageForFilling;
 
         private GraphicObject selectedGraphicObject;
@@ -266,18 +267,9 @@ namespace Paint
             SaveFile();
         }
 
-        private static void SaveFile()
+        private void SaveFile()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Ptr format|*.ptr",
-                FilterIndex = 0
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                // TODO: чоделать
-            }
+            // TODO: туду
         }
 
         // Отображение инфы разработчиков

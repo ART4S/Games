@@ -14,7 +14,7 @@ namespace Paint
             return (float) penSize;
         }
 
-        public static float ToInt(this PenSize penSize)
+        public static int ToInt(this PenSize penSize)
         {
             return (int) penSize;
         }

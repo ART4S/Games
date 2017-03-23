@@ -31,6 +31,9 @@ namespace Paint
         public void Draw(Graphics graphics)
         {
             graphics.DrawCurve(pen, points.ToArray());
+
+            foreach (PointF point in points)
+                graphics.FillEllipse(new SolidBrush(pen.Color), point.X - pen.Width / 2, point.Y - pen.Width / 2, pen.Width, pen.Width);
         }
 
         public void Move(MoveDirection direction, int moveRange)

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Paint
 {
@@ -57,9 +59,9 @@ namespace Paint
             if (!graphicObjects.Any())
                 return;
 
-            Curve lastGraphicObject = graphicObjects.Last() as Curve;
+            Curve curve = graphicObjects.Last() as Curve;
 
-            lastGraphicObject?.AddPoint(point);
+            curve?.AddPoint(point);
         }
     }
 }
