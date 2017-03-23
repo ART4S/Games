@@ -3,14 +3,15 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
-using Newtonsoft.Json;
+using Paint.GraphicObjects;
 using Paint.Properties;
+using Rectangle = Paint.GraphicObjects.Rectangle;
 
 namespace Paint
 {
     public partial class DrawingForm : Form
     {
-        private Painter painter;
+        private readonly Painter painter;
         private Image selectedImageForFilling;
 
         private GraphicObject selectedGraphicObject;
@@ -154,7 +155,7 @@ namespace Paint
             if (mouseState == MouseState.MouseKeyPressed
                 && (selectedGraphicObject == GraphicObject.Circle
                     || selectedGraphicObject == GraphicObject.Rectangle))
-                e.Graphics.DrawLine(new Pen(selectedColor, selectedPenSize.ToFloat()), selectedFirstPoint, cursorPoint);
+                e.Graphics.DrawLine(new Pen(selectedColor, selectedPenSize.ToInt()), selectedFirstPoint, cursorPoint);
         }
 
         private void drawingPictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -186,7 +187,7 @@ namespace Paint
         private void AddSelectedGraphicObjectInPainter()
         {
             TextureBrush textureBrush = new TextureBrush(selectedImageForFilling);
-            Pen pen = new Pen(selectedColor, selectedPenSize.ToFloat());
+            Pen pen = new Pen(selectedColor, selectedPenSize.ToInt());
 
             int distanceBetweenFirstPointAndSecondPoint =
                 (int) Math.Sqrt(Math.Pow(selectedFirstPoint.X - selectedSecondPoint.X, 2)
@@ -223,9 +224,9 @@ namespace Paint
                 case GraphicObject.Curve:
                     painter.AddGraphicObject(new Curve(selectedFirstPoint, selectedFirstPoint, pen));
                     break;
-                case GraphicObject.Empty:
-                    break;
                 case GraphicObject.DrawingImage:
+                    break;
+                case GraphicObject.Empty:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(selectedGraphicObject), selectedGraphicObject, null);
@@ -254,22 +255,6 @@ namespace Paint
         {
             toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
             toolStrip.Visible = toolbarMenuItem.Checked;
-        }
-
-        // Сохранение файла
-        private void saveAsFIleMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFile();
-        }
-
-        private void saveFileButton_Click(object sender, EventArgs e)
-        {
-            SaveFile();
-        }
-
-        private void SaveFile()
-        {
-            // TODO: туду
         }
 
         // Отображение инфы разработчиков

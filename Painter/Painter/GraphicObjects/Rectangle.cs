@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Paint
+namespace Paint.GraphicObjects
 {
     public class Rectangle : IGraphicObject
     {
@@ -12,8 +12,6 @@ namespace Paint
         private readonly Pen pen;
         private readonly TextureBrush textureBrush;
 
-        private readonly PointMover pointMover;
-
         public Rectangle(PointF topLeftPoint, int width, int height, Pen pen, TextureBrush textureBrush)
         {
             this.topLeftPoint = topLeftPoint;
@@ -21,8 +19,6 @@ namespace Paint
             this.height = height;
             this.pen = pen;
             this.textureBrush = textureBrush;
-
-            pointMover = new PointMover();
         }
 
         public void Draw(Graphics graphics)
@@ -33,7 +29,7 @@ namespace Paint
 
         public void Move(MoveDirection direction, int moveRange)
         {
-            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
+            topLeftPoint = PointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
         }
     }
 }

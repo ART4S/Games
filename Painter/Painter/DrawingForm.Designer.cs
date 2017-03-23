@@ -126,7 +126,6 @@
             this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
             this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveAsFIleMenuItem.Text = "Save As...";
-            this.saveAsFIleMenuItem.Click += new System.EventHandler(this.saveAsFIleMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -261,7 +260,6 @@
             this.saveFileButton.Size = new System.Drawing.Size(23, 22);
             this.saveFileButton.Text = "Save";
             this.saveFileButton.ToolTipText = "Save";
-            this.saveFileButton.Click += new System.EventHandler(this.saveFileButton_Click);
             // 
             // toolStripSeparator4
             // 

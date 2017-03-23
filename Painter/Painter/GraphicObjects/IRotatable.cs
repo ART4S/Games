@@ -1,4 +1,4 @@
-﻿namespace Paint
+﻿namespace Paint.GraphicObjects
 {
     interface IRotatable
     {

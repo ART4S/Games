@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Paint
+namespace Paint.GraphicObjects
 {
     public class Circle : IGraphicObject
     {
@@ -10,16 +10,12 @@ namespace Paint
         private readonly Pen pen;
         private readonly TextureBrush textureBrush;
 
-        private readonly PointMover pointMover;
-
         public Circle(PointF middlePoint, int radius, Pen pen, TextureBrush textureBrush)
         {
             this.middlePoint = middlePoint;
             this.radius = radius;
             this.pen = pen;
             this.textureBrush = textureBrush;
-
-            pointMover = new PointMover();
         }
 
         public void Draw(Graphics graphics)
@@ -30,7 +26,7 @@ namespace Paint
 
         public void Move(MoveDirection direction, int moveRange)
         {
-            middlePoint = pointMover.GetMovedPoint(middlePoint, direction, moveRange);
+            middlePoint = PointMover.GetMovedPoint(middlePoint, direction, moveRange);
         }
     }
 }

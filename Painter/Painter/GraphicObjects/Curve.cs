@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Paint
+namespace Paint.GraphicObjects
 {
     public class Curve : IGraphicObject
     {
         private readonly Pen pen;
         private List<PointF> points;
-        private readonly PointMover pointMover;
 
         public Curve(PointF startingFirstPoint, PointF startingSecondPoint, Pen pen)
         {
@@ -19,8 +18,6 @@ namespace Paint
                 startingFirstPoint,
                 startingSecondPoint
             };
-
-            pointMover = new PointMover();
         }
 
         public void AddPoint(PointF point)
@@ -38,7 +35,7 @@ namespace Paint
 
         public void Move(MoveDirection direction, int moveRange)
         {
-            points = points.Select(point => pointMover.GetMovedPoint(point, direction, moveRange)).ToList();
+            points = points.Select(point => PointMover.GetMovedPoint(point, direction, moveRange)).ToList();
         }
     }
 }

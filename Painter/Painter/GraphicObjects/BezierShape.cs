@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Linq;
 
-namespace Paint
+namespace Paint.GraphicObjects
 {
     public class BezierShape : IGraphicObject, IRotatable
     {
@@ -10,15 +10,11 @@ namespace Paint
 
         private readonly Pen pen;
 
-        private readonly PointMover pointMover;
-
         public BezierShape(PointF[] curve, PointF middlePoint, Pen pen)
         {
             this.curve = curve;
             this.middlePoint = middlePoint;
             this.pen = pen;
-
-            pointMover = new PointMover();
         }
 
         public void Draw(Graphics graphics)
@@ -28,13 +24,13 @@ namespace Paint
 
         public void Move(MoveDirection direction, int moveRange)
         {
-            curve = curve.Select(point => pointMover.GetMovedPoint(point, direction, moveRange)).ToArray();
-            middlePoint = pointMover.GetMovedPoint(middlePoint, direction, moveRange);
+            curve = curve.Select(point => PointMover.GetMovedPoint(point, direction, moveRange)).ToArray();
+            middlePoint = PointMover.GetMovedPoint(middlePoint, direction, moveRange);
         }
 
         public void RotateClockwise(double angle)
         {
-            curve = curve.Select(point => pointMover.GetFirstPointAfterRotateRelativeSecondPoint(point, middlePoint, angle)).ToArray();
+            curve = curve.Select(point => PointMover.GetFirstPointAfterRotateRelativeSecondPoint(point, middlePoint, angle)).ToArray();
         }
     }
 }

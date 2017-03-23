@@ -9,11 +9,6 @@ namespace Paint
 
     public static class PenSizeExtensions
     {
-        public static float ToFloat(this PenSize penSize)
-        {
-            return (float) penSize;
-        }
-
         public static int ToInt(this PenSize penSize)
         {
             return (int) penSize;

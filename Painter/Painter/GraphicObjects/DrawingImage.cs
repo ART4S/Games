@@ -1,20 +1,16 @@
 using System.Drawing;
 
-namespace Paint
+namespace Paint.GraphicObjects
 {
     public class DrawingImage : IGraphicObject
     {
         private readonly Image image;
         private PointF topLeftPoint;
 
-        private readonly PointMover pointMover;
-
         public DrawingImage(Image image, PointF topLeftPoint)
         {
             this.image = image;
             this.topLeftPoint = topLeftPoint;
-
-            pointMover = new PointMover();
         }
 
         public void Draw(Graphics graphics)
@@ -24,7 +20,7 @@ namespace Paint
 
         public void Move(MoveDirection direction, int moveRange)
         {
-            topLeftPoint = pointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
+            topLeftPoint = PointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
         }
     }
 }

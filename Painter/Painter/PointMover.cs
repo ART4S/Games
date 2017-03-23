@@ -3,14 +3,14 @@ using System.Drawing;
 
 namespace Paint
 {
-    public class PointMover
+    public static class PointMover
     {
-        public PointF GetMovedPoint(PointF point, MoveDirection direction, int moveRange)
+        public static PointF GetMovedPoint(PointF point, MoveDirection direction, int moveRange)
         {
             return new PointF(point.X + moveRange * direction.ToPoint().X, point.Y + moveRange * direction.ToPoint().Y);
         }
 
-        public PointF GetFirstPointAfterRotateRelativeSecondPoint(PointF firstPoint, PointF secondPoint, double angle)
+        public static PointF GetFirstPointAfterRotateRelativeSecondPoint(PointF firstPoint, PointF secondPoint, double angle)
         {
             return new PointF(
                 (float)(secondPoint.X + (firstPoint.X - secondPoint.X) * Math.Cos(angle)
