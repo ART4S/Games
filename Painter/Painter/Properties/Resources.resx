@@ -150,4 +150,18 @@ Year: 2017</value>
   <data name="ImageFilterPattern" xml:space="preserve">
     <value>Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG</value>
   </data>
+  <data name="HelpText" xml:space="preserve">
+    <value>Moving last drawn object:
+	Arrow keys
+
+Rotation Polygon and Bezier shape:
+	E - сlockwise
+	Q - counterclockwise
+
+Remove last drawn object:
+	Ctrl+Z
+
+Clear screen:
+	Del</value>
+  </data>
 </root>

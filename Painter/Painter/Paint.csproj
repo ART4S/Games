@@ -74,8 +74,9 @@
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GraphicObjects\DrawingImage.cs" />
+    <Compile Include="GraphicObjects\GraphicObject.cs" />
     <Compile Include="MouseState.cs" />
-    <Compile Include="GraphicObject.cs" />
+    <Compile Include="GraphicObjectType.cs" />
     <Compile Include="GraphicObjects\IRotatable.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="MoveDirection.cs" />
@@ -89,7 +90,6 @@
     </Compile>
     <Compile Include="GraphicObjects\Polygon.cs" />
     <Compile Include="GraphicObjects\Rectangle.cs" />
-    <Compile Include="GraphicObjects\IGraphicObject.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

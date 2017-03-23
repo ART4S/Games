@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Paint.GraphicObjects
 {
-    public class BezierShape : IGraphicObject, IRotatable
+    public class BezierShape : GraphicObject, IRotatable
     {
         private PointF[] curve;
         private PointF middlePoint;
@@ -17,12 +17,12 @@ namespace Paint.GraphicObjects
             this.pen = pen;
         }
 
-        public void Draw(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             graphics.DrawBeziers(pen, curve);
         }
 
-        public void Move(MoveDirection direction, int moveRange)
+        public override void Move(MoveDirection direction, int moveRange)
         {
             curve = curve.Select(point => PointMover.GetMovedPoint(point, direction, moveRange)).ToArray();
             middlePoint = PointMover.GetMovedPoint(middlePoint, direction, moveRange);

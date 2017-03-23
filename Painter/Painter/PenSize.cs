@@ -11,7 +11,7 @@ namespace Paint
     {
         public static int ToInt(this PenSize penSize)
         {
-            return (int) penSize;
+            return (int)penSize;
         }
     }
 }

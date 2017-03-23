@@ -61,6 +61,26 @@ namespace Paint.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Moving last drawn object:
+        ///	Arrow keys
+        ///
+        ///Rotation Polygon and Bezier shape:
+        ///	E - сlockwise
+        ///	Q - counterclockwise
+        ///
+        ///Remove last drawn object:
+        ///	Ctrl+Z
+        ///
+        ///Clear screen:
+        ///	Del.
+        /// </summary>
+        internal static string HelpText {
+            get {
+                return ResourceManager.GetString("HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG.
         /// </summary>
         internal static string ImageFilterPattern {

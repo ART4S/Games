@@ -7,21 +7,21 @@ namespace Paint
 {
     public class Painter
     {
-        private readonly List<IGraphicObject> graphicObjects;
+        private readonly List<GraphicObject> graphicObjects;
 
         public Painter()
         {
-            graphicObjects = new List<IGraphicObject>();
+            graphicObjects = new List<GraphicObject>();
         }
 
-        public void AddGraphicObject(IGraphicObject graphicObject)
+        public void AddGraphicObject(GraphicObject graphicObject)
         {
             graphicObjects.Add(graphicObject);
         }
 
         public void DrawGraphicObjects(Graphics graphics)
         {
-            foreach (IGraphicObject graphicObject in graphicObjects)
+            foreach (var graphicObject in graphicObjects)
                 graphicObject.Draw(graphics);
         }
 

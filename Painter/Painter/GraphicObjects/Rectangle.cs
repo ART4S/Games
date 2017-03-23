@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Paint.GraphicObjects
 {
-    public class Rectangle : IGraphicObject
+    public class Rectangle : GraphicObject
     {
         private PointF topLeftPoint;
 
@@ -21,13 +21,13 @@ namespace Paint.GraphicObjects
             this.textureBrush = textureBrush;
         }
 
-        public void Draw(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             graphics.DrawRectangle(pen, topLeftPoint.X, topLeftPoint.Y, width, height);
             graphics.FillRectangle(textureBrush, topLeftPoint.X, topLeftPoint.Y, width, height);
         }
 
-        public void Move(MoveDirection direction, int moveRange)
+        public override void Move(MoveDirection direction, int moveRange)
         {
             topLeftPoint = PointMover.GetMovedPoint(topLeftPoint, direction, moveRange);
         }

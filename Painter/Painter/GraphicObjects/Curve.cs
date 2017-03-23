@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Paint.GraphicObjects
 {
-    public class Curve : IGraphicObject
+    public class Curve : GraphicObject
     {
         private readonly Pen pen;
         private List<PointF> points;
@@ -25,7 +25,7 @@ namespace Paint.GraphicObjects
             points.Add(point);
         }
 
-        public void Draw(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             graphics.DrawCurve(pen, points.ToArray());
 
@@ -33,7 +33,7 @@ namespace Paint.GraphicObjects
                 graphics.FillEllipse(new SolidBrush(pen.Color), point.X - pen.Width / 2, point.Y - pen.Width / 2, pen.Width, pen.Width);
         }
 
-        public void Move(MoveDirection direction, int moveRange)
+        public override void Move(MoveDirection direction, int moveRange)
         {
             points = points.Select(point => PointMover.GetMovedPoint(point, direction, moveRange)).ToList();
         }

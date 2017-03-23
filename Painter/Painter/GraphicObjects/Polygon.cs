@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Paint.GraphicObjects
 {
-    public class Polygon : IGraphicObject, IRotatable
+    public class Polygon : GraphicObject, IRotatable
     {
         private PointF[] points;
         private PointF middlePoint;
@@ -19,13 +19,13 @@ namespace Paint.GraphicObjects
             this.textureBrush = textureBrush;
         }
 
-        public void Draw(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             graphics.DrawPolygon(pen, points);
             graphics.FillPolygon(textureBrush, points);
         }
 
-        public void Move(MoveDirection direction, int moveRange)
+        public override void Move(MoveDirection direction, int moveRange)
         {
             points = points.Select(point => PointMover.GetMovedPoint(point, direction, moveRange)).ToArray();
             middlePoint = PointMover.GetMovedPoint(middlePoint, direction, moveRange);

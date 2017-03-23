@@ -1,6 +1,6 @@
 ﻿namespace Paint
 {
-    public enum GraphicObject
+    public enum GraphicObjectType
     {
         Empty,
         Circle,

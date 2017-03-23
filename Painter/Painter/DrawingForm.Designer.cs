@@ -397,7 +397,7 @@
             this.helpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(23, 22);
-            this.helpButton.Text = "Info";
+            this.helpButton.Text = "Help";
             this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
             // 
             // patternsList

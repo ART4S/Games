@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Paint.GraphicObjects
 {
-    public class Circle : IGraphicObject
+    public class Circle : GraphicObject
     {
         private PointF middlePoint;
         private readonly int radius;
@@ -18,13 +18,13 @@ namespace Paint.GraphicObjects
             this.textureBrush = textureBrush;
         }
 
-        public void Draw(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             graphics.DrawEllipse(pen, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
             graphics.FillEllipse(textureBrush, middlePoint.X - radius, middlePoint.Y - radius, 2 * radius, 2 * radius);
         }
 
-        public void Move(MoveDirection direction, int moveRange)
+        public override void Move(MoveDirection direction, int moveRange)
         {
             middlePoint = PointMover.GetMovedPoint(middlePoint, direction, moveRange);
         }

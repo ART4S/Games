@@ -14,7 +14,7 @@ namespace Paint
         private readonly Painter painter;
         private Image selectedImageForFilling;
 
-        private GraphicObject selectedGraphicObject;
+        private GraphicObjectType selectedGraphicObject;
         private MouseState mouseState;
         private PenSize selectedPenSize;
 
@@ -30,9 +30,10 @@ namespace Paint
 
             painter = new Painter();
             selectedImageForFilling = new Bitmap(patternsList.Images[0]);
-            selectedPenSize = PenSize.Little;
-            selectedGraphicObject = GraphicObject.Empty;
+
+            selectedGraphicObject = GraphicObjectType.Empty;
             mouseState = MouseState.MouseKeyDepressed;
+            selectedPenSize = PenSize.Little;
 
             selectedColor = Color.Black;
 
@@ -65,50 +66,19 @@ namespace Paint
             }
         }
 
-        // изменить selectedGraphicObject
-        private void drawCircleButton_Click(object sender, EventArgs e)
+        // Изменение selectedColor
+        private void selectColorButton_Click(object sender, EventArgs e)
         {
-            selectedGraphicObject = GraphicObject.Circle;
-        }
+            ColorDialog colorDialog = new ColorDialog();
 
-        private void drawRectangleButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObject.Rectangle;
-        }
-
-        private void drawPolygonButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObject.Polygon;
-        }
-
-        private void drawBezierShapeButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObject.BezierShape;
-        }
-
-        private void drawCurveButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObject.Curve;
-        }
-
-        private void drawImageButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                Filter = Resources.ImageFilterPattern
-            };
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Image selectedImage = new Bitmap(openFileDialog.FileName);
-
-                painter.AddGraphicObject(new DrawingImage(selectedImage, selectedFirstPoint));
-
-                drawingPictureBox.Refresh();
+                selectedColor = colorDialog.Color;
+                selectColorButton.BackColor = colorDialog.Color;
             }
         }
 
-        // изменить selectedPenSize
+        // Изменение selectedPenSize
         private void littlePenSizeMenuItem_Click(object sender, EventArgs e)
         {
             selectedPenSize = PenSize.Little;
@@ -124,19 +94,50 @@ namespace Paint
             selectedPenSize = PenSize.Big;
         }
 
-        // изменить selectedColor
-        private void selectColorButton_Click(object sender, EventArgs e)
+        // Изменение selectedGraphicObject
+        private void drawCircleButton_Click(object sender, EventArgs e)
         {
-            ColorDialog colorDialog = new ColorDialog();
+            selectedGraphicObject = GraphicObjectType.Circle;
+        }
 
-            if (colorDialog.ShowDialog() == DialogResult.OK)
+        private void drawRectangleButton_Click(object sender, EventArgs e)
+        {
+            selectedGraphicObject = GraphicObjectType.Rectangle;
+        }
+
+        private void drawPolygonButton_Click(object sender, EventArgs e)
+        {
+            selectedGraphicObject = GraphicObjectType.Polygon;
+        }
+
+        private void drawBezierShapeButton_Click(object sender, EventArgs e)
+        {
+            selectedGraphicObject = GraphicObjectType.BezierShape;
+        }
+
+        private void drawCurveButton_Click(object sender, EventArgs e)
+        {
+            selectedGraphicObject = GraphicObjectType.Curve;
+        }
+
+        private void drawImageButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                selectedColor = colorDialog.Color;
-                selectColorButton.BackColor = colorDialog.Color;
+                Filter = Resources.ImageFilterPattern
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Image selectedImage = new Bitmap(openFileDialog.FileName);
+
+                painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
+
+                drawingPictureBox.Refresh();
             }
         }
 
-        // изменить selectedImageForFilling
+        // Изменение selectedImageForFilling
         private void patternsListView_ItemActivate(object sender, EventArgs e)
         {
             if (patternsListView.SelectedItems.Count == 0)
@@ -145,7 +146,7 @@ namespace Paint
             selectedImageForFilling = patternsList.Images[patternsListView.SelectedIndices[0]];
         }
 
-        // рисовние фигруы на доске
+        // Рисование
         private void drawingPictureBox_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -153,8 +154,8 @@ namespace Paint
             painter.DrawGraphicObjects(e.Graphics);
 
             if (mouseState == MouseState.MouseKeyPressed
-                && (selectedGraphicObject == GraphicObject.Circle
-                    || selectedGraphicObject == GraphicObject.Rectangle))
+                && (selectedGraphicObject == GraphicObjectType.Circle
+                    || selectedGraphicObject == GraphicObjectType.Rectangle))
                 e.Graphics.DrawLine(new Pen(selectedColor, selectedPenSize.ToInt()), selectedFirstPoint, cursorPoint);
         }
 
@@ -165,7 +166,7 @@ namespace Paint
 
             selectedFirstPoint = cursorPoint;
 
-            if (selectedGraphicObject == GraphicObject.Curve)
+            if (selectedGraphicObject == GraphicObjectType.Curve)
                 AddSelectedGraphicObjectInPainter();
 
             mouseState = MouseState.MouseKeyPressed;
@@ -178,7 +179,7 @@ namespace Paint
 
             selectedSecondPoint = cursorPoint;
 
-            if (selectedGraphicObject != GraphicObject.Curve)
+            if (selectedGraphicObject != GraphicObjectType.Curve)
                 AddSelectedGraphicObjectInPainter();
 
             mouseState = MouseState.MouseKeyDepressed;
@@ -195,7 +196,7 @@ namespace Paint
 
             switch (selectedGraphicObject)
             {
-                case GraphicObject.Circle:
+                case GraphicObjectType.Circle:
                     painter.AddGraphicObject(
                         new Circle(
                             selectedFirstPoint,
@@ -204,7 +205,7 @@ namespace Paint
                             textureBrush));
                     break;
 
-                case GraphicObject.Rectangle:
+                case GraphicObjectType.Rectangle:
                     painter.AddGraphicObject(
                         new Rectangle(
                             selectedFirstPoint,
@@ -214,74 +215,92 @@ namespace Paint
                             textureBrush));
                     break;
 
-                case GraphicObject.Polygon:
+                case GraphicObjectType.Curve:
+                    painter.AddGraphicObject(
+                        new Curve(
+                            selectedFirstPoint,
+                            selectedFirstPoint,
+                            pen));
+                    break;
+
+                case GraphicObjectType.Polygon:
                     painter.AddGraphicObject(GetPolygon12(selectedFirstPoint, pen, textureBrush));
                     break;
 
-                case GraphicObject.BezierShape:
+                case GraphicObjectType.BezierShape:
                     painter.AddGraphicObject(GetBezierShape12(selectedFirstPoint, pen));
                     break;
-                case GraphicObject.Curve:
-                    painter.AddGraphicObject(new Curve(selectedFirstPoint, selectedFirstPoint, pen));
+                case GraphicObjectType.DrawingImage:
                     break;
-                case GraphicObject.DrawingImage:
-                    break;
-                case GraphicObject.Empty:
+                case GraphicObjectType.Empty:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(selectedGraphicObject), selectedGraphicObject, null);
             }
         }
 
-        // Позиция курсора
+        // Изменение cursorPoint
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             cursorPoint = new Point(e.X, e.Y);
 
-            if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObject.Curve)
+            if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObjectType.Curve)
                 painter.AddPointToLastAddedCurve(cursorPoint);
 
             drawingPictureBox.Refresh();
         }
 
-        // Очистить экран
-        private void clearMenuItem_Click(object sender, EventArgs e)
-        {
-            ClearDrawingBoard();
-        }
-
-        // Отобразить тулбар
+        // Отображение тулбара
         private void toolbarMenuItem_Click(object sender, EventArgs e)
         {
             toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
             toolStrip.Visible = toolbarMenuItem.Checked;
         }
 
-        // Отображение инфы разработчиков
+        // Отображение инструкции к программе
         private void helpButton_Click(object sender, EventArgs e)
         {
-            ShowHelpDialog();
+            MessageBox.Show(Resources.HelpText, "Help");
         }
 
+        // Отображение информации о программе и разработчиках
         private void aboutPainterMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowHelpDialog();
-        }
-
-        private void ShowHelpDialog()
         {
             MessageBox.Show(Resources.InfoAboutProgram, "About program");
         }
 
-        // Удалить последнюю нарисованную фигуру
+        // Удаление последнего нарисованного графического объекта
         private void undoMenuItem_Click(object sender, EventArgs e)
         {
             RemoveLastAddedGraphicObject();
         }
 
+        // Очистка экрана
+        private void clearMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearDrawingBoard();
+        }
+
+        // Настройка размера drawingPictureBox
+        private void pagePropertyMenuItem_Click(object sender, EventArgs e)
+        {
+            var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(drawingPictureBox);
+
+            settingSizeDrawingPictureBoxDialog.ShowDialog();
+        }
+
+        // Выход
+        private void exitMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
         // Клавиши
         private void drawingForm_KeyDown(object sender, KeyEventArgs e)
         {
+            if (mouseState != MouseState.MouseKeyDepressed)
+                return;
+
             Keys pressedKey = e.KeyCode;
 
             if (pressedKey == Keys.Z && e.Control)
@@ -290,12 +309,9 @@ namespace Paint
             if (pressedKey == Keys.Delete)
                 ClearDrawingBoard();
 
-            if (mouseState != MouseState.MouseKeyDepressed)
-                return;
-
             const double rotationAngle = 0.05;
             const int moveRange = 3;
-                                             
+                                                        
             switch (pressedKey)
             {
                 case Keys.Up:
@@ -333,18 +349,7 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
-        private void pagePropertyMenuItem_Click(object sender, EventArgs e)
-        {
-            new SettingSizePictureBoxForm(drawingPictureBox).ShowDialog();
-        }
-
-        private void exitMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        // 12-й вариант
-        // полигон и фигура, построенная из кривых безье
+        // Фигуры для 12-го варианта
 
         private Polygon GetPolygon12(Point middlePoint, Pen pen, TextureBrush textureBrush)
         {
