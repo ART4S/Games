@@ -45,6 +45,7 @@
             this.clearMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patternsPanelMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutPainterMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
@@ -70,7 +71,6 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
-            this.patternsPanelMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -86,7 +86,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(517, 24);
+            this.menuStrip.Size = new System.Drawing.Size(652, 24);
             this.menuStrip.TabIndex = 0;
             // 
             // fileToolStripMenuItem
@@ -189,9 +189,18 @@
             this.toolbarMenuItem.Checked = true;
             this.toolbarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolbarMenuItem.Name = "toolbarMenuItem";
-            this.toolbarMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolbarMenuItem.Size = new System.Drawing.Size(149, 22);
             this.toolbarMenuItem.Text = "Toolbar";
             this.toolbarMenuItem.Click += new System.EventHandler(this.toolbarMenuItem_Click);
+            // 
+            // patternsPanelMenuItem
+            // 
+            this.patternsPanelMenuItem.Checked = true;
+            this.patternsPanelMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.patternsPanelMenuItem.Name = "patternsPanelMenuItem";
+            this.patternsPanelMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.patternsPanelMenuItem.Text = "Patterns panel";
+            this.patternsPanelMenuItem.Click += new System.EventHandler(this.patternsPanelMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -230,7 +239,7 @@
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip.Size = new System.Drawing.Size(517, 25);
+            this.toolStrip.Size = new System.Drawing.Size(652, 25);
             this.toolStrip.TabIndex = 1;
             // 
             // newFileButton
@@ -427,7 +436,7 @@
             this.patternsListView.MultiSelect = false;
             this.patternsListView.Name = "patternsListView";
             this.patternsListView.ShowGroups = false;
-            this.patternsListView.Size = new System.Drawing.Size(517, 74);
+            this.patternsListView.Size = new System.Drawing.Size(652, 74);
             this.patternsListView.SmallImageList = this.patternsList;
             this.patternsListView.TabIndex = 3;
             this.patternsListView.UseCompatibleStateImageBehavior = false;
@@ -450,23 +459,13 @@
             // drawingPanel
             // 
             this.drawingPanel.AutoScroll = true;
-            this.drawingPanel.AutoSize = true;
             this.drawingPanel.BackColor = System.Drawing.Color.DimGray;
             this.drawingPanel.Controls.Add(this.drawingPictureBox);
             this.drawingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drawingPanel.Location = new System.Drawing.Point(0, 49);
             this.drawingPanel.Name = "drawingPanel";
-            this.drawingPanel.Size = new System.Drawing.Size(517, 290);
+            this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
-            // 
-            // patternsPanelMenuItem
-            // 
-            this.patternsPanelMenuItem.Checked = true;
-            this.patternsPanelMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.patternsPanelMenuItem.Name = "patternsPanelMenuItem";
-            this.patternsPanelMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.patternsPanelMenuItem.Text = "Patterns panel";
-            this.patternsPanelMenuItem.Click += new System.EventHandler(this.patternsPanelMenuItem_Click);
             // 
             // DrawingForm
             // 
@@ -474,7 +473,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Silver;
-            this.ClientSize = new System.Drawing.Size(517, 413);
+            this.ClientSize = new System.Drawing.Size(652, 413);
             this.Controls.Add(this.drawingPanel);
             this.Controls.Add(this.patternsListView);
             this.Controls.Add(this.toolStrip);
