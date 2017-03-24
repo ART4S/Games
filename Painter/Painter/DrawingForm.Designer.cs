@@ -70,6 +70,7 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.patternsPanelMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -177,7 +178,8 @@
             // viewMenuItem
             // 
             this.viewMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolbarMenuItem});
+            this.toolbarMenuItem,
+            this.patternsPanelMenuItem});
             this.viewMenuItem.Name = "viewMenuItem";
             this.viewMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewMenuItem.Text = "View";
@@ -187,7 +189,7 @@
             this.toolbarMenuItem.Checked = true;
             this.toolbarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolbarMenuItem.Name = "toolbarMenuItem";
-            this.toolbarMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.toolbarMenuItem.Size = new System.Drawing.Size(152, 22);
             this.toolbarMenuItem.Text = "Toolbar";
             this.toolbarMenuItem.Click += new System.EventHandler(this.toolbarMenuItem_Click);
             // 
@@ -457,6 +459,15 @@
             this.drawingPanel.Size = new System.Drawing.Size(517, 290);
             this.drawingPanel.TabIndex = 4;
             // 
+            // patternsPanelMenuItem
+            // 
+            this.patternsPanelMenuItem.Checked = true;
+            this.patternsPanelMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.patternsPanelMenuItem.Name = "patternsPanelMenuItem";
+            this.patternsPanelMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.patternsPanelMenuItem.Text = "Patterns panel";
+            this.patternsPanelMenuItem.Click += new System.EventHandler(this.patternsPanelMenuItem_Click);
+            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,6 +540,7 @@
         private System.Windows.Forms.ToolStripMenuItem bigPenSizeMenuItem;
         private System.Windows.Forms.ToolStripButton drawCurveButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem patternsPanelMenuItem;
     }
 }
 

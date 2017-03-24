@@ -257,6 +257,13 @@ namespace Paint
             toolStrip.Visible = toolbarMenuItem.Checked;
         }
 
+        // Оторажение панели паттернов
+        private void patternsPanelMenuItem_Click(object sender, EventArgs e)
+        {
+            patternsPanelMenuItem.Checked = !patternsPanelMenuItem.Checked;
+            patternsListView.Visible = patternsPanelMenuItem.Checked;
+        }
+
         // Отображение инструкции к программе
         private void helpButton_Click(object sender, EventArgs e)
         {
