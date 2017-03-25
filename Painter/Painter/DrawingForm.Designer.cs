@@ -74,6 +74,7 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.gifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -130,9 +131,10 @@
             // saveAsFIleMenuItem
             // 
             this.saveAsFIleMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bmpMenuItem,
+            this.pngMenuItem,
             this.jpegMenuItem,
-            this.pngMenuItem});
+            this.bmpMenuItem,
+            this.gifMenuItem});
             this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
             this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveAsFIleMenuItem.Text = "Save As...";
@@ -140,21 +142,21 @@
             // bmpMenuItem
             // 
             this.bmpMenuItem.Name = "bmpMenuItem";
-            this.bmpMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bmpMenuItem.Text = "BMP";
             this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
             // 
             // jpegMenuItem
             // 
             this.jpegMenuItem.Name = "jpegMenuItem";
-            this.jpegMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.jpegMenuItem.Size = new System.Drawing.Size(152, 22);
             this.jpegMenuItem.Text = "JPEG";
             this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
             // 
             // pngMenuItem
             // 
             this.pngMenuItem.Name = "pngMenuItem";
-            this.pngMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pngMenuItem.Text = "PNG";
             this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
             // 
@@ -499,6 +501,13 @@
             this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
             // 
+            // gifMenuItem
+            // 
+            this.gifMenuItem.Name = "gifMenuItem";
+            this.gifMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gifMenuItem.Text = "GIF";
+            this.gifMenuItem.Click += new System.EventHandler(this.gifMenuItem_Click);
+            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -575,6 +584,7 @@
         private System.Windows.Forms.ToolStripMenuItem bmpMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jpegMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pngMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gifMenuItem;
     }
 }
 

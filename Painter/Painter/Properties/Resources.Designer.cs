@@ -81,7 +81,7 @@ namespace Paint.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG.
+        ///   Ищет локализованную строку, похожую на Image Files(*.PNG;*.JPG;*.BMP;*.GIF)|*.PNG;*.JPG;*.BMP;*.GIF.
         /// </summary>
         internal static string ImageFilterPattern {
             get {

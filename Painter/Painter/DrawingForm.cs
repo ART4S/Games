@@ -247,6 +247,26 @@ namespace Paint
             FastSaveDrawnImage();
         }
 
+        private void pngMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveDrawnImageToFormat(ImageFormat.Png);
+        }
+
+        private void jpegMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveDrawnImageToFormat(ImageFormat.Jpeg);
+        }
+
+        private void bmpMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveDrawnImageToFormat(ImageFormat.Bmp);
+        }
+
+        private void gifMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveDrawnImageToFormat(ImageFormat.Gif);
+        }
+
         private void FastSaveDrawnImage()
         {
             Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
@@ -257,19 +277,12 @@ namespace Paint
                 SaveDrawnImageToFormat(ImageFormat.Png);
         }
 
-        private void bmpMenuItem_Click(object sender, EventArgs e)
+        private void SaveDrawnImageToFormat(ImageFormat imageFormat)
         {
-            SaveDrawnImageToFormat(ImageFormat.Bmp);
-        }
+            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
 
-        private void jpegMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveDrawnImageToFormat(ImageFormat.Jpeg);
-        }
-
-        private void pngMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveDrawnImageToFormat(ImageFormat.Png);
+            if (TrySetDrawnImageFileNameViaDialogBox(imageFormat))
+                resultImage.Save(drawnImageFileName);
         }
 
         private bool TrySetDrawnImageFileNameViaDialogBox(ImageFormat imageFormat)
@@ -293,14 +306,6 @@ namespace Paint
             }
 
             return false;
-        }
-
-        private void SaveDrawnImageToFormat(ImageFormat imageFormat)
-        {
-            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
-
-            if (TrySetDrawnImageFileNameViaDialogBox(imageFormat))
-                resultImage.Save(drawnImageFileName, imageFormat);
         }
 
         // Изменение cursorPoint
