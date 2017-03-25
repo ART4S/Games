@@ -7,7 +7,7 @@ namespace Paint
     {
         private readonly PictureBox pictureBox;
 
-        public SettingSizePictureBoxForm(PictureBox pictureBox)
+        public SettingSizePictureBoxForm(PictureBox pictureBox, int pictureBoxMaxWidth, int pictureBoxMaxHeight)
         {
             InitializeComponent();
 
@@ -15,6 +15,9 @@ namespace Paint
 
             widthNumericUpDown.Value = pictureBox.Width;
             heightNumericUpDown.Value = pictureBox.Height;
+
+            widthNumericUpDown.Maximum = pictureBoxMaxWidth;
+            heightNumericUpDown.Maximum = pictureBoxMaxHeight;
         }
 
         private void okButton_Click(object sender, EventArgs e)

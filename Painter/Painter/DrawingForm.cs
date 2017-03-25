@@ -25,6 +25,9 @@ namespace Paint
         private Point selectedSecondPoint;
         private Point cursorPoint;
 
+        private const int drawingBoardMaxWidth = 1920;
+        private const int drawingBoardMaxHeight = 1080;
+
         private string drawnImageFileName;
 
         public DrawingForm()
@@ -239,6 +242,126 @@ namespace Paint
             }
         }
 
+        // Изменение cursorPoint
+        private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            cursorPoint = new Point(e.X, e.Y);
+
+            if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObjectType.Curve)
+                painter.AddPointToLastAddedCurve(cursorPoint);
+
+            drawingPictureBox.Refresh();
+        }
+
+        // Отображение тулбара
+        private void toolbarMenuItem_Click(object sender, EventArgs e)
+        {
+            toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
+            toolStrip.Visible = toolbarMenuItem.Checked;
+        }
+
+        // Оторажение панели паттернов
+        private void patternsPanelMenuItem_Click(object sender, EventArgs e)
+        {
+            patternsPanelMenuItem.Checked = !patternsPanelMenuItem.Checked;
+            patternsListView.Visible = patternsPanelMenuItem.Checked;
+        }
+
+        // Отображение инструкции к программе
+        private void helpButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(Resources.HelpText, @"Help");
+        }
+
+        // Отображение информации о программе и разработчиках
+        private void aboutPainterMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(Resources.InfoAboutProgram, @"About program");
+        }
+
+        // Удаление последнего нарисованного графического объекта
+        private void undoMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLastAddedGraphicObject();
+        }
+
+        // Очистка экрана
+        private void clearMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearDrawingBoard();
+        }
+
+        // Настройка размера drawingPictureBox
+        private void pagePropertyMenuItem_Click(object sender, EventArgs e)
+        {
+            var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(
+                drawingPictureBox,
+                drawingBoardMaxWidth,
+                drawingBoardMaxHeight);
+
+            settingSizeDrawingPictureBoxDialog.ShowDialog();
+        }
+
+        // Выход
+        private void exitMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        // Нажатие на клавиши
+        private void drawingForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (mouseState != MouseState.MouseKeyDepressed)
+                return;
+
+            Keys pressedKey = e.KeyCode;
+
+            if (pressedKey == Keys.Z && e.Control)
+                RemoveLastAddedGraphicObject();
+
+            if (pressedKey == Keys.Delete)
+                ClearDrawingBoard();
+
+            const double rotationAngle = 0.05;
+            const int moveRange = 3;
+                                                        
+            switch (pressedKey)
+            {
+                case Keys.Up:
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Up, moveRange);
+                    break;
+                case Keys.Down:
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Down, moveRange);
+                    break;
+                case Keys.Left:
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Left, moveRange);
+                    break;
+                case Keys.Right:
+                    painter.MoveLastAddedGraphicObject(MoveDirection.Right, moveRange);
+                    break;
+                case Keys.Q:
+                    painter.RotateClockwiseLastAddedGraphicObject(-rotationAngle);
+                    break;
+                case Keys.E:
+                    painter.RotateClockwiseLastAddedGraphicObject(rotationAngle);
+                    break;
+            }
+
+            drawingPictureBox.Refresh();
+        }
+
+        private void RemoveLastAddedGraphicObject()
+        {
+            painter.RemoveLastAddedGraphicObject();
+            drawingPictureBox.Refresh();
+        }
+
+        private void ClearDrawingBoard()
+        {
+            painter.ClearGraphicObjects();
+            drawingPictureBox.Refresh();
+        }
+
         // Сохранение изображения
         private void saveFileButton_Click(object sender, EventArgs e)
         {
@@ -342,121 +465,45 @@ namespace Paint
             }
         }
 
-        // Изменение cursorPoint
-        private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
+        // Открытие файла изображения в программе
+        private void openFileButton_Click(object sender, EventArgs e)
         {
-            cursorPoint = new Point(e.X, e.Y);
-
-            if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObjectType.Curve)
-                painter.AddPointToLastAddedCurve(cursorPoint);
-
-            drawingPictureBox.Refresh();
+            SaveChangesAnsOpenFileInProgram();
         }
 
-        // Отображение тулбара
-        private void toolbarMenuItem_Click(object sender, EventArgs e)
+        private void openFileMenuItem_Click(object sender, EventArgs e)
         {
-            toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
-            toolStrip.Visible = toolbarMenuItem.Checked;
+            SaveChangesAnsOpenFileInProgram();
         }
 
-        // Оторажение панели паттернов
-        private void patternsPanelMenuItem_Click(object sender, EventArgs e)
+        private void SaveChangesAnsOpenFileInProgram()
         {
-            patternsPanelMenuItem.Checked = !patternsPanelMenuItem.Checked;
-            patternsListView.Visible = patternsPanelMenuItem.Checked;
-        }
-
-        // Отображение инструкции к программе
-        private void helpButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Resources.HelpText, @"Help");
-        }
-
-        // Отображение информации о программе и разработчиках
-        private void aboutPainterMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Resources.InfoAboutProgram, @"About program");
-        }
-
-        // Удаление последнего нарисованного графического объекта
-        private void undoMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveLastAddedGraphicObject();
-        }
-
-        // Очистка экрана
-        private void clearMenuItem_Click(object sender, EventArgs e)
-        {
-            ClearDrawingBoard();
-        }
-
-        // Настройка размера drawingPictureBox
-        private void pagePropertyMenuItem_Click(object sender, EventArgs e)
-        {
-            var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(drawingPictureBox);
-
-            settingSizeDrawingPictureBoxDialog.ShowDialog();
-        }
-
-        // Выход
-        private void exitMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        // Нажатие на клавиши
-        private void drawingForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (mouseState != MouseState.MouseKeyDepressed)
-                return;
-
-            Keys pressedKey = e.KeyCode;
-
-            if (pressedKey == Keys.Z && e.Control)
-                RemoveLastAddedGraphicObject();
-
-            if (pressedKey == Keys.Delete)
-                ClearDrawingBoard();
-
-            const double rotationAngle = 0.05;
-            const int moveRange = 3;
-                                                        
-            switch (pressedKey)
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                case Keys.Up:
-                    painter.MoveLastAddedGraphicObject(MoveDirection.Up, moveRange);
-                    break;
-                case Keys.Down:
-                    painter.MoveLastAddedGraphicObject(MoveDirection.Down, moveRange);
-                    break;
-                case Keys.Left:
-                    painter.MoveLastAddedGraphicObject(MoveDirection.Left, moveRange);
-                    break;
-                case Keys.Right:
-                    painter.MoveLastAddedGraphicObject(MoveDirection.Right, moveRange);
-                    break;
-                case Keys.Q:
-                    painter.RotateClockwiseLastAddedGraphicObject(-rotationAngle);
-                    break;
-                case Keys.E:
-                    painter.RotateClockwiseLastAddedGraphicObject(rotationAngle);
-                    break;
+                Filter = Resources.ImageFilterPattern
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Image selectedImage = new Bitmap(openFileDialog.FileName);
+
+                if (TrySaveChanges())
+                {
+                    SetDefaultValuesForFields();
+
+                    painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
+
+                    drawnImageFileName = openFileDialog.FileName;
+
+
+                    if (selectedImage.Width > drawingBoardMaxWidth || selectedImage.Height > drawingBoardMaxHeight)
+                        drawingPictureBox.Size = new Size(drawingBoardMaxWidth, drawingBoardMaxHeight);
+                    else
+                        drawingPictureBox.Size = selectedImage.Size;
+
+                    drawingPictureBox.Refresh();
+                }
             }
-
-            drawingPictureBox.Refresh();
-        }
-
-        private void RemoveLastAddedGraphicObject()
-        {
-            painter.RemoveLastAddedGraphicObject();
-            drawingPictureBox.Refresh();
-        }
-
-        private void ClearDrawingBoard()
-        {
-            painter.ClearGraphicObjects();
-            drawingPictureBox.Refresh();
         }
 
         // Фигуры для 12-го варианта

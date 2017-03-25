@@ -36,9 +36,10 @@
             this.openFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.jpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pagePropertyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -74,7 +75,6 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
-            this.gifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -120,6 +120,7 @@
             this.openFileMenuItem.Name = "openFileMenuItem";
             this.openFileMenuItem.Size = new System.Drawing.Size(157, 22);
             this.openFileMenuItem.Text = "Open";
+            this.openFileMenuItem.Click += new System.EventHandler(this.openFileMenuItem_Click);
             // 
             // saveFileMenuItem
             // 
@@ -139,12 +140,12 @@
             this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveAsFIleMenuItem.Text = "Save As...";
             // 
-            // bmpMenuItem
+            // pngMenuItem
             // 
-            this.bmpMenuItem.Name = "bmpMenuItem";
-            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.bmpMenuItem.Text = "BMP";
-            this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
+            this.pngMenuItem.Name = "pngMenuItem";
+            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.pngMenuItem.Text = "PNG";
+            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
             // 
             // jpegMenuItem
             // 
@@ -153,12 +154,19 @@
             this.jpegMenuItem.Text = "JPEG";
             this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
             // 
-            // pngMenuItem
+            // bmpMenuItem
             // 
-            this.pngMenuItem.Name = "pngMenuItem";
-            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pngMenuItem.Text = "PNG";
-            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
+            this.bmpMenuItem.Name = "bmpMenuItem";
+            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bmpMenuItem.Text = "BMP";
+            this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
+            // 
+            // gifMenuItem
+            // 
+            this.gifMenuItem.Name = "gifMenuItem";
+            this.gifMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gifMenuItem.Text = "GIF";
+            this.gifMenuItem.Click += new System.EventHandler(this.gifMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -294,6 +302,7 @@
             this.openFileButton.Size = new System.Drawing.Size(23, 22);
             this.openFileButton.Text = "Open";
             this.openFileButton.ToolTipText = "Open";
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
             // saveFileButton
             // 
@@ -500,13 +509,6 @@
             this.drawingPanel.Name = "drawingPanel";
             this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
-            // 
-            // gifMenuItem
-            // 
-            this.gifMenuItem.Name = "gifMenuItem";
-            this.gifMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.gifMenuItem.Text = "GIF";
-            this.gifMenuItem.Click += new System.EventHandler(this.gifMenuItem_Click);
             // 
             // DrawingForm
             // 
