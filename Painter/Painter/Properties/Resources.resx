@@ -167,4 +167,10 @@ Clear screen:
   <data name="savingImageErrorText" xml:space="preserve">
     <value>Cannot save image</value>
   </data>
+  <data name="saveChangesText" xml:space="preserve">
+    <value>Do want save changes to file?</value>
+  </data>
+  <data name="programName" xml:space="preserve">
+    <value>Simple Painter</value>
+  </data>
 </root>

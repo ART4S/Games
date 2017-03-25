@@ -181,6 +181,24 @@ namespace Paint.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Simple Painter.
+        /// </summary>
+        internal static string programName {
+            get {
+                return ResourceManager.GetString("programName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Do want save changes to file?.
+        /// </summary>
+        internal static string saveChangesText {
+            get {
+                return ResourceManager.GetString("saveChangesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cannot save image.
         /// </summary>
         internal static string savingImageErrorText {

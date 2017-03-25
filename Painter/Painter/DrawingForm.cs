@@ -12,7 +12,7 @@ namespace Paint
 {
     public partial class DrawingForm : Form
     {
-        private readonly Painter painter;
+        private Painter painter;
         private Image selectedImageForFilling;
 
         private GraphicObjectType selectedGraphicObject;
@@ -30,7 +30,12 @@ namespace Paint
         public DrawingForm()
         {
             InitializeComponent();
+            SetDefaultValuesForFields();
+            AddPatternsInPatternsListView();
+        }
 
+        private void SetDefaultValuesForFields()
+        {
             painter = new Painter();
             selectedImageForFilling = new Bitmap(patternsList.Images[0]);
 
@@ -45,8 +50,6 @@ namespace Paint
             selectedSecondPoint = new Point(0, 0);
 
             drawnImageFileName = string.Empty;
-
-            AddPatternsInPatternsListView();
         }
 
         private void AddPatternsInPatternsListView()
@@ -308,6 +311,37 @@ namespace Paint
             return false;
         }
 
+        // Создание нового файла
+        private void newFileMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TrySaveChanges())
+                SetDefaultValuesForFields();
+        }
+
+        private void newFileButton_Click(object sender, EventArgs e)
+        {
+            if (TrySaveChanges())
+                SetDefaultValuesForFields();
+        }
+
+        private bool TrySaveChanges()
+        {
+            DialogResult saveChangesDialogResult = MessageBox.Show(Resources.saveChangesText, Resources.programName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            switch (saveChangesDialogResult)
+            {
+                case DialogResult.Yes:
+                    FastSaveDrawnImage();
+                    return true;
+                case DialogResult.No:
+                    return true;
+                case DialogResult.Cancel:
+                    return false;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(saveChangesDialogResult), saveChangesDialogResult, null);
+            }
+        }
+
         // Изменение cursorPoint
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
@@ -484,22 +518,6 @@ namespace Paint
             };
 
             return new BezierShape(curve, middlePoint, pen);
-        }
-
-        // Создание нового файла
-        private void newFileMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateNewFile();
-        }
-
-        private void newFileButton_Click(object sender, EventArgs e)
-        {
-            CreateNewFile();
-        }
-
-        private void CreateNewFile()
-        {
-            // TODO
         }
     }
 }
