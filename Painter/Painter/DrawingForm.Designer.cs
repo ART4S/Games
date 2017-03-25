@@ -38,6 +38,7 @@
             this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pagePropertyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -73,7 +74,6 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
-            this.pngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -112,6 +112,7 @@
             this.newFileMenuItem.Name = "newFileMenuItem";
             this.newFileMenuItem.Size = new System.Drawing.Size(157, 22);
             this.newFileMenuItem.Text = "New";
+            this.newFileMenuItem.Click += new System.EventHandler(this.newFileMenuItem_Click);
             // 
             // openFileMenuItem
             // 
@@ -139,16 +140,23 @@
             // bmpMenuItem
             // 
             this.bmpMenuItem.Name = "bmpMenuItem";
-            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bmpMenuItem.Size = new System.Drawing.Size(99, 22);
             this.bmpMenuItem.Text = "BMP";
             this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
             // 
             // jpegMenuItem
             // 
             this.jpegMenuItem.Name = "jpegMenuItem";
-            this.jpegMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.jpegMenuItem.Size = new System.Drawing.Size(99, 22);
             this.jpegMenuItem.Text = "JPEG";
             this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
+            // 
+            // pngMenuItem
+            // 
+            this.pngMenuItem.Name = "pngMenuItem";
+            this.pngMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.pngMenuItem.Text = "PNG";
+            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -273,6 +281,7 @@
             this.newFileButton.Size = new System.Drawing.Size(23, 22);
             this.newFileButton.Text = "New";
             this.newFileButton.ToolTipText = "New";
+            this.newFileButton.Click += new System.EventHandler(this.newFileButton_Click);
             // 
             // openFileButton
             // 
@@ -489,13 +498,6 @@
             this.drawingPanel.Name = "drawingPanel";
             this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
-            // 
-            // pngMenuItem
-            // 
-            this.pngMenuItem.Name = "pngMenuItem";
-            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pngMenuItem.Text = "PNG";
-            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
             // 
             // DrawingForm
             // 

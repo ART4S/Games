@@ -25,6 +25,8 @@ namespace Paint
         private Point selectedSecondPoint;
         private Point cursorPoint;
 
+        private string drawnImageFileName;
+
         public DrawingForm()
         {
             InitializeComponent();
@@ -41,6 +43,8 @@ namespace Paint
             cursorPoint = new Point(0, 0);
             selectedFirstPoint = new Point(0, 0);
             selectedSecondPoint = new Point(0, 0);
+
+            drawnImageFileName = string.Empty;
 
             AddPatternsInPatternsListView();
         }
@@ -235,41 +239,41 @@ namespace Paint
         // Сохранение изображения
         private void saveFileButton_Click(object sender, EventArgs e)
         {
-            SaveImageInBmpFormatOnDesktop();
+            FastSaveDrawnImage();
         }
 
         private void saveFileMenuItem_Click(object sender, EventArgs e)
         {
-            SaveImageInBmpFormatOnDesktop();
+            FastSaveDrawnImage();
         }
 
-        private void SaveImageInBmpFormatOnDesktop()
+        private void FastSaveDrawnImage()
         {
             Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
-            string pathToDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-            resultImage.Save(pathToDesktop + "\\Image.bmp", ImageFormat.Bmp);
+            if (drawnImageFileName != string.Empty)
+                resultImage.Save(drawnImageFileName);
+            else
+                SaveDrawnImageToFormat(ImageFormat.Png);
         }
 
         private void bmpMenuItem_Click(object sender, EventArgs e)
         {
-            SaveImageToFormatViaDialogBox(ImageFormat.Bmp);
+            SaveDrawnImageToFormat(ImageFormat.Bmp);
         }
 
         private void jpegMenuItem_Click(object sender, EventArgs e)
         {
-            SaveImageToFormatViaDialogBox(ImageFormat.Jpeg);
+            SaveDrawnImageToFormat(ImageFormat.Jpeg);
         }
 
         private void pngMenuItem_Click(object sender, EventArgs e)
         {
-            SaveImageToFormatViaDialogBox(ImageFormat.Png);
+            SaveDrawnImageToFormat(ImageFormat.Png);
         }
 
-        private void SaveImageToFormatViaDialogBox(ImageFormat imageFormat)
+        private bool TrySetDrawnImageFileNameViaDialogBox(ImageFormat imageFormat)
         {
-            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
-
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 FileName = "Image." + imageFormat
@@ -279,13 +283,24 @@ namespace Paint
             {
                 try
                 {
-                    resultImage.Save(saveFileDialog.FileName, imageFormat);
+                    drawnImageFileName = saveFileDialog.FileName;
+                    return true;
                 }
                 catch
                 {
                     MessageBox.Show(Resources.savingImageErrorText, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            return false;
+        }
+
+        private void SaveDrawnImageToFormat(ImageFormat imageFormat)
+        {
+            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+
+            if (TrySetDrawnImageFileNameViaDialogBox(imageFormat))
+                resultImage.Save(drawnImageFileName, imageFormat);
         }
 
         // Изменение cursorPoint
@@ -464,6 +479,22 @@ namespace Paint
             };
 
             return new BezierShape(curve, middlePoint, pen);
+        }
+
+        // Создание нового файла
+        private void newFileMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateNewFile();
+        }
+
+        private void newFileButton_Click(object sender, EventArgs e)
+        {
+            CreateNewFile();
+        }
+
+        private void CreateNewFile()
+        {
+            // TODO
         }
     }
 }
