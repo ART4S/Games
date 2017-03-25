@@ -81,7 +81,7 @@ namespace Paint.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG.
+        ///   Ищет локализованную строку, похожую на Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG.
         /// </summary>
         internal static string ImageFilterPattern {
             get {
@@ -177,6 +177,15 @@ namespace Paint.Properties {
             get {
                 object obj = ResourceManager.GetObject("Pattern7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cannot save image.
+        /// </summary>
+        internal static string savingImageErrorText {
+            get {
+                return ResourceManager.GetString("savingImageErrorText", resourceCulture);
             }
         }
     }

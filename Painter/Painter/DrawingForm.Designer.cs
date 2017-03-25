@@ -36,6 +36,8 @@
             this.openFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pagePropertyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -71,6 +73,7 @@
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.pngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -121,12 +124,31 @@
             this.saveFileMenuItem.Name = "saveFileMenuItem";
             this.saveFileMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveFileMenuItem.Text = "Save";
+            this.saveFileMenuItem.Click += new System.EventHandler(this.saveFileMenuItem_Click);
             // 
             // saveAsFIleMenuItem
             // 
+            this.saveAsFIleMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bmpMenuItem,
+            this.jpegMenuItem,
+            this.pngMenuItem});
             this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
             this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveAsFIleMenuItem.Text = "Save As...";
+            // 
+            // bmpMenuItem
+            // 
+            this.bmpMenuItem.Name = "bmpMenuItem";
+            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bmpMenuItem.Text = "BMP";
+            this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
+            // 
+            // jpegMenuItem
+            // 
+            this.jpegMenuItem.Name = "jpegMenuItem";
+            this.jpegMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.jpegMenuItem.Text = "JPEG";
+            this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -271,6 +293,7 @@
             this.saveFileButton.Size = new System.Drawing.Size(23, 22);
             this.saveFileButton.Text = "Save";
             this.saveFileButton.ToolTipText = "Save";
+            this.saveFileButton.Click += new System.EventHandler(this.saveFileButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -467,6 +490,13 @@
             this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
             // 
+            // pngMenuItem
+            // 
+            this.pngMenuItem.Name = "pngMenuItem";
+            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.pngMenuItem.Text = "PNG";
+            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
+            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -540,6 +570,9 @@
         private System.Windows.Forms.ToolStripButton drawCurveButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem patternsPanelMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bmpMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jpegMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pngMenuItem;
     }
 }
 

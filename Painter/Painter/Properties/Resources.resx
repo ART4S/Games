@@ -148,7 +148,7 @@ Developer: Chulets Vyacheslav
 Year: 2017</value>
   </data>
   <data name="ImageFilterPattern" xml:space="preserve">
-    <value>Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG</value>
+    <value>Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG</value>
   </data>
   <data name="HelpText" xml:space="preserve">
     <value>Moving last drawn object:
@@ -163,5 +163,8 @@ Remove last drawn object:
 
 Clear screen:
 	Del</value>
+  </data>
+  <data name="savingImageErrorText" xml:space="preserve">
+    <value>Cannot save image</value>
   </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using Paint.GraphicObjects;
@@ -41,15 +42,7 @@ namespace Paint
             selectedFirstPoint = new Point(0, 0);
             selectedSecondPoint = new Point(0, 0);
 
-            BringToFontDrawingFormElements();
             AddPatternsInPatternsListView();
-        }
-
-        private void BringToFontDrawingFormElements()
-        {
-            patternsListView.BringToFront();
-            menuStrip.BringToFront();
-            toolStrip.BringToFront();
         }
 
         private void AddPatternsInPatternsListView()
@@ -236,6 +229,62 @@ namespace Paint
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(selectedGraphicObject), selectedGraphicObject, null);
+            }
+        }
+
+        // Сохранение изображения
+        private void saveFileButton_Click(object sender, EventArgs e)
+        {
+            SaveImageInBmpFormatOnDesktop();
+        }
+
+        private void saveFileMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveImageInBmpFormatOnDesktop();
+        }
+
+        private void SaveImageInBmpFormatOnDesktop()
+        {
+            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+            string pathToDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+            resultImage.Save(pathToDesktop + "\\Image.bmp", ImageFormat.Bmp);
+        }
+
+        private void bmpMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveImageToFormatViaDialogBox(ImageFormat.Bmp);
+        }
+
+        private void jpegMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveImageToFormatViaDialogBox(ImageFormat.Jpeg);
+        }
+
+        private void pngMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveImageToFormatViaDialogBox(ImageFormat.Png);
+        }
+
+        private void SaveImageToFormatViaDialogBox(ImageFormat imageFormat)
+        {
+            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                FileName = "Image." + imageFormat
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    resultImage.Save(saveFileDialog.FileName, imageFormat);
+                }
+                catch
+                {
+                    MessageBox.Show(Resources.savingImageErrorText, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

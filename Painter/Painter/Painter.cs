@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using Paint.GraphicObjects;
 
@@ -61,6 +62,22 @@ namespace Paint
             Curve curve = graphicObjects.Last() as Curve;
 
             curve?.AddPoint(point);
+        }
+
+        public Bitmap ToBitmap(int bitmapWidth, int bitmapHeight)
+        {
+            Bitmap resultBitmap = new Bitmap(bitmapWidth, bitmapHeight);
+            Graphics graphics = Graphics.FromImage(resultBitmap);
+            RectangleF rectangle = new RectangleF(new PointF(0, 0), new SizeF(bitmapWidth, bitmapHeight));
+            Brush whiteBrush = new SolidBrush(Color.White);
+
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            graphics.FillRectangle(whiteBrush, rectangle);
+
+            DrawGraphicObjects(graphics);
+
+            return resultBitmap;
         }
     }
 }
