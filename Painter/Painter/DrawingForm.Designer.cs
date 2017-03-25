@@ -143,28 +143,28 @@
             // pngMenuItem
             // 
             this.pngMenuItem.Name = "pngMenuItem";
-            this.pngMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.pngMenuItem.Size = new System.Drawing.Size(99, 22);
             this.pngMenuItem.Text = "PNG";
             this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
             // 
             // jpegMenuItem
             // 
             this.jpegMenuItem.Name = "jpegMenuItem";
-            this.jpegMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.jpegMenuItem.Size = new System.Drawing.Size(99, 22);
             this.jpegMenuItem.Text = "JPEG";
             this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
             // 
             // bmpMenuItem
             // 
             this.bmpMenuItem.Name = "bmpMenuItem";
-            this.bmpMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bmpMenuItem.Size = new System.Drawing.Size(99, 22);
             this.bmpMenuItem.Text = "BMP";
             this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
             // 
             // gifMenuItem
             // 
             this.gifMenuItem.Name = "gifMenuItem";
-            this.gifMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gifMenuItem.Size = new System.Drawing.Size(99, 22);
             this.gifMenuItem.Text = "GIF";
             this.gifMenuItem.Click += new System.EventHandler(this.gifMenuItem_Click);
             // 
@@ -528,6 +528,7 @@
             this.Name = "DrawingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple Painter";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DrawingForm_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.drawingForm_KeyDown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

@@ -12,6 +12,9 @@ namespace Paint
 {
     public partial class DrawingForm : Form
     {
+        private const int DrawingPictureBoxMaxWidth = 1920;
+        private const int DrawingPictureBoxMaxHeight = 1080;
+
         private Painter painter;
         private Image selectedImageForFilling;
 
@@ -24,9 +27,6 @@ namespace Paint
         private Point selectedFirstPoint;
         private Point selectedSecondPoint;
         private Point cursorPoint;
-
-        private const int drawingPictureBoxMaxWidth = 1920;
-        private const int drawingPictureBoxMaxHeight = 1080;
 
         private string drawnImageFileName;
 
@@ -296,8 +296,8 @@ namespace Paint
         {
             var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(
                 drawingPictureBox,
-                drawingPictureBoxMaxWidth,
-                drawingPictureBoxMaxHeight);
+                DrawingPictureBoxMaxWidth,
+                DrawingPictureBoxMaxHeight);
 
             settingSizeDrawingPictureBoxDialog.ShowDialog();
         }
@@ -468,41 +468,45 @@ namespace Paint
         // Открытие файла изображения в программе
         private void openFileButton_Click(object sender, EventArgs e)
         {
-            SaveChangesAnsOpenFileInProgram();
+            SaveChangesAndOpenSelectedFileInProgram();
         }
 
         private void openFileMenuItem_Click(object sender, EventArgs e)
         {
-            SaveChangesAnsOpenFileInProgram();
+            SaveChangesAndOpenSelectedFileInProgram();
         }
 
-        private void SaveChangesAnsOpenFileInProgram()
+        private void SaveChangesAndOpenSelectedFileInProgram()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = Resources.ImageFilterPattern
             };
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK && TrySaveChanges())
             {
                 Image selectedImage = new Bitmap(openFileDialog.FileName);
 
-                if (TrySaveChanges())
-                {
-                    SetDefaultValuesForFields();
+                SetDefaultValuesForFields();
 
-                    painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
+                painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
 
-                    drawnImageFileName = openFileDialog.FileName;
+                drawnImageFileName = openFileDialog.FileName;
 
-                    bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > drawingPictureBoxMaxWidth ||
-                                                                         selectedImage.Height > drawingPictureBoxMaxHeight;
+                bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > DrawingPictureBoxMaxWidth ||
+                                                                        selectedImage.Height > DrawingPictureBoxMaxHeight;
 
-                    drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(drawingPictureBoxMaxWidth, drawingPictureBoxMaxHeight) : selectedImage.Size;
+                drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(DrawingPictureBoxMaxWidth, DrawingPictureBoxMaxHeight) : selectedImage.Size;
 
-                    drawingPictureBox.Refresh();
-                }
+                drawingPictureBox.Refresh();
             }
+        }
+
+        // Окно выбора сохранения нарисованной картинки при закрытии приложения
+        private void DrawingForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // если пользователь нажал "Отмена", TrySaveChanges() вернёт false, значит сигнал на отмену закрытия приложения нужно ставить true
+            e.Cancel = !TrySaveChanges();
         }
 
         // Фигуры для 12-го варианта
