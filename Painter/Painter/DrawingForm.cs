@@ -495,11 +495,10 @@ namespace Paint
 
                     drawnImageFileName = openFileDialog.FileName;
 
+                    bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > drawingBoardMaxWidth ||
+                                                                         selectedImage.Height > drawingBoardMaxHeight;
 
-                    if (selectedImage.Width > drawingBoardMaxWidth || selectedImage.Height > drawingBoardMaxHeight)
-                        drawingPictureBox.Size = new Size(drawingBoardMaxWidth, drawingBoardMaxHeight);
-                    else
-                        drawingPictureBox.Size = selectedImage.Size;
+                    drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(drawingBoardMaxWidth, drawingBoardMaxHeight) : selectedImage.Size;
 
                     drawingPictureBox.Refresh();
                 }
