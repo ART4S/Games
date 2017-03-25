@@ -25,8 +25,8 @@ namespace Paint
         private Point selectedSecondPoint;
         private Point cursorPoint;
 
-        private const int drawingBoardMaxWidth = 1920;
-        private const int drawingBoardMaxHeight = 1080;
+        private const int drawingPictureBoxMaxWidth = 1920;
+        private const int drawingPictureBoxMaxHeight = 1080;
 
         private string drawnImageFileName;
 
@@ -296,8 +296,8 @@ namespace Paint
         {
             var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(
                 drawingPictureBox,
-                drawingBoardMaxWidth,
-                drawingBoardMaxHeight);
+                drawingPictureBoxMaxWidth,
+                drawingPictureBoxMaxHeight);
 
             settingSizeDrawingPictureBoxDialog.ShowDialog();
         }
@@ -495,10 +495,10 @@ namespace Paint
 
                     drawnImageFileName = openFileDialog.FileName;
 
-                    bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > drawingBoardMaxWidth ||
-                                                                         selectedImage.Height > drawingBoardMaxHeight;
+                    bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > drawingPictureBoxMaxWidth ||
+                                                                         selectedImage.Height > drawingPictureBoxMaxHeight;
 
-                    drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(drawingBoardMaxWidth, drawingBoardMaxHeight) : selectedImage.Size;
+                    drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(drawingPictureBoxMaxWidth, drawingPictureBoxMaxHeight) : selectedImage.Size;
 
                     drawingPictureBox.Refresh();
                 }
