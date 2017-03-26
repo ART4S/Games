@@ -317,6 +317,9 @@ namespace Paint
 
             Keys pressedKey = e.KeyCode;
 
+            if (pressedKey == Keys.V && e.Control)
+                InsertImageFromClipboard();
+
             if (pressedKey == Keys.Z && e.Control)
                 RemoveLastAddedGraphicObject();
 
@@ -349,6 +352,24 @@ namespace Paint
             }
 
             drawingPictureBox.Refresh();
+        }
+
+        private void InsertImageFromClipboard()
+        {
+            Image imageFromClipboard = Clipboard.GetImage();
+
+            if (imageFromClipboard == null)
+                return;
+
+            selectedGraphicObject = GraphicObjectType.DrawingImage;
+
+            painter.AddGraphicObject(new DrawingImage(imageFromClipboard, new PointF(0, 0)));
+
+            drawingPictureBox.Size = imageFromClipboard.Size;
+
+            drawingPictureBox.Refresh();
+
+            Clipboard.Clear();
         }
 
         private void RemoveLastAddedGraphicObject()
