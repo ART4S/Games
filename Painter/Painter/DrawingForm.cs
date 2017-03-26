@@ -506,8 +506,11 @@ namespace Paint
         // Окно выбора сохранения нарисованной картинки при закрытии приложения
         private void DrawingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // если пользователь нажал "Отмена", TrySaveChanges() вернёт false, значит сигнал на отмену закрытия приложения нужно ставить true
-            e.Cancel = !TrySaveChanges();
+            if (selectedGraphicObject != GraphicObjectType.Empty)
+            {
+                // если пользователь нажал "Отмена", TrySaveChanges() вернёт false, значит сигнал на отмену закрытия приложения нужно ставить true
+                e.Cancel = !TrySaveChanges();
+            }
         }
 
         // Фигуры для 12-го варианта
