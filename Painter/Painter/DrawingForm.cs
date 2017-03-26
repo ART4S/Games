@@ -47,6 +47,7 @@ namespace Paint
             selectedPenSize = PenSize.Little;
 
             selectedColor = Color.Black;
+            selectColorButton.BackColor = Color.Black;
 
             cursorPoint = new Point(0, 0);
             selectedFirstPoint = new Point(0, 0);
