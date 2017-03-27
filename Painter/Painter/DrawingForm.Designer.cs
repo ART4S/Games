@@ -33,13 +33,13 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openNewImageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.jpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsPngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsJpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsBmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsGifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pagePropertyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,7 +54,7 @@
             this.aboutPainterMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.newFileButton = new System.Windows.Forms.ToolStripButton();
-            this.openFileButton = new System.Windows.Forms.ToolStripButton();
+            this.openNewImageButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.selectColorButton = new System.Windows.Forms.ToolStripButton();
@@ -97,7 +97,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newFileMenuItem,
-            this.openFileMenuItem,
+            this.openNewImageMenuItem,
             this.saveFileMenuItem,
             this.saveAsFIleMenuItem,
             this.toolStripSeparator1,
@@ -115,12 +115,12 @@
             this.newFileMenuItem.Text = "New";
             this.newFileMenuItem.Click += new System.EventHandler(this.newFileMenuItem_Click);
             // 
-            // openFileMenuItem
+            // openNewImageMenuItem
             // 
-            this.openFileMenuItem.Name = "openFileMenuItem";
-            this.openFileMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.openFileMenuItem.Text = "Open";
-            this.openFileMenuItem.Click += new System.EventHandler(this.openFileMenuItem_Click);
+            this.openNewImageMenuItem.Name = "openNewImageMenuItem";
+            this.openNewImageMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.openNewImageMenuItem.Text = "Open";
+            this.openNewImageMenuItem.Click += new System.EventHandler(this.openNewImageMenuItem_Click);
             // 
             // saveFileMenuItem
             // 
@@ -132,41 +132,41 @@
             // saveAsFIleMenuItem
             // 
             this.saveAsFIleMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pngMenuItem,
-            this.jpegMenuItem,
-            this.bmpMenuItem,
-            this.gifMenuItem});
+            this.saveAsPngMenuItem,
+            this.saveAsJpegMenuItem,
+            this.saveAsBmpMenuItem,
+            this.saveAsGifMenuItem});
             this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
             this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveAsFIleMenuItem.Text = "Save As...";
             // 
-            // pngMenuItem
+            // saveAsPngMenuItem
             // 
-            this.pngMenuItem.Name = "pngMenuItem";
-            this.pngMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.pngMenuItem.Text = "PNG";
-            this.pngMenuItem.Click += new System.EventHandler(this.pngMenuItem_Click);
+            this.saveAsPngMenuItem.Name = "saveAsPngMenuItem";
+            this.saveAsPngMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.saveAsPngMenuItem.Text = "PNG";
+            this.saveAsPngMenuItem.Click += new System.EventHandler(this.saveAsPngMenuItem_Click);
             // 
-            // jpegMenuItem
+            // saveAsJpegMenuItem
             // 
-            this.jpegMenuItem.Name = "jpegMenuItem";
-            this.jpegMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.jpegMenuItem.Text = "JPEG";
-            this.jpegMenuItem.Click += new System.EventHandler(this.jpegMenuItem_Click);
+            this.saveAsJpegMenuItem.Name = "saveAsJpegMenuItem";
+            this.saveAsJpegMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.saveAsJpegMenuItem.Text = "JPEG";
+            this.saveAsJpegMenuItem.Click += new System.EventHandler(this.saveAsJpegMenuItem_Click);
             // 
-            // bmpMenuItem
+            // saveAsBmpMenuItem
             // 
-            this.bmpMenuItem.Name = "bmpMenuItem";
-            this.bmpMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.bmpMenuItem.Text = "BMP";
-            this.bmpMenuItem.Click += new System.EventHandler(this.bmpMenuItem_Click);
+            this.saveAsBmpMenuItem.Name = "saveAsBmpMenuItem";
+            this.saveAsBmpMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.saveAsBmpMenuItem.Text = "BMP";
+            this.saveAsBmpMenuItem.Click += new System.EventHandler(this.saveAsBmpMenuItem_Click);
             // 
-            // gifMenuItem
+            // saveAsGifMenuItem
             // 
-            this.gifMenuItem.Name = "gifMenuItem";
-            this.gifMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.gifMenuItem.Text = "GIF";
-            this.gifMenuItem.Click += new System.EventHandler(this.gifMenuItem_Click);
+            this.saveAsGifMenuItem.Name = "saveAsGifMenuItem";
+            this.saveAsGifMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.saveAsGifMenuItem.Text = "GIF";
+            this.saveAsGifMenuItem.Click += new System.EventHandler(this.saveAsGifMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -255,14 +255,13 @@
             this.aboutPainterMenuItem.Name = "aboutPainterMenuItem";
             this.aboutPainterMenuItem.Size = new System.Drawing.Size(165, 22);
             this.aboutPainterMenuItem.Text = "About program...";
-            this.aboutPainterMenuItem.Click += new System.EventHandler(this.aboutPainterMenuItem_Click);
             // 
             // toolStrip
             // 
             this.toolStrip.BackColor = System.Drawing.Color.White;
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newFileButton,
-            this.openFileButton,
+            this.openNewImageButton,
             this.saveFileButton,
             this.toolStripSeparator4,
             this.selectColorButton,
@@ -293,16 +292,16 @@
             this.newFileButton.ToolTipText = "New";
             this.newFileButton.Click += new System.EventHandler(this.newFileButton_Click);
             // 
-            // openFileButton
+            // openNewImageButton
             // 
-            this.openFileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.openFileButton.Image = ((System.Drawing.Image)(resources.GetObject("openFileButton.Image")));
-            this.openFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(23, 22);
-            this.openFileButton.Text = "Open";
-            this.openFileButton.ToolTipText = "Open";
-            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            this.openNewImageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.openNewImageButton.Image = ((System.Drawing.Image)(resources.GetObject("openNewImageButton.Image")));
+            this.openNewImageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.openNewImageButton.Name = "openNewImageButton";
+            this.openNewImageButton.Size = new System.Drawing.Size(23, 22);
+            this.openNewImageButton.Text = "Open";
+            this.openNewImageButton.ToolTipText = "Open";
+            this.openNewImageButton.Click += new System.EventHandler(this.openNewImageButton_Click);
             // 
             // saveFileButton
             // 
@@ -353,7 +352,6 @@
             this.littlePenSizeMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.littlePenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
             this.littlePenSizeMenuItem.Text = "Little";
-            this.littlePenSizeMenuItem.Click += new System.EventHandler(this.littlePenSizeMenuItem_Click);
             // 
             // averagePenSizeMenuItem
             // 
@@ -361,7 +359,6 @@
             this.averagePenSizeMenuItem.Name = "averagePenSizeMenuItem";
             this.averagePenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
             this.averagePenSizeMenuItem.Text = "Average";
-            this.averagePenSizeMenuItem.Click += new System.EventHandler(this.averagePenSizeMenuItem_Click);
             // 
             // bigPenSizeMenuItem
             // 
@@ -370,7 +367,6 @@
             this.bigPenSizeMenuItem.Name = "bigPenSizeMenuItem";
             this.bigPenSizeMenuItem.Size = new System.Drawing.Size(117, 22);
             this.bigPenSizeMenuItem.Text = "Big";
-            this.bigPenSizeMenuItem.Click += new System.EventHandler(this.bigPenSizeMenuItem_Click);
             // 
             // drawCurveButton
             // 
@@ -381,7 +377,6 @@
             this.drawCurveButton.Size = new System.Drawing.Size(23, 22);
             this.drawCurveButton.Text = "Pen";
             this.drawCurveButton.ToolTipText = "Pen";
-            this.drawCurveButton.Click += new System.EventHandler(this.drawCurveButton_Click);
             // 
             // toolStripSeparator3
             // 
@@ -396,7 +391,6 @@
             this.drawImageButton.Name = "drawImageButton";
             this.drawImageButton.Size = new System.Drawing.Size(23, 22);
             this.drawImageButton.Text = "Loag image";
-            this.drawImageButton.Click += new System.EventHandler(this.drawImageButton_Click);
             // 
             // drawCircleButton
             // 
@@ -406,7 +400,6 @@
             this.drawCircleButton.Name = "drawCircleButton";
             this.drawCircleButton.Size = new System.Drawing.Size(23, 22);
             this.drawCircleButton.Text = "Circle";
-            this.drawCircleButton.Click += new System.EventHandler(this.drawCircleButton_Click);
             // 
             // drawRectangleButton
             // 
@@ -416,7 +409,6 @@
             this.drawRectangleButton.Name = "drawRectangleButton";
             this.drawRectangleButton.Size = new System.Drawing.Size(23, 22);
             this.drawRectangleButton.Text = "Rectangle";
-            this.drawRectangleButton.Click += new System.EventHandler(this.drawRectangleButton_Click);
             // 
             // drawPolygonButton
             // 
@@ -426,7 +418,6 @@
             this.drawPolygonButton.Name = "drawPolygonButton";
             this.drawPolygonButton.Size = new System.Drawing.Size(23, 22);
             this.drawPolygonButton.Text = "Polygon";
-            this.drawPolygonButton.Click += new System.EventHandler(this.drawPolygonButton_Click);
             // 
             // drawBezierShapeButton
             // 
@@ -437,7 +428,6 @@
             this.drawBezierShapeButton.Size = new System.Drawing.Size(23, 22);
             this.drawBezierShapeButton.Text = "BezierShape shape";
             this.drawBezierShapeButton.ToolTipText = "Shape using Bezier curve";
-            this.drawBezierShapeButton.Click += new System.EventHandler(this.drawBezierShapeButton_Click);
             // 
             // toolStripSeparator5
             // 
@@ -452,7 +442,6 @@
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(23, 22);
             this.helpButton.Text = "Help";
-            this.helpButton.Click += new System.EventHandler(this.helpButton_Click);
             // 
             // patternsList
             // 
@@ -546,7 +535,7 @@
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newFileMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openFileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openNewImageMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveFileMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsFIleMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -562,7 +551,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutPainterMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton newFileButton;
-        private System.Windows.Forms.ToolStripButton openFileButton;
+        private System.Windows.Forms.ToolStripButton openNewImageButton;
         private System.Windows.Forms.ToolStripButton saveFileButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton drawCircleButton;
@@ -584,10 +573,10 @@
         private System.Windows.Forms.ToolStripButton drawCurveButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem patternsPanelMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bmpMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem jpegMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pngMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gifMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsBmpMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsJpegMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsPngMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsGifMenuItem;
     }
 }
 

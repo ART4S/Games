@@ -28,13 +28,18 @@ namespace Paint
         private Point selectedSecondPoint;
         private Point cursorPoint;
 
-        private string drawnImageFileName;
+        private string finalImageSavingPath;
 
         public DrawingForm()
         {
             InitializeComponent();
             SetDefaultValuesForFields();
             AddPatternsInPatternsListView();
+            SetChangeSelectedPenSizeThroughMouseClickOnButton();
+            SetChangeSelectedGraphicObjectThroughMouseClickOnButton();
+
+            helpButton.Click += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
+            aboutPainterMenuItem.Click += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
         }
 
         private void SetDefaultValuesForFields()
@@ -53,78 +58,41 @@ namespace Paint
             selectedFirstPoint = new Point(0, 0);
             selectedSecondPoint = new Point(0, 0);
 
-            drawnImageFileName = string.Empty;
+            finalImageSavingPath = string.Empty;
         }
 
         private void AddPatternsInPatternsListView()
         {
-            foreach (var namePattern in patternsList.Images.Keys)
+            foreach (string patternName in patternsList.Images.Keys)
             {
                 ListViewItem newItem = new ListViewItem
                 {
-                    Text = namePattern.Split('.').First(),
-                    ImageKey = namePattern
+                    Text = patternName.Split('.').First(),
+                    ImageKey = patternName
                 };
 
                 patternsListView.Items.Add(newItem);
             }
         }
 
-        // Изменение selectedColor
-        private void selectColorButton_Click(object sender, EventArgs e)
+        private void SetChangeSelectedPenSizeThroughMouseClickOnButton()
         {
-            ColorDialog colorDialog = new ColorDialog();
-
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                selectedColor = colorDialog.Color;
-                selectColorButton.BackColor = colorDialog.Color;
-            }
+            littlePenSizeMenuItem.Click  += (sender, e) => selectedPenSize = PenSize.Little;
+            averagePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Average;
+            bigPenSizeMenuItem.Click     += (sender, e) => selectedPenSize = PenSize.Big;
         }
 
-        // Изменение selectedPenSize
-        private void littlePenSizeMenuItem_Click(object sender, EventArgs e)
+        private void SetChangeSelectedGraphicObjectThroughMouseClickOnButton()
         {
-            selectedPenSize = PenSize.Little;
+            drawCircleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
+            drawRectangleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
+            drawPolygonButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
+            drawBezierShapeButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
+            drawCurveButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
+            drawImageButton.Click += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
         }
 
-        private void averagePenSizeMenuItem_Click(object sender, EventArgs e)
-        {
-            selectedPenSize = PenSize.Average;
-        }
-
-        private void bigPenSizeMenuItem_Click(object sender, EventArgs e)
-        {
-            selectedPenSize = PenSize.Big;
-        }
-
-        // Изменение selectedGraphicObject
-        private void drawCircleButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObjectType.Circle;
-        }
-
-        private void drawRectangleButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObjectType.Rectangle;
-        }
-
-        private void drawPolygonButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObjectType.Polygon;
-        }
-
-        private void drawBezierShapeButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObjectType.BezierShape;
-        }
-
-        private void drawCurveButton_Click(object sender, EventArgs e)
-        {
-            selectedGraphicObject = GraphicObjectType.Curve;
-        }
-
-        private void drawImageButton_Click(object sender, EventArgs e)
+        private void SelectImageViaOpenDialogBoxAndAddToPainter()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -133,11 +101,23 @@ namespace Paint
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Image selectedImage = new Bitmap(openFileDialog.FileName);
+                Image selectedImage = Image.FromFile(openFileDialog.FileName);
 
                 painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
 
                 drawingPictureBox.Refresh();
+            }
+        }
+
+        // Изменение SelectColor
+        private void selectColorButton_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                selectedColor = colorDialog.Color;
+                selectColorButton.BackColor = colorDialog.Color;
             }
         }
 
@@ -171,7 +151,7 @@ namespace Paint
             selectedFirstPoint = cursorPoint;
 
             if (selectedGraphicObject == GraphicObjectType.Curve)
-                AddSelectedGraphicObjectInPainter();
+                AddSelectedGraphicObjectToPainter();
 
             mouseState = MouseState.MouseKeyPressed;
         }
@@ -184,12 +164,12 @@ namespace Paint
             selectedSecondPoint = cursorPoint;
 
             if (selectedGraphicObject != GraphicObjectType.Curve)
-                AddSelectedGraphicObjectInPainter();
+                AddSelectedGraphicObjectToPainter();
 
             mouseState = MouseState.MouseKeyDepressed;
         }
 
-        private void AddSelectedGraphicObjectInPainter()
+        private void AddSelectedGraphicObjectToPainter()
         {
             TextureBrush textureBrush = new TextureBrush(selectedImageForFilling);
             Pen pen = new Pen(selectedColor, selectedPenSize.ToInt());
@@ -243,7 +223,7 @@ namespace Paint
             }
         }
 
-        // Изменение cursorPoint
+        // Изменение cursorPoint и добавление точек кривой, рисуемой пером, в Painter
         private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             cursorPoint = new Point(e.X, e.Y);
@@ -254,30 +234,18 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
-        // Отображение тулбара
+        // Скрытие/отображение тулбара
         private void toolbarMenuItem_Click(object sender, EventArgs e)
         {
             toolbarMenuItem.Checked = !toolbarMenuItem.Checked;
             toolStrip.Visible = toolbarMenuItem.Checked;
         }
 
-        // Оторажение панели паттернов
+        // Скрытие/отображение панели паттернов
         private void patternsPanelMenuItem_Click(object sender, EventArgs e)
         {
             patternsPanelMenuItem.Checked = !patternsPanelMenuItem.Checked;
             patternsListView.Visible = patternsPanelMenuItem.Checked;
-        }
-
-        // Отображение инструкции к программе
-        private void helpButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Resources.HelpText, @"Help");
-        }
-
-        // Отображение информации о программе и разработчиках
-        private void aboutPainterMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Resources.InfoAboutProgram, @"About program");
         }
 
         // Удаление последнего нарисованного графического объекта
@@ -318,7 +286,7 @@ namespace Paint
             Keys pressedKey = e.KeyCode;
 
             if (pressedKey == Keys.V && e.Control)
-                InsertImageFromClipboard();
+                AddImageToPainterFromClipboardAndResizeDrawingBoard();
 
             if (pressedKey == Keys.Z && e.Control)
                 RemoveLastAddedGraphicObject();
@@ -354,7 +322,7 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
-        private void InsertImageFromClipboard()
+        private void AddImageToPainterFromClipboardAndResizeDrawingBoard()
         {
             Image imageFromClipboard = Clipboard.GetImage();
 
@@ -387,53 +355,53 @@ namespace Paint
         // Сохранение изображения
         private void saveFileButton_Click(object sender, EventArgs e)
         {
-            FastSaveDrawnImage();
+            SaveFinalImage();
         }
 
         private void saveFileMenuItem_Click(object sender, EventArgs e)
         {
-            FastSaveDrawnImage();
+            SaveFinalImage();
         }
 
-        private void pngMenuItem_Click(object sender, EventArgs e)
+        private void saveAsPngMenuItem_Click(object sender, EventArgs e)
         {
-            SaveDrawnImageToFormat(ImageFormat.Png);
+            SaveFinalImageToFormat(ImageFormat.Png);
         }
 
-        private void jpegMenuItem_Click(object sender, EventArgs e)
+        private void saveAsJpegMenuItem_Click(object sender, EventArgs e)
         {
-            SaveDrawnImageToFormat(ImageFormat.Jpeg);
+            SaveFinalImageToFormat(ImageFormat.Jpeg);
         }
 
-        private void bmpMenuItem_Click(object sender, EventArgs e)
+        private void saveAsBmpMenuItem_Click(object sender, EventArgs e)
         {
-            SaveDrawnImageToFormat(ImageFormat.Bmp);
+            SaveFinalImageToFormat(ImageFormat.Bmp);
         }
 
-        private void gifMenuItem_Click(object sender, EventArgs e)
+        private void saveAsGifMenuItem_Click(object sender, EventArgs e)
         {
-            SaveDrawnImageToFormat(ImageFormat.Gif);
+            SaveFinalImageToFormat(ImageFormat.Gif);
         }
 
-        private void FastSaveDrawnImage()
+        private void SaveFinalImage()
         {
-            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+            Bitmap finalImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
 
-            if (drawnImageFileName != string.Empty)
-                resultImage.Save(drawnImageFileName);
+            if (finalImageSavingPath != string.Empty)
+                finalImage.Save(finalImageSavingPath);
             else
-                SaveDrawnImageToFormat(ImageFormat.Png);
+                SaveFinalImageToFormat(ImageFormat.Png);
         }
 
-        private void SaveDrawnImageToFormat(ImageFormat imageFormat)
+        private void SaveFinalImageToFormat(ImageFormat imageFormat)
         {
-            Bitmap resultImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
+            Bitmap finalImage = painter.ToBitmap(drawingPictureBox.Width, drawingPictureBox.Height);
 
-            if (TrySetDrawnImageFileNameViaDialogBox(imageFormat))
-                resultImage.Save(drawnImageFileName);
+            if (TrySetFinalImageSavingPathViaSaveFileDialog(imageFormat))
+                finalImage.Save(finalImageSavingPath);
         }
 
-        private bool TrySetDrawnImageFileNameViaDialogBox(ImageFormat imageFormat)
+        private bool TrySetFinalImageSavingPathViaSaveFileDialog(ImageFormat imageFormat)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -442,15 +410,8 @@ namespace Paint
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    drawnImageFileName = saveFileDialog.FileName;
-                    return true;
-                }
-                catch
-                {
-                    MessageBox.Show(Resources.savingImageErrorText, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                finalImageSavingPath = saveFileDialog.FileName;
+                return true;
             }
 
             return false;
@@ -459,24 +420,24 @@ namespace Paint
         // Создание нового файла
         private void newFileMenuItem_Click(object sender, EventArgs e)
         {
-            if (TrySaveChanges())
+            if (TrySaveChangesViaDialogBox())
                 SetDefaultValuesForFields();
         }
 
         private void newFileButton_Click(object sender, EventArgs e)
         {
-            if (TrySaveChanges())
+            if (TrySaveChangesViaDialogBox())
                 SetDefaultValuesForFields();
         }
 
-        private bool TrySaveChanges()
+        private bool TrySaveChangesViaDialogBox()
         {
             DialogResult saveChangesDialogResult = MessageBox.Show(Resources.saveChangesText, Resources.programName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
             switch (saveChangesDialogResult)
             {
                 case DialogResult.Yes:
-                    FastSaveDrawnImage();
+                    SaveFinalImage();
                     return true;
                 case DialogResult.No:
                     return true;
@@ -488,50 +449,47 @@ namespace Paint
         }
 
         // Открытие файла изображения в программе
-        private void openFileButton_Click(object sender, EventArgs e)
+        private void openNewImageButton_Click(object sender, EventArgs e)
         {
-            SaveChangesAndOpenSelectedFileInProgram();
+            SaveChangesAndOpenNewImageInProgram();
         }
 
-        private void openFileMenuItem_Click(object sender, EventArgs e)
+        private void openNewImageMenuItem_Click(object sender, EventArgs e)
         {
-            SaveChangesAndOpenSelectedFileInProgram();
+            SaveChangesAndOpenNewImageInProgram();
         }
 
-        private void SaveChangesAndOpenSelectedFileInProgram()
+        private void SaveChangesAndOpenNewImageInProgram()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = Resources.ImageFilterPattern
             };
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK && TrySaveChanges())
+            if (openFileDialog.ShowDialog() == DialogResult.OK && TrySaveChangesViaDialogBox())
             {
-                Image selectedImage = new Bitmap(openFileDialog.FileName);
+                Image newImage = Image.FromFile(openFileDialog.FileName);
 
                 SetDefaultValuesForFields();
 
-                painter.AddGraphicObject(new DrawingImage(selectedImage, new PointF(0, 0)));
+                painter.AddGraphicObject(new DrawingImage(newImage, new PointF(0, 0)));
 
-                drawnImageFileName = openFileDialog.FileName;
+                finalImageSavingPath = openFileDialog.FileName;
 
-                bool isSelectedImageSizeExceedsDrawingBoardMaxSize = selectedImage.Width > DrawingPictureBoxMaxWidth ||
-                                                                        selectedImage.Height > DrawingPictureBoxMaxHeight;
+                bool isNewImageSizeExceedsDrawingBoardMaxSize = newImage.Width > DrawingPictureBoxMaxWidth ||
+                                                                        newImage.Height > DrawingPictureBoxMaxHeight;
 
-                drawingPictureBox.Size = isSelectedImageSizeExceedsDrawingBoardMaxSize ? new Size(DrawingPictureBoxMaxWidth, DrawingPictureBoxMaxHeight) : selectedImage.Size;
+                drawingPictureBox.Size = isNewImageSizeExceedsDrawingBoardMaxSize ? new Size(DrawingPictureBoxMaxWidth, DrawingPictureBoxMaxHeight) : newImage.Size;
 
                 drawingPictureBox.Refresh();
             }
         }
 
-        // Окно выбора сохранения нарисованной картинки при закрытии приложения
+        // Окно сохранения нарисованной картинки при закрытии приложения
         private void DrawingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (selectedGraphicObject != GraphicObjectType.Empty)
-            {
-                // если пользователь нажал "Отмена", TrySaveChanges() вернёт false, значит сигнал на отмену закрытия приложения нужно ставить true
-                e.Cancel = !TrySaveChanges();
-            }
+                e.Cancel = !TrySaveChangesViaDialogBox();
         }
 
         // Фигуры для 12-го варианта

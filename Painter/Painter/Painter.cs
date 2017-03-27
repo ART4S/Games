@@ -22,7 +22,7 @@ namespace Paint
 
         public void DrawGraphicObjects(Graphics graphics)
         {
-            foreach (var graphicObject in graphicObjects)
+            foreach (GraphicObject graphicObject in graphicObjects)
                 graphicObject.Draw(graphics);
         }
 
@@ -66,18 +66,18 @@ namespace Paint
 
         public Bitmap ToBitmap(int bitmapWidth, int bitmapHeight)
         {
-            Bitmap resultBitmap = new Bitmap(bitmapWidth, bitmapHeight);
-            Graphics graphics = Graphics.FromImage(resultBitmap);
-            RectangleF rectangle = new RectangleF(new PointF(0, 0), new SizeF(bitmapWidth, bitmapHeight));
+            Bitmap bitmap = new Bitmap(bitmapWidth, bitmapHeight);
+            Graphics bitmapGraphics = Graphics.FromImage(bitmap);
+            RectangleF bitmapRectangle = new RectangleF(new PointF(0, 0), new SizeF(bitmapWidth, bitmapHeight));
             Brush whiteBrush = new SolidBrush(Color.White);
 
-            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            bitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            graphics.FillRectangle(whiteBrush, rectangle);
+            bitmapGraphics.FillRectangle(whiteBrush, bitmapRectangle);
 
-            DrawGraphicObjects(graphics);
+            DrawGraphicObjects(bitmapGraphics);
 
-            return resultBitmap;
+            return bitmap;
         }
     }
 }
