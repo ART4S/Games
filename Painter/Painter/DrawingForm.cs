@@ -556,40 +556,25 @@ namespace Paint
         {
             PointF[] curve =
             {
-                new PointF(middlePoint.X - 10, middlePoint.Y + 10),
-                new PointF(middlePoint.X - 15, middlePoint.Y + 15),
-                new PointF(middlePoint.X - 15, middlePoint.Y + 15),
-                new PointF(middlePoint.X - 20, middlePoint.Y + 20),
-
-                new PointF(middlePoint.X - 20, middlePoint.Y + 20),
-                new PointF(middlePoint.X - 20, middlePoint.Y),
-                new PointF(middlePoint.X - 20, middlePoint.Y),
-                new PointF(middlePoint.X - 20, middlePoint.Y - 20),
-
-                new PointF(middlePoint.X - 20, middlePoint.Y - 20),
-                new PointF(middlePoint.X, middlePoint.Y - 20),
-                new PointF(middlePoint.X, middlePoint.Y - 20),
-                new PointF(middlePoint.X + 20, middlePoint.Y - 20),
-
-                new PointF(middlePoint.X + 20, middlePoint.Y - 20),
-                new PointF(middlePoint.X + 15, middlePoint.Y - 15),
-                new PointF(middlePoint.X + 15, middlePoint.Y - 15),
-                new PointF(middlePoint.X + 10, middlePoint.Y - 10),
-
-                new PointF(middlePoint.X + 10, middlePoint.Y - 10),
                 new PointF(middlePoint.X, middlePoint.Y),
-                new PointF(middlePoint.X, middlePoint.Y),
-                new PointF(middlePoint.X + 60, middlePoint.Y + 30),
-
-                new PointF(middlePoint.X + 60, middlePoint.Y + 30),
-                new PointF(middlePoint.X + 30, middlePoint.Y + 30),
-                new PointF(middlePoint.X + 30, middlePoint.Y + 30),
-                new PointF(middlePoint.X + 30, middlePoint.Y + 50),
-
-                new PointF(middlePoint.X + 30, middlePoint.Y + 50),
-                new PointF(middlePoint.X, middlePoint.Y),
-                new PointF(middlePoint.X, middlePoint.Y),
-                new PointF(middlePoint.X - 10, middlePoint.Y + 10)
+                new PointF(middlePoint.X - 20, middlePoint.Y - 50),
+                new PointF(middlePoint.X - 20, middlePoint.Y - 50),
+                new PointF(middlePoint.X, middlePoint.Y - 100),
+                new PointF(middlePoint.X + 5, middlePoint.Y - 125),
+                new PointF(middlePoint.X + 5, middlePoint.Y - 125),
+                new PointF(middlePoint.X, middlePoint.Y - 150),
+                new PointF(middlePoint.X + 20, middlePoint.Y - 150),
+                new PointF(middlePoint.X + 20, middlePoint.Y - 150),
+                new PointF(middlePoint.X + 40, middlePoint.Y - 150),
+                new PointF(middlePoint.X + 35, middlePoint.Y - 125),
+                new PointF(middlePoint.X + 35, middlePoint.Y - 125),
+                new PointF(middlePoint.X + 40, middlePoint.Y - 100),
+                new PointF(middlePoint.X + 60, middlePoint.Y - 50),
+                new PointF(middlePoint.X + 60, middlePoint.Y - 50),
+                new PointF(middlePoint.X + 40, middlePoint.Y),
+                new PointF(middlePoint.X + 20, middlePoint.Y),
+                new PointF(middlePoint.X + 20, middlePoint.Y),
+                new PointF(middlePoint.X, middlePoint.Y)
             };
 
             return new BezierShape(curve, middlePoint, pen);
