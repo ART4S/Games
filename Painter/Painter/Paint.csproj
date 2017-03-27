@@ -132,7 +132,7 @@
     <None Include="Resources\Pattern2.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pattern3.bmp" />
+    <None Include="Resources\Pattern3.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Pattern4.bmp" />
