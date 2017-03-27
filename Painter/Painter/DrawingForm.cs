@@ -35,8 +35,17 @@ namespace Paint
             InitializeComponent();
             SetDefaultValuesForFields();
             AddPatternsInPatternsListView();
-            SetChangeSelectedPenSizeThroughMouseClickOnButton();
-            SetChangeSelectedGraphicObjectThroughMouseClickOnButton();
+
+            littlePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Little;
+            averagePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Average;
+            bigPenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Big;
+
+            drawCircleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
+            drawRectangleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
+            drawPolygonButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
+            drawBezierShapeButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
+            drawCurveButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
+            drawImageButton.Click += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
 
             helpButton.Click += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
             aboutPainterMenuItem.Click += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
@@ -73,23 +82,6 @@ namespace Paint
 
                 patternsListView.Items.Add(newItem);
             }
-        }
-
-        private void SetChangeSelectedPenSizeThroughMouseClickOnButton()
-        {
-            littlePenSizeMenuItem.Click  += (sender, e) => selectedPenSize = PenSize.Little;
-            averagePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Average;
-            bigPenSizeMenuItem.Click     += (sender, e) => selectedPenSize = PenSize.Big;
-        }
-
-        private void SetChangeSelectedGraphicObjectThroughMouseClickOnButton()
-        {
-            drawCircleButton.Click      += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
-            drawRectangleButton.Click   += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
-            drawPolygonButton.Click     += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
-            drawBezierShapeButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
-            drawCurveButton.Click       += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
-            drawImageButton.Click       += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
         }
 
         private void SelectImageViaOpenDialogBoxAndAddToPainter()
