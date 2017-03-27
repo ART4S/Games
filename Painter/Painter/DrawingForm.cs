@@ -84,12 +84,12 @@ namespace Paint
 
         private void SetChangeSelectedGraphicObjectThroughMouseClickOnButton()
         {
-            drawCircleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
-            drawRectangleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
-            drawPolygonButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
+            drawCircleButton.Click      += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
+            drawRectangleButton.Click   += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
+            drawPolygonButton.Click     += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
             drawBezierShapeButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
-            drawCurveButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
-            drawImageButton.Click += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
+            drawCurveButton.Click       += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
+            drawImageButton.Click       += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
         }
 
         private void SelectImageViaOpenDialogBoxAndAddToPainter()
