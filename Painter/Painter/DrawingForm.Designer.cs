@@ -113,21 +113,18 @@
             this.newFileMenuItem.Name = "newFileMenuItem";
             this.newFileMenuItem.Size = new System.Drawing.Size(157, 22);
             this.newFileMenuItem.Text = "New";
-            this.newFileMenuItem.Click += new System.EventHandler(this.newFileMenuItem_Click);
             // 
             // openNewImageMenuItem
             // 
             this.openNewImageMenuItem.Name = "openNewImageMenuItem";
             this.openNewImageMenuItem.Size = new System.Drawing.Size(157, 22);
             this.openNewImageMenuItem.Text = "Open";
-            this.openNewImageMenuItem.Click += new System.EventHandler(this.openNewImageMenuItem_Click);
             // 
             // saveFileMenuItem
             // 
             this.saveFileMenuItem.Name = "saveFileMenuItem";
             this.saveFileMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveFileMenuItem.Text = "Save";
-            this.saveFileMenuItem.Click += new System.EventHandler(this.saveFileMenuItem_Click);
             // 
             // saveAsFIleMenuItem
             // 
@@ -145,28 +142,24 @@
             this.saveAsPngMenuItem.Name = "saveAsPngMenuItem";
             this.saveAsPngMenuItem.Size = new System.Drawing.Size(99, 22);
             this.saveAsPngMenuItem.Text = "PNG";
-            this.saveAsPngMenuItem.Click += new System.EventHandler(this.saveAsPngMenuItem_Click);
             // 
             // saveAsJpegMenuItem
             // 
             this.saveAsJpegMenuItem.Name = "saveAsJpegMenuItem";
             this.saveAsJpegMenuItem.Size = new System.Drawing.Size(99, 22);
             this.saveAsJpegMenuItem.Text = "JPEG";
-            this.saveAsJpegMenuItem.Click += new System.EventHandler(this.saveAsJpegMenuItem_Click);
             // 
             // saveAsBmpMenuItem
             // 
             this.saveAsBmpMenuItem.Name = "saveAsBmpMenuItem";
             this.saveAsBmpMenuItem.Size = new System.Drawing.Size(99, 22);
             this.saveAsBmpMenuItem.Text = "BMP";
-            this.saveAsBmpMenuItem.Click += new System.EventHandler(this.saveAsBmpMenuItem_Click);
             // 
             // saveAsGifMenuItem
             // 
             this.saveAsGifMenuItem.Name = "saveAsGifMenuItem";
             this.saveAsGifMenuItem.Size = new System.Drawing.Size(99, 22);
             this.saveAsGifMenuItem.Text = "GIF";
-            this.saveAsGifMenuItem.Click += new System.EventHandler(this.saveAsGifMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -178,7 +171,6 @@
             this.pagePropertyMenuItem.Name = "pagePropertyMenuItem";
             this.pagePropertyMenuItem.Size = new System.Drawing.Size(157, 22);
             this.pagePropertyMenuItem.Text = "Page Property...";
-            this.pagePropertyMenuItem.Click += new System.EventHandler(this.pagePropertyMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -190,7 +182,6 @@
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.Size = new System.Drawing.Size(157, 22);
             this.exitMenuItem.Text = "Exit";
-            this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
             // editMenuItem
             // 
@@ -206,14 +197,12 @@
             this.undoMenuItem.Name = "undoMenuItem";
             this.undoMenuItem.Size = new System.Drawing.Size(167, 22);
             this.undoMenuItem.Text = "Undo          Ctrl+Z";
-            this.undoMenuItem.Click += new System.EventHandler(this.undoMenuItem_Click);
             // 
             // clearMenuItem
             // 
             this.clearMenuItem.Name = "clearMenuItem";
             this.clearMenuItem.Size = new System.Drawing.Size(167, 22);
             this.clearMenuItem.Text = "Clear           Del";
-            this.clearMenuItem.Click += new System.EventHandler(this.clearMenuItem_Click);
             // 
             // viewMenuItem
             // 
@@ -229,7 +218,7 @@
             this.toolbarMenuItem.Checked = true;
             this.toolbarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolbarMenuItem.Name = "toolbarMenuItem";
-            this.toolbarMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.toolbarMenuItem.Size = new System.Drawing.Size(152, 22);
             this.toolbarMenuItem.Text = "Toolbar";
             this.toolbarMenuItem.Click += new System.EventHandler(this.toolbarMenuItem_Click);
             // 
@@ -238,7 +227,7 @@
             this.patternsPanelMenuItem.Checked = true;
             this.patternsPanelMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.patternsPanelMenuItem.Name = "patternsPanelMenuItem";
-            this.patternsPanelMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.patternsPanelMenuItem.Size = new System.Drawing.Size(152, 22);
             this.patternsPanelMenuItem.Text = "Patterns panel";
             this.patternsPanelMenuItem.Click += new System.EventHandler(this.patternsPanelMenuItem_Click);
             // 
@@ -290,7 +279,6 @@
             this.newFileButton.Size = new System.Drawing.Size(23, 22);
             this.newFileButton.Text = "New";
             this.newFileButton.ToolTipText = "New";
-            this.newFileButton.Click += new System.EventHandler(this.newFileButton_Click);
             // 
             // openNewImageButton
             // 
@@ -301,7 +289,6 @@
             this.openNewImageButton.Size = new System.Drawing.Size(23, 22);
             this.openNewImageButton.Text = "Open";
             this.openNewImageButton.ToolTipText = "Open";
-            this.openNewImageButton.Click += new System.EventHandler(this.openNewImageButton_Click);
             // 
             // saveFileButton
             // 
@@ -312,7 +299,6 @@
             this.saveFileButton.Size = new System.Drawing.Size(23, 22);
             this.saveFileButton.Text = "Save";
             this.saveFileButton.ToolTipText = "Save";
-            this.saveFileButton.Click += new System.EventHandler(this.saveFileButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -329,7 +315,6 @@
             this.selectColorButton.Size = new System.Drawing.Size(23, 22);
             this.selectColorButton.Text = "Select color";
             this.selectColorButton.ToolTipText = "Color";
-            this.selectColorButton.Click += new System.EventHandler(this.selectColorButton_Click);
             // 
             // selectPenSizeButton
             // 
@@ -473,7 +458,6 @@
             this.patternsListView.TabIndex = 3;
             this.patternsListView.UseCompatibleStateImageBehavior = false;
             this.patternsListView.View = System.Windows.Forms.View.SmallIcon;
-            this.patternsListView.ItemActivate += new System.EventHandler(this.patternsListView_ItemActivate);
             // 
             // drawingPictureBox
             // 
@@ -485,7 +469,6 @@
             this.drawingPictureBox.TabStop = false;
             this.drawingPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.drawingPictureBox_Paint);
             this.drawingPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseDown);
-            this.drawingPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseMove);
             this.drawingPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawingPictureBox_MouseUp);
             // 
             // drawingPanel
@@ -518,7 +501,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple Painter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DrawingForm_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.drawingForm_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DrawingForm_KeyDown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.toolStrip.ResumeLayout(false);

@@ -68,10 +68,10 @@ namespace Paint.Properties {
         ///	E - сlockwise
         ///	Q - counterclockwise
         ///
-        ///Remove last drawn object:
+        ///Removing last drawn object:
         ///	Ctrl+Z
         ///
-        ///Clear screen:
+        ///Cleaning screen:
         ///	Del.
         /// </summary>
         internal static string HelpText {

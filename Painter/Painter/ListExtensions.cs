@@ -7,10 +7,8 @@ namespace Paint
     {
         public static void RemoveLast<T>(this List<T> list)
         {
-            if (!list.Any())
-                return;
-
-            list.RemoveAt(list.Count - 1);
+            if (list.Any())
+                list.RemoveAt(list.Count - 1);
         }
     }
 }

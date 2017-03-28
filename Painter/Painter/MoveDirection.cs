@@ -19,16 +19,12 @@ namespace Paint
             {
                 case MoveDirection.Up:
                     return new Point(0, -1);
-
                 case MoveDirection.Down:
                     return new Point(0, 1);
-
                 case MoveDirection.Left:
                     return new Point(-1, 0);
-
                 case MoveDirection.Right:
                     return new Point(1, 0);
-
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }

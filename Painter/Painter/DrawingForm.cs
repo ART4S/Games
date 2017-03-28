@@ -36,19 +36,44 @@ namespace Paint
             SetDefaultValuesForFields();
             AddPatternsInPatternsListView();
 
-            littlePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Little;
-            averagePenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Average;
-            bigPenSizeMenuItem.Click += (sender, e) => selectedPenSize = PenSize.Big;
+            littlePenSizeMenuItem.Click   += (sender, e) => selectedPenSize = PenSize.Little;
+            averagePenSizeMenuItem.Click  += (sender, e) => selectedPenSize = PenSize.Average;
+            bigPenSizeMenuItem.Click      += (sender, e) => selectedPenSize = PenSize.Big;
 
-            drawCircleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
-            drawRectangleButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
-            drawPolygonButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
-            drawBezierShapeButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
-            drawCurveButton.Click += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
-            drawImageButton.Click += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
+            drawCircleButton.Click        += (sender, e) => selectedGraphicObject = GraphicObjectType.Circle;
+            drawRectangleButton.Click     += (sender, e) => selectedGraphicObject = GraphicObjectType.Rectangle;
+            drawPolygonButton.Click       += (sender, e) => selectedGraphicObject = GraphicObjectType.Polygon;
+            drawBezierShapeButton.Click   += (sender, e) => selectedGraphicObject = GraphicObjectType.BezierShape;
+            drawCurveButton.Click         += (sender, e) => selectedGraphicObject = GraphicObjectType.Curve;
+            drawImageButton.Click         += (sender, e) => SelectImageViaOpenDialogBoxAndAddToPainter();
 
-            helpButton.Click += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
-            aboutPainterMenuItem.Click += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
+            newFileButton.Click           += (sender, e) => SaveChangesAndSetDefaultValuesForFields();
+            newFileMenuItem.Click         += (sender, e) => SaveChangesAndSetDefaultValuesForFields();
+
+            openNewImageButton.Click      += (sender, e) => SaveChangesAndOpenNewImageInProgram();
+            openNewImageMenuItem.Click    += (sender, e) => SaveChangesAndOpenNewImageInProgram();
+
+            saveFileButton.Click          += (sender, e) => SaveFinalImage();
+            saveFileMenuItem.Click        += (sender, e) => SaveFinalImage();
+            saveAsPngMenuItem.Click       += (sender, e) => SaveFinalImageToFormat(ImageFormat.Png);
+            saveAsJpegMenuItem.Click      += (sender, e) => SaveFinalImageToFormat(ImageFormat.Jpeg);
+            saveAsBmpMenuItem.Click       += (sender, e) => SaveFinalImageToFormat(ImageFormat.Bmp);
+            saveAsGifMenuItem.Click       += (sender, e) => SaveFinalImageToFormat(ImageFormat.Bmp);
+
+            undoMenuItem.Click            += (sender, e) => RemoveLastAddedGraphicObject();
+            clearMenuItem.Click           += (sender, e) => ClearDrawingBoard();
+
+            pagePropertyMenuItem.Click    += (sender, e) => SetSizeDrawingPictureBoxViaDialogBox();
+            exitMenuItem.Click            += (sender, e) => Close();
+
+            drawingPictureBox.MouseMove   += (sender, e) => cursorPoint = new Point(e.X, e.Y);
+            drawingPictureBox.MouseMove   += (sender, e) => AddPointToCurveDrawnWithPen(cursorPoint);
+
+            selectColorButton.Click       += (sender, e) => SetSelectedColorViaColorDialog();
+            patternsListView.ItemActivate += (sender, e) => SetSelectedImageForFilling();
+
+            aboutPainterMenuItem.Click    += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
+            helpButton.Click              += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
         }
 
         private void SetDefaultValuesForFields()
@@ -84,6 +109,23 @@ namespace Paint
             }
         }
 
+        private void SetSelectedColorViaColorDialog()
+        {
+            ColorDialog colorDialog = new ColorDialog();
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                selectedColor = colorDialog.Color;
+                selectColorButton.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void SetSelectedImageForFilling()
+        {
+            if (patternsListView.SelectedItems.Count != 0)
+                selectedImageForFilling = patternsList.Images[patternsListView.SelectedIndices[0]];
+        }
+
         private void SelectImageViaOpenDialogBoxAndAddToPainter()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -99,27 +141,6 @@ namespace Paint
 
                 drawingPictureBox.Refresh();
             }
-        }
-
-        // Изменение SelectColor
-        private void selectColorButton_Click(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                selectedColor = colorDialog.Color;
-                selectColorButton.BackColor = colorDialog.Color;
-            }
-        }
-
-        // Изменение selectedImageForFilling
-        private void patternsListView_ItemActivate(object sender, EventArgs e)
-        {
-            if (patternsListView.SelectedItems.Count == 0)
-                return;
-
-            selectedImageForFilling = patternsList.Images[patternsListView.SelectedIndices[0]];
         }
 
         // Рисование
@@ -173,41 +194,21 @@ namespace Paint
             switch (selectedGraphicObject)
             {
                 case GraphicObjectType.Circle:
-                    painter.AddGraphicObject(
-                        new Circle(
-                            selectedFirstPoint,
-                            distanceBetweenFirstPointAndSecondPoint,
-                            pen,
-                            textureBrush));
+                    painter.AddGraphicObject(new Circle(selectedFirstPoint, distanceBetweenFirstPointAndSecondPoint, pen, textureBrush));
                     break;
-
                 case GraphicObjectType.Rectangle:
-                    painter.AddGraphicObject(
-                        new Rectangle(
-                            selectedFirstPoint,
-                            2 * distanceBetweenFirstPointAndSecondPoint,
-                            2 * distanceBetweenFirstPointAndSecondPoint,
-                            pen,
-                            textureBrush));
+                    painter.AddGraphicObject(new Rectangle(selectedFirstPoint, 2 * distanceBetweenFirstPointAndSecondPoint, 2 * distanceBetweenFirstPointAndSecondPoint, pen, textureBrush));
                     break;
-
                 case GraphicObjectType.Curve:
-                    painter.AddGraphicObject(
-                        new Curve(
-                            selectedFirstPoint,
-                            selectedFirstPoint,
-                            pen));
+                    painter.AddGraphicObject(new Curve(selectedFirstPoint, selectedFirstPoint, pen));
                     break;
-
                 case GraphicObjectType.Polygon:
                     painter.AddGraphicObject(GetPolygon12(selectedFirstPoint, pen, textureBrush));
                     break;
-
                 case GraphicObjectType.BezierShape:
                     painter.AddGraphicObject(GetBezierShape12(selectedFirstPoint, pen));
                     break;
                 case GraphicObjectType.DrawingImage:
-                    break;
                 case GraphicObjectType.Empty:
                     break;
                 default:
@@ -215,15 +216,22 @@ namespace Paint
             }
         }
 
-        // Изменение cursorPoint и добавление точек кривой, рисуемой пером, в Painter
-        private void drawingPictureBox_MouseMove(object sender, MouseEventArgs e)
+        private void AddPointToCurveDrawnWithPen(Point point)
         {
-            cursorPoint = new Point(e.X, e.Y);
-
             if (mouseState == MouseState.MouseKeyPressed && selectedGraphicObject == GraphicObjectType.Curve)
-                painter.AddPointToLastAddedCurve(cursorPoint);
+                painter.AddPointToLastAddedCurve(point);
 
             drawingPictureBox.Refresh();
+        }
+
+        private void SetSizeDrawingPictureBoxViaDialogBox()
+        {
+            var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(
+                drawingPictureBox,
+                DrawingPictureBoxMaxWidth,
+                DrawingPictureBoxMaxHeight);
+
+            settingSizeDrawingPictureBoxDialog.ShowDialog();
         }
 
         // Скрытие/отображение тулбара
@@ -240,37 +248,8 @@ namespace Paint
             patternsListView.Visible = patternsPanelMenuItem.Checked;
         }
 
-        // Удаление последнего нарисованного графического объекта
-        private void undoMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveLastAddedGraphicObject();
-        }
-
-        // Очистка экрана
-        private void clearMenuItem_Click(object sender, EventArgs e)
-        {
-            ClearDrawingBoard();
-        }
-
-        // Настройка размера drawingPictureBox
-        private void pagePropertyMenuItem_Click(object sender, EventArgs e)
-        {
-            var settingSizeDrawingPictureBoxDialog = new SettingSizePictureBoxForm(
-                drawingPictureBox,
-                DrawingPictureBoxMaxWidth,
-                DrawingPictureBoxMaxHeight);
-
-            settingSizeDrawingPictureBoxDialog.ShowDialog();
-        }
-
-        // Выход
-        private void exitMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         // Нажатие на клавиши
-        private void drawingForm_KeyDown(object sender, KeyEventArgs e)
+        private void DrawingForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (mouseState != MouseState.MouseKeyDepressed)
                 return;
@@ -314,6 +293,12 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
+        private void DrawingForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (selectedGraphicObject != GraphicObjectType.Empty)
+                e.Cancel = !TrySaveChangesViaDialogBox();
+        }
+
         private void AddImageToPainterFromClipboardAndResizeDrawingBoard()
         {
             Image imageFromClipboard = Clipboard.GetImage();
@@ -344,36 +329,7 @@ namespace Paint
             drawingPictureBox.Refresh();
         }
 
-        // Сохранение изображения
-        private void saveFileButton_Click(object sender, EventArgs e)
-        {
-            SaveFinalImage();
-        }
-
-        private void saveFileMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFinalImage();
-        }
-
-        private void saveAsPngMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFinalImageToFormat(ImageFormat.Png);
-        }
-
-        private void saveAsJpegMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFinalImageToFormat(ImageFormat.Jpeg);
-        }
-
-        private void saveAsBmpMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFinalImageToFormat(ImageFormat.Bmp);
-        }
-
-        private void saveAsGifMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFinalImageToFormat(ImageFormat.Gif);
-        }
+        // Сохранение
 
         private void SaveFinalImage()
         {
@@ -409,14 +365,7 @@ namespace Paint
             return false;
         }
 
-        // Создание нового файла
-        private void newFileMenuItem_Click(object sender, EventArgs e)
-        {
-            if (TrySaveChangesViaDialogBox())
-                SetDefaultValuesForFields();
-        }
-
-        private void newFileButton_Click(object sender, EventArgs e)
+        private void SaveChangesAndSetDefaultValuesForFields()
         {
             if (TrySaveChangesViaDialogBox())
                 SetDefaultValuesForFields();
@@ -438,17 +387,6 @@ namespace Paint
                 default:
                     throw new ArgumentOutOfRangeException(nameof(saveChangesDialogResult), saveChangesDialogResult, null);
             }
-        }
-
-        // Открытие файла изображения в программе
-        private void openNewImageButton_Click(object sender, EventArgs e)
-        {
-            SaveChangesAndOpenNewImageInProgram();
-        }
-
-        private void openNewImageMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveChangesAndOpenNewImageInProgram();
         }
 
         private void SaveChangesAndOpenNewImageInProgram()
@@ -475,13 +413,6 @@ namespace Paint
 
                 drawingPictureBox.Refresh();
             }
-        }
-
-        // Окно сохранения нарисованной картинки при закрытии приложения
-        private void DrawingForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (selectedGraphicObject != GraphicObjectType.Empty)
-                e.Cancel = !TrySaveChangesViaDialogBox();
         }
 
         // Фигуры для 12-го варианта

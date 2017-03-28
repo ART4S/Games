@@ -38,10 +38,8 @@ namespace Paint
 
         public void MoveLastAddedGraphicObject(MoveDirection direction, int moveRange)
         {
-            if (!graphicObjects.Any())
-                return;
-
-            graphicObjects.Last().Move(direction, moveRange);
+            if (graphicObjects.Any())
+                graphicObjects.Last().Move(direction, moveRange);
         }
 
         public void RotateClockwiseLastAddedGraphicObject(double angle)

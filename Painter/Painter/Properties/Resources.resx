@@ -158,10 +158,10 @@ Rotation Polygon and Bezier shape:
 	E - сlockwise
 	Q - counterclockwise
 
-Remove last drawn object:
+Removing last drawn object:
 	Ctrl+Z
 
-Clear screen:
+Cleaning screen:
 	Del</value>
   </data>
   <data name="savingImageErrorText" xml:space="preserve">
