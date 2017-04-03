@@ -72,6 +72,8 @@ namespace Paint
             selectColorButton.Click       += (sender, e) => SetSelectedColorViaColorDialog();
             patternsListView.ItemActivate += (sender, e) => SetSelectedImageForFilling();
 
+            imageViewerButton.Click       += (sender, e) => ShowImageViewer();
+
             aboutPainterMenuItem.Click    += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
             helpButton.Click              += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
         }
@@ -459,6 +461,12 @@ namespace Paint
             };
 
             return new BezierShape(curve, middlePoint, pen);
+        }
+
+        private void ShowImageViewer()
+        {
+            ImageViewerForm imageViewer = new ImageViewerForm();
+            imageViewer.ShowDialog();
         }
     }
 }

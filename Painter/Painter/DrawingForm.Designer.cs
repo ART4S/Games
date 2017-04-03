@@ -34,12 +34,6 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openNewImageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsPngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsJpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsBmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsGifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pagePropertyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -69,12 +63,20 @@
             this.drawRectangleButton = new System.Windows.Forms.ToolStripButton();
             this.drawPolygonButton = new System.Windows.Forms.ToolStripButton();
             this.drawBezierShapeButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.imageViewerButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.helpButton = new System.Windows.Forms.ToolStripButton();
             this.patternsList = new System.Windows.Forms.ImageList(this.components);
             this.patternsListView = new System.Windows.Forms.ListView();
             this.drawingPictureBox = new System.Windows.Forms.PictureBox();
             this.drawingPanel = new System.Windows.Forms.Panel();
+            this.saveAsPngMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsJpegMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsBmpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsGifMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsFIleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingPictureBox)).BeginInit();
@@ -119,47 +121,6 @@
             this.openNewImageMenuItem.Name = "openNewImageMenuItem";
             this.openNewImageMenuItem.Size = new System.Drawing.Size(157, 22);
             this.openNewImageMenuItem.Text = "Open";
-            // 
-            // saveFileMenuItem
-            // 
-            this.saveFileMenuItem.Name = "saveFileMenuItem";
-            this.saveFileMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveFileMenuItem.Text = "Save";
-            // 
-            // saveAsFIleMenuItem
-            // 
-            this.saveAsFIleMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveAsPngMenuItem,
-            this.saveAsJpegMenuItem,
-            this.saveAsBmpMenuItem,
-            this.saveAsGifMenuItem});
-            this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
-            this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveAsFIleMenuItem.Text = "Save As...";
-            // 
-            // saveAsPngMenuItem
-            // 
-            this.saveAsPngMenuItem.Name = "saveAsPngMenuItem";
-            this.saveAsPngMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.saveAsPngMenuItem.Text = "PNG";
-            // 
-            // saveAsJpegMenuItem
-            // 
-            this.saveAsJpegMenuItem.Name = "saveAsJpegMenuItem";
-            this.saveAsJpegMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.saveAsJpegMenuItem.Text = "JPEG";
-            // 
-            // saveAsBmpMenuItem
-            // 
-            this.saveAsBmpMenuItem.Name = "saveAsBmpMenuItem";
-            this.saveAsBmpMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.saveAsBmpMenuItem.Text = "BMP";
-            // 
-            // saveAsGifMenuItem
-            // 
-            this.saveAsGifMenuItem.Name = "saveAsGifMenuItem";
-            this.saveAsGifMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.saveAsGifMenuItem.Text = "GIF";
             // 
             // toolStripSeparator1
             // 
@@ -218,7 +179,7 @@
             this.toolbarMenuItem.Checked = true;
             this.toolbarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolbarMenuItem.Name = "toolbarMenuItem";
-            this.toolbarMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolbarMenuItem.Size = new System.Drawing.Size(149, 22);
             this.toolbarMenuItem.Text = "Toolbar";
             this.toolbarMenuItem.Click += new System.EventHandler(this.toolbarMenuItem_Click);
             // 
@@ -227,7 +188,7 @@
             this.patternsPanelMenuItem.Checked = true;
             this.patternsPanelMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.patternsPanelMenuItem.Name = "patternsPanelMenuItem";
-            this.patternsPanelMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.patternsPanelMenuItem.Size = new System.Drawing.Size(149, 22);
             this.patternsPanelMenuItem.Text = "Patterns panel";
             this.patternsPanelMenuItem.Click += new System.EventHandler(this.patternsPanelMenuItem_Click);
             // 
@@ -262,6 +223,8 @@
             this.drawRectangleButton,
             this.drawPolygonButton,
             this.drawBezierShapeButton,
+            this.toolStripSeparator6,
+            this.imageViewerButton,
             this.toolStripSeparator5,
             this.helpButton});
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
@@ -414,6 +377,21 @@
             this.drawBezierShapeButton.Text = "BezierShape shape";
             this.drawBezierShapeButton.ToolTipText = "Shape using Bezier curve";
             // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // imageViewerButton
+            // 
+            this.imageViewerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.imageViewerButton.Image = ((System.Drawing.Image)(resources.GetObject("imageViewerButton.Image")));
+            this.imageViewerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.imageViewerButton.Name = "imageViewerButton";
+            this.imageViewerButton.Size = new System.Drawing.Size(23, 22);
+            this.imageViewerButton.Text = "Image Viewer";
+            this.imageViewerButton.ToolTipText = "Image Viewer";
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
@@ -482,6 +460,47 @@
             this.drawingPanel.Size = new System.Drawing.Size(652, 290);
             this.drawingPanel.TabIndex = 4;
             // 
+            // saveAsPngMenuItem
+            // 
+            this.saveAsPngMenuItem.Name = "saveAsPngMenuItem";
+            this.saveAsPngMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsPngMenuItem.Text = "PNG";
+            // 
+            // saveAsJpegMenuItem
+            // 
+            this.saveAsJpegMenuItem.Name = "saveAsJpegMenuItem";
+            this.saveAsJpegMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsJpegMenuItem.Text = "JPEG";
+            // 
+            // saveAsBmpMenuItem
+            // 
+            this.saveAsBmpMenuItem.Name = "saveAsBmpMenuItem";
+            this.saveAsBmpMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsBmpMenuItem.Text = "BMP";
+            // 
+            // saveAsGifMenuItem
+            // 
+            this.saveAsGifMenuItem.Name = "saveAsGifMenuItem";
+            this.saveAsGifMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsGifMenuItem.Text = "GIF";
+            // 
+            // saveAsFIleMenuItem
+            // 
+            this.saveAsFIleMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveAsPngMenuItem,
+            this.saveAsJpegMenuItem,
+            this.saveAsBmpMenuItem,
+            this.saveAsGifMenuItem});
+            this.saveAsFIleMenuItem.Name = "saveAsFIleMenuItem";
+            this.saveAsFIleMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveAsFIleMenuItem.Text = "Save As...";
+            // 
+            // saveFileMenuItem
+            // 
+            this.saveFileMenuItem.Name = "saveFileMenuItem";
+            this.saveFileMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveFileMenuItem.Text = "Save";
+            // 
             // DrawingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -519,8 +538,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newFileMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openNewImageMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveFileMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsFIleMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem pagePropertyMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -556,9 +573,13 @@
         private System.Windows.Forms.ToolStripButton drawCurveButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem patternsPanelMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsBmpMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsJpegMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripButton imageViewerButton;
+        private System.Windows.Forms.ToolStripMenuItem saveFileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsFIleMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsPngMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsJpegMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsBmpMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsGifMenuItem;
     }
 }
