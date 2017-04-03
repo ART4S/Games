@@ -90,6 +90,17 @@ namespace Paint.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Zoom:
+        ///	Ctrl+E - enlarge image
+        ///	Ctrl+Q - reduce image.
+        /// </summary>
+        internal static string ImageViewerFormHelpText {
+            get {
+                return ResourceManager.GetString("ImageViewerFormHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Program name: Simple Painter
         ///Developer: Chulets Vyacheslav
         ///Year: 2017.

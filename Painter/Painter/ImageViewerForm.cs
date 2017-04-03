@@ -15,8 +15,10 @@ namespace Paint
         {
             InitializeComponent();
 
+            newImageMenuItem.Click        += (sender, e) => InitScalableImagesViaOpenDialogBox();
             openNewImageMenuItem.Click    += (sender, e) => InitScalableImagesViaOpenDialogBox();
             exitMenuItem.Click            += (sender, e) => Close();
+            helpMenuItem.Click            += (sender, e) => MessageBox.Show(Resources.ImageViewerFormHelpText, "Help");
 
             firstPictureBox.Click         += (sender, e) => selectedScalableImage = firstScalableImage;
             secondPictureBox.Click        += (sender, e) => selectedScalableImage = secondScalableImage;
@@ -49,8 +51,7 @@ namespace Paint
                 firstPictureBox.Size = selectedImage.Size;
                 secondPictureBox.Size = selectedImage.Size;
 
-                firstPictureBox.Refresh();
-                secondPictureBox.Refresh();
+                splitContainer.Refresh();
             }
         }
 
@@ -68,8 +69,7 @@ namespace Paint
                 ChangePictureBoxSizeToPixelsCount(
                     selectedScalableImage == firstScalableImage ? firstPictureBox : secondPictureBox, -pixelsCount);
 
-            firstPictureBox.Refresh();
-            secondPictureBox.Refresh();
+            splitContainer.Refresh();
         }
 
         private void ChangePictureBoxSizeToPixelsCount(PictureBox pictureBox, int pixelsCount)
@@ -81,8 +81,7 @@ namespace Paint
         {
             selectedScalableImage?.SetInterpolationMode(interpolationMode);
 
-            firstPictureBox.Refresh();
-            secondPictureBox.Refresh();
+            splitContainer.Refresh();
         }
     }
 }

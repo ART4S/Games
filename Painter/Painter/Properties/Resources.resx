@@ -173,4 +173,9 @@ Cleaning screen:
   <data name="programName" xml:space="preserve">
     <value>Simple Painter</value>
   </data>
+  <data name="ImageViewerFormHelpText" xml:space="preserve">
+    <value>Zoom:
+	Ctrl+E - enlarge image
+	Ctrl+Q - reduce image</value>
+  </data>
 </root>

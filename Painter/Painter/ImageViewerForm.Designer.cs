@@ -36,12 +36,10 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomPlusMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomMinusMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.nearestNeighborMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bilinearMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bicubicMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.firstPictureBox = new System.Windows.Forms.PictureBox();
             this.secondPictureBox = new System.Windows.Forms.PictureBox();
@@ -59,7 +57,8 @@
             this.menuStrip.BackColor = System.Drawing.Color.White;
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.helpMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(576, 24);
@@ -80,32 +79,29 @@
             // newImageMenuItem
             // 
             this.newImageMenuItem.Name = "newImageMenuItem";
-            this.newImageMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.newImageMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newImageMenuItem.Text = "New";
             // 
             // openNewImageMenuItem
             // 
             this.openNewImageMenuItem.Name = "openNewImageMenuItem";
-            this.openNewImageMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openNewImageMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openNewImageMenuItem.Text = "Open";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(100, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitMenuItem.Text = "Exit";
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zoomPlusMenuItem,
-            this.zoomMinusMenuItem,
-            this.toolStripSeparator2,
             this.nearestNeighborMenuItem,
             this.bilinearMenuItem,
             this.bicubicMenuItem});
@@ -113,40 +109,29 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
             // 
-            // zoomPlusMenuItem
-            // 
-            this.zoomPlusMenuItem.Name = "zoomPlusMenuItem";
-            this.zoomPlusMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.zoomPlusMenuItem.Text = "Zoom +       Ctrl+E";
-            // 
-            // zoomMinusMenuItem
-            // 
-            this.zoomMinusMenuItem.Name = "zoomMinusMenuItem";
-            this.zoomMinusMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.zoomMinusMenuItem.Text = "Zoom -        Ctrl+Q";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(171, 6);
-            // 
             // nearestNeighborMenuItem
             // 
             this.nearestNeighborMenuItem.Name = "nearestNeighborMenuItem";
-            this.nearestNeighborMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.nearestNeighborMenuItem.Size = new System.Drawing.Size(165, 22);
             this.nearestNeighborMenuItem.Text = "Nearest neighbor";
             // 
             // bilinearMenuItem
             // 
             this.bilinearMenuItem.Name = "bilinearMenuItem";
-            this.bilinearMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.bilinearMenuItem.Size = new System.Drawing.Size(165, 22);
             this.bilinearMenuItem.Text = "Bilinear";
             // 
             // bicubicMenuItem
             // 
             this.bicubicMenuItem.Name = "bicubicMenuItem";
-            this.bicubicMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.bicubicMenuItem.Size = new System.Drawing.Size(165, 22);
             this.bicubicMenuItem.Text = "Bicubic";
+            // 
+            // helpMenuItem
+            // 
+            this.helpMenuItem.Name = "helpMenuItem";
+            this.helpMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpMenuItem.Text = "Help";
             // 
             // splitContainer
             // 
@@ -169,7 +154,7 @@
             this.splitContainer.Panel2.Controls.Add(this.secondPictureBox);
             this.splitContainer.Panel2MinSize = 0;
             this.splitContainer.Size = new System.Drawing.Size(576, 361);
-            this.splitContainer.SplitterDistance = 7;
+            this.splitContainer.SplitterDistance = 25;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 2;
             // 
@@ -223,15 +208,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zoomPlusMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zoomMinusMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newImageMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem nearestNeighborMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bilinearMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bicubicMenuItem;
         private System.Windows.Forms.PictureBox firstPictureBox;
         private System.Windows.Forms.PictureBox secondPictureBox;
+        private System.Windows.Forms.ToolStripMenuItem helpMenuItem;
     }
 }
