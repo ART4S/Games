@@ -31,8 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageViewerForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newImageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openNewImageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,25 +68,25 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newImageMenuItem,
-            this.openNewImageMenuItem,
+            this.newMenuItem,
+            this.openMenuItem,
             this.toolStripSeparator1,
             this.exitMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // newImageMenuItem
+            // newMenuItem
             // 
-            this.newImageMenuItem.Name = "newImageMenuItem";
-            this.newImageMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.newImageMenuItem.Text = "New";
+            this.newMenuItem.Name = "newMenuItem";
+            this.newMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newMenuItem.Text = "New";
             // 
-            // openNewImageMenuItem
+            // openMenuItem
             // 
-            this.openNewImageMenuItem.Name = "openNewImageMenuItem";
-            this.openNewImageMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.openNewImageMenuItem.Text = "Open";
+            this.openMenuItem.Name = "openMenuItem";
+            this.openMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openMenuItem.Text = "Open";
             // 
             // toolStripSeparator1
             // 
@@ -204,11 +204,11 @@
         #endregion
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openNewImageMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newImageMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.ToolStripMenuItem nearestNeighborMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bilinearMenuItem;

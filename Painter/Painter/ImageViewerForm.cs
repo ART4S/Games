@@ -15,8 +15,8 @@ namespace Paint
         {
             InitializeComponent();
 
-            newImageMenuItem.Click        += (sender, e) => InitScalableImagesViaOpenDialogBox();
-            openNewImageMenuItem.Click    += (sender, e) => InitScalableImagesViaOpenDialogBox();
+            newMenuItem.Click             += (sender, e) => SetScalableImagesViaOpenDialogBox();
+            openMenuItem.Click            += (sender, e) => SetScalableImagesViaOpenDialogBox();
             exitMenuItem.Click            += (sender, e) => Close();
             helpMenuItem.Click            += (sender, e) => MessageBox.Show(Resources.ImageViewerFormHelpText, "Help");
 
@@ -33,7 +33,7 @@ namespace Paint
             splitContainer.SplitterDistance = 0;
         }
 
-        private void InitScalableImagesViaOpenDialogBox()
+        private void SetScalableImagesViaOpenDialogBox()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -55,11 +55,18 @@ namespace Paint
             }
         }
 
+        private void SetInterpolationModeToSelectedScalableImage(InterpolationMode interpolationMode)
+        {
+            selectedScalableImage?.SetInterpolationMode(interpolationMode);
+
+            splitContainer.Refresh();
+        }
+
         private void ImageViewerForm_KeyDown(object sender, KeyEventArgs e)
         {
             Keys pressedKey = e.KeyCode;
 
-            const int pixelsCount = 10;
+            const int pixelsCount = 20;
 
             if (pressedKey == Keys.E && e.Control)
                 ChangePictureBoxSizeToPixelsCount(
@@ -75,13 +82,6 @@ namespace Paint
         private void ChangePictureBoxSizeToPixelsCount(PictureBox pictureBox, int pixelsCount)
         {
             pictureBox.Size = new Size(pictureBox.Width + pixelsCount, pictureBox.Height + pixelsCount);
-        }
-
-        private void SetInterpolationModeToSelectedScalableImage(InterpolationMode interpolationMode)
-        {
-            selectedScalableImage?.SetInterpolationMode(interpolationMode);
-
-            splitContainer.Refresh();
         }
     }
 }

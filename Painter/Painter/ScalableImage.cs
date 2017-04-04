@@ -16,8 +16,10 @@ namespace Paint
 
         public void Draw(Graphics graphics, Size drawingFrameSize)
         {
+            Rectangle drawingRectangle = new Rectangle(new Point(0, 0), drawingFrameSize);
+
             graphics.InterpolationMode = interpolationMode;
-            graphics.DrawImage(image, new Rectangle(new Point(0, 0), drawingFrameSize));
+            graphics.DrawImage(image, drawingRectangle);
         }
 
         public void SetInterpolationMode(InterpolationMode interpolationMode)

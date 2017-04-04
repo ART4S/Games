@@ -75,7 +75,7 @@ namespace Paint
             imageViewerButton.Click       += (sender, e) => ShowImageViewer();
 
             aboutPainterMenuItem.Click    += (sender, e) => MessageBox.Show(Resources.InfoAboutProgram, "About program");
-            helpButton.Click              += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
+            helpButton.Click += (sender, e) => MessageBox.Show(Resources.HelpText, "Help");
         }
 
         private void SetDefaultValuesForFields()
