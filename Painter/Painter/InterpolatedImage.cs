@@ -3,12 +3,12 @@ using System.Drawing.Drawing2D;
 
 namespace Paint
 {
-    public class ScalableImage
+    public class InterpolatedImage
     {
         private readonly Image image;
         private InterpolationMode interpolationMode;
 
-        public ScalableImage(Image image, InterpolationMode interpolationMode)
+        public InterpolatedImage(Image image, InterpolationMode interpolationMode)
         {
             this.image = image;
             this.interpolationMode = interpolationMode;

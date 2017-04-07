@@ -7,33 +7,33 @@ namespace Paint
 {
     public partial class ImageViewerForm : Form
     {
-        private ScalableImage firstScalableImage;
-        private ScalableImage secondScalableImage;
-        private ScalableImage selectedScalableImage;
+        private InterpolatedImage firstInterpolatedImage;
+        private InterpolatedImage secondInterpolatedImage;
+        private InterpolatedImage selectedInterpolatedImage;
 
         public ImageViewerForm()
         {
             InitializeComponent();
 
-            newMenuItem.Click             += (sender, e) => SetScalableImagesViaOpenDialogBox();
-            openMenuItem.Click            += (sender, e) => SetScalableImagesViaOpenDialogBox();
+            newMenuItem.Click             += (sender, e) => SetInterpolatedImagesViaOpenDialogBox();
+            openMenuItem.Click            += (sender, e) => SetInterpolatedImagesViaOpenDialogBox();
             exitMenuItem.Click            += (sender, e) => Close();
             helpMenuItem.Click            += (sender, e) => MessageBox.Show(Resources.ImageViewerFormHelpText, "Help");
 
-            firstPictureBox.Click         += (sender, e) => selectedScalableImage = firstScalableImage;
-            secondPictureBox.Click        += (sender, e) => selectedScalableImage = secondScalableImage;
+            firstPictureBox.Click         += (sender, e) => selectedInterpolatedImage = firstInterpolatedImage;
+            secondPictureBox.Click        += (sender, e) => selectedInterpolatedImage = secondInterpolatedImage;
 
-            firstPictureBox.Paint         += (sender, e) => firstScalableImage?.Draw(e.Graphics, firstPictureBox.Size);
-            secondPictureBox.Paint        += (sender, e) => secondScalableImage?.Draw(e.Graphics, secondPictureBox.Size);
+            firstPictureBox.Paint         += (sender, e) => firstInterpolatedImage?.Draw(e.Graphics, firstPictureBox.Size);
+            secondPictureBox.Paint        += (sender, e) => secondInterpolatedImage?.Draw(e.Graphics, secondPictureBox.Size);
 
-            nearestNeighborMenuItem.Click += (sender, e) => SetInterpolationModeToSelectedScalableImage(InterpolationMode.NearestNeighbor);
-            bilinearMenuItem.Click        += (sender, e) => SetInterpolationModeToSelectedScalableImage(InterpolationMode.Bilinear);
-            bicubicMenuItem.Click         += (sender, e) => SetInterpolationModeToSelectedScalableImage(InterpolationMode.Bicubic);
+            nearestNeighborMenuItem.Click += (sender, e) => SetInterpolationModeToSelectedInterpolatedImage(InterpolationMode.NearestNeighbor);
+            bilinearMenuItem.Click        += (sender, e) => SetInterpolationModeToSelectedInterpolatedImage(InterpolationMode.HighQualityBilinear);
+            bicubicMenuItem.Click         += (sender, e) => SetInterpolationModeToSelectedInterpolatedImage(InterpolationMode.HighQualityBicubic);
 
             splitContainer.SplitterDistance = 0;
         }
 
-        private void SetScalableImagesViaOpenDialogBox()
+        private void SetInterpolatedImagesViaOpenDialogBox()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -44,9 +44,9 @@ namespace Paint
             {
                 Image selectedImage = Image.FromFile(openFileDialog.FileName);
 
-                firstScalableImage = new ScalableImage(selectedImage, InterpolationMode.Default);
-                secondScalableImage = new ScalableImage(selectedImage, InterpolationMode.Default);
-                selectedScalableImage = secondScalableImage;
+                firstInterpolatedImage = new InterpolatedImage(selectedImage, InterpolationMode.Default);
+                secondInterpolatedImage = new InterpolatedImage(selectedImage, InterpolationMode.Default);
+                selectedInterpolatedImage = secondInterpolatedImage;
 
                 firstPictureBox.Size = selectedImage.Size;
                 secondPictureBox.Size = selectedImage.Size;
@@ -55,9 +55,9 @@ namespace Paint
             }
         }
 
-        private void SetInterpolationModeToSelectedScalableImage(InterpolationMode interpolationMode)
+        private void SetInterpolationModeToSelectedInterpolatedImage(InterpolationMode interpolationMode)
         {
-            selectedScalableImage?.SetInterpolationMode(interpolationMode);
+            selectedInterpolatedImage?.SetInterpolationMode(interpolationMode);
 
             splitContainer.Refresh();
         }
@@ -70,11 +70,11 @@ namespace Paint
 
             if (pressedKey == Keys.E && e.Control)
                 ChangePictureBoxSizeToPixelsCount(
-                    selectedScalableImage == firstScalableImage ? firstPictureBox : secondPictureBox, pixelsCount);
+                    selectedInterpolatedImage == firstInterpolatedImage ? firstPictureBox : secondPictureBox, pixelsCount);
 
             if (pressedKey == Keys.Q && e.Control)
                 ChangePictureBoxSizeToPixelsCount(
-                    selectedScalableImage == firstScalableImage ? firstPictureBox : secondPictureBox, -pixelsCount);
+                    selectedInterpolatedImage == firstInterpolatedImage ? firstPictureBox : secondPictureBox, -pixelsCount);
 
             splitContainer.Refresh();
         }
