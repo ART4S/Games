@@ -9,7 +9,7 @@ namespace AirForce.AirObjects
 
         protected AirObject(Point positionInSpace)
         {
-            PositionInSpace = positionInSpace;
+            PositionInSpace = positionInSpace; //
         }
 
         public abstract void Move(Line trajectory);
