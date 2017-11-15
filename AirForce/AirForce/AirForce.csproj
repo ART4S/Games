@@ -55,7 +55,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Direction.cs" />
-    <Compile Include="AirObjects\PlayerAir.cs" />
+    <Compile Include="AirObjects\PlayerShip.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">

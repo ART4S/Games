@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AirForce
@@ -22,6 +23,11 @@ namespace AirForce
         private void MainForm_Resize(object sender, System.EventArgs e)
         {
             GameFieldPictureBox.Refresh();
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            gameController.MakingPlayerShipAct(e.KeyCode);
         }
     }
 }

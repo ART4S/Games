@@ -51,6 +51,7 @@
             this.Controls.Add(this.GameFieldPictureBox);
             this.Name = "MainForm";
             this.Text = "Air force";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.GameFieldPictureBox)).EndInit();
             this.ResumeLayout(false);
