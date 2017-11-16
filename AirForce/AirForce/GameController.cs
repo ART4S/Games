@@ -7,15 +7,29 @@ namespace AirForce
     public class GameController
     {
         private Size gameFieldSize;
+        private Line deathLine;
 
-        public void DrawAllElements(Graphics graphics, Size windowSize)
+        public GameController(Size gameFieldSize)
         {
-            gameFieldSize = windowSize;
+            this.gameFieldSize = gameFieldSize;
 
-            Line deathLine = new Line(
+            deathLine = new Line(
+                new Point(0, gameFieldSize.Height - 30),
+                new Point(gameFieldSize.Width, gameFieldSize.Height - 30));
+        }
+
+        public void ResizeGameFieldBorders(Size newGameFieldSize)
+        {
+            gameFieldSize = newGameFieldSize;
+
+            deathLine = new Line(
                 new Point(0, gameFieldSize.Height - 30),
                 new Point(gameFieldSize.Width, gameFieldSize.Height - 30));
 
+        }
+
+        public void DrawAllElements(Graphics graphics)
+        {
             Pen borderLinePen = new Pen(Color.DarkRed, 4);
 
             graphics.DrawLine(
@@ -24,7 +38,7 @@ namespace AirForce
                 deathLine.SecondPoint);
         }
 
-        public void MakingPlayerShipAct(Keys pressedKey)
+        public void ChangePlayerShipBehaviour(Keys pressedKey)
         {
             switch (pressedKey)
             {
@@ -46,7 +60,7 @@ namespace AirForce
         }
 
         // modifier "public"  only for Unit test
-        public bool IsBodyOutOfGameFieldSize(Point objectPosition, float objectCollisionRadius, )
+        public bool IsBodyOutOfGameFieldSize(Point objectPosition, float objectCollisionRadius)
         {
 
             return true;
