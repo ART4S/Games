@@ -46,6 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirObjects\AirObject.cs" />
+    <Compile Include="AirObjects\BigEnemyShip.cs" />
+    <Compile Include="AirObjects\EnemyShip.cs" />
+    <Compile Include="AirObjects\Meteor.cs" />
+    <Compile Include="Direction.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="MainForm.cs">

@@ -37,7 +37,7 @@
             this.GameFieldPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GameFieldPictureBox.Location = new System.Drawing.Point(0, 0);
             this.GameFieldPictureBox.Name = "GameFieldPictureBox";
-            this.GameFieldPictureBox.Size = new System.Drawing.Size(728, 478);
+            this.GameFieldPictureBox.Size = new System.Drawing.Size(884, 561);
             this.GameFieldPictureBox.TabIndex = 0;
             this.GameFieldPictureBox.TabStop = false;
             this.GameFieldPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.GameFieldPictureBox_Paint);
@@ -46,13 +46,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(728, 478);
+            this.ClientSize = new System.Drawing.Size(884, 561);
             this.Controls.Add(this.GameFieldPictureBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MainForm";
             this.Text = "Air force";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.GameFieldPictureBox)).EndInit();
             this.ResumeLayout(false);
 

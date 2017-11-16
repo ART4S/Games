@@ -1,18 +1,19 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace AirForce.AirObjects
 {
     public abstract class AirObject
     {
-        protected Point PositionInSpace;
-        public abstract int CollisionRadius { get; }
+        public Point PositionInSpace { get; protected set; }
+        public int CollisionRadius { get; }
 
-        protected AirObject(Point positionInSpace)
+        protected AirObject(Point positionInSpace, int collisionRadius)
         {
             PositionInSpace = positionInSpace;
+            CollisionRadius = collisionRadius;
         }
 
-        public abstract void Move(Line trajectory);
-        public abstract void BumpWithOtherAirObject();
+        public abstract void BumpWithOtherAirObject(AirObject otherAirObject);
     }
 }
