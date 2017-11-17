@@ -49,8 +49,9 @@
     <Compile Include="AirObjects\BigEnemyShip.cs" />
     <Compile Include="AirObjects\EnemyShip.cs" />
     <Compile Include="AirObjects\Meteor.cs" />
-    <Compile Include="Direction.cs" />
+    <Compile Include="Enums\Direction.cs" />
     <Compile Include="GameController.cs" />
+    <Compile Include="Enums\GameStatus.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -111,5 +112,6 @@
   <ItemGroup>
     <None Include="Resources\explosion.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

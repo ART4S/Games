@@ -3,7 +3,7 @@
 
 namespace AirForce
 {
-    public class Line
+    public sealed class Line
     {
         public Point FirstPoint { get; }
         public Point SecondPoint { get; }

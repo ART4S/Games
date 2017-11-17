@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace AirForce
 {
-    public partial class MainForm : Form
+    public sealed partial class MainForm : Form
     {
         private readonly GameController gameController;
         private readonly Timer drawingTimer = new Timer();

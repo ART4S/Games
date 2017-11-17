@@ -8,18 +8,20 @@ namespace AirForce.AirObjects
         public Point PositionInSpace { get; protected set; }
         public int Strength { get; protected set; }
         public int Radius { get; }
-        public event Action DeathObjectEvent;
 
-        protected int SpeedMovingShift;
+        protected event Action DeathObjectEvent;
+        protected readonly int MovespeedShift;
         protected readonly Image Image;
 
-        protected AirObject(Point positionInSpace, int radius, int strength, int speedMovingShift, Image image)
+        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action deathObjectMethod)
         {
             PositionInSpace = positionInSpace;
             Radius = radius;
             Strength = strength;
-            SpeedMovingShift = speedMovingShift;
+            MovespeedShift = movespeedShift;
             Image = image;
+
+            DeathObjectEvent += deathObjectMethod;
         }
 
         public abstract void BumpWithOtherAirObject(AirObject otherAirObject);

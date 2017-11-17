@@ -2,11 +2,14 @@
 using System.Drawing;
 using System.Windows.Forms;
 using AirForce.AirObjects;
+using AirForce.Enums;
 
 namespace AirForce
 {
-    public class GameController
+    public sealed class GameController
     {
+        private GameStatus gameStatus = GameStatus.Play;
+
         private readonly Size gameFieldSize;
         private readonly Line groundLine;
 
@@ -20,23 +23,58 @@ namespace AirForce
                 new Point(0, gameFieldSize.Height - 30),
                 new Point(gameFieldSize.Width, gameFieldSize.Height - 30));
 
-            playerShip = new PlayerShip(gameFieldSize);
-
-            playerShip.DeathObjectEvent += RecreateAirObjectsOnGameField;
+            playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
         }
 
         public void DrawAllElements(Graphics graphics)
+        {
+            if (gameStatus == GameStatus.Wait)
+                DrawWaitingStateString(graphics);
+
+            if (gameStatus == GameStatus.Play)
+                playerShip.Draw(graphics);
+
+            DrawGround(graphics);         
+        }
+
+        private void DrawGround(Graphics graphics)
         {
             Brush groundBrush = Brushes.Green;
             Rectangle groundRectangle = new Rectangle(groundLine.FirstPoint, gameFieldSize);
 
             graphics.FillRectangle(groundBrush, groundRectangle);
+        }
 
-            playerShip.Draw(graphics);
+        private void DrawWaitingStateString(Graphics graphics)
+        {
+            string contentText = "Press SPACE to start game";
+
+            Font font = new Font("Segoe UI", 12, FontStyle.Bold);
+            Brush brush = Brushes.DeepPink;
+            Rectangle gameFieldRectangle = new Rectangle(new Point(), gameFieldSize);
+
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            graphics.DrawString(contentText, font, brush, gameFieldRectangle, stringFormat);
         }
 
         public void ChangePlayerShipBehaviour(Keys pressedKey)
         {
+            if (gameStatus == GameStatus.Wait)
+            {
+                if (pressedKey == Keys.Space)
+                {
+                    RecreateAirObjectsOnGameField();
+                    gameStatus = GameStatus.Play;
+                }
+
+                return;
+            }
+
             Direction movingDirection = Direction.Empty;
 
             switch (pressedKey)
@@ -62,11 +100,11 @@ namespace AirForce
                     break;
 
                 case Keys.Space:
+                    // shoot
                     break;
 
                 default:
-                    new ArgumentOutOfRangeException(nameof(pressedKey), "Not found param!");
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(pressedKey), pressedKey, null);
             }
 
             playerShip.Move(movingDirection, gameFieldSize, groundLine);
@@ -74,9 +112,12 @@ namespace AirForce
 
         private void RecreateAirObjectsOnGameField()
         {
-            playerShip = new PlayerShip(gameFieldSize);
+            playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
+        }
 
-            playerShip.DeathObjectEvent += RecreateAirObjectsOnGameField;
+        private void ChangeGameStatusToWaitingState()
+        {
+            gameStatus = GameStatus.Wait;
         }
     }
 }

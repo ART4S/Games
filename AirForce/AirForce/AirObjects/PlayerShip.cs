@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Drawing;
+using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
-    public class PlayerShip : AirObject
+    public sealed class PlayerShip : AirObject
     {
-        public PlayerShip(Size spaceSize)
-            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship)
+        public PlayerShip(Size spaceSize, Action deathPlayerShipMethod)
+            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship, deathPlayerShipMethod)
         {
-
         }
 
         public override void BumpWithOtherAirObject(AirObject otherAirObject)
         {
             Strength--;
+
+            if (Strength == 0)
+                OnDeathObjectEvent();
         }
 
         public override void Draw(Graphics graphics)
@@ -35,18 +38,18 @@ namespace AirForce.AirObjects
                     break;
 
                 case Direction.Up:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - SpeedMovingShift);
+                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - MovespeedShift);
                     break;
 
                 case Direction.Down:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + SpeedMovingShift);
+                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + MovespeedShift);
                     break;
 
                 case Direction.Left:
-                    nextPositionInSpace = new Point(PositionInSpace.X - SpeedMovingShift, PositionInSpace.Y);
+                    nextPositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
                     break;
                 case Direction.Right:
-                    nextPositionInSpace = new Point(PositionInSpace.X + SpeedMovingShift, PositionInSpace.Y);
+                    nextPositionInSpace = new Point(PositionInSpace.X + MovespeedShift, PositionInSpace.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
@@ -57,11 +60,6 @@ namespace AirForce.AirObjects
 
             if (!IsAboveGroundLine(groundLine))
                 OnDeathObjectEvent();
-        }
-
-        public void Shoot()
-        {
-
         }
     }
 }

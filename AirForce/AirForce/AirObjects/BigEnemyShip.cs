@@ -2,7 +2,7 @@
 
 namespace AirForce.AirObjects
 {
-    public class BigEnemyShip
+    public sealed class BigEnemyShip
     {
     }
 }
