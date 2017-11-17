@@ -3,10 +3,12 @@ using System.Drawing;
 
 namespace AirForce.AirObjects
 {
-    public partial class PlayerShip : AirObject
+    public class PlayerShip : AirObject
     {
-        public PlayerShip(Point positionInSpace, int collisionRadius, int strength) : base(positionInSpace, collisionRadius, strength)
+        public PlayerShip(Size spaceSize)
+            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship)
         {
+
         }
 
         public override void BumpWithOtherAirObject(AirObject otherAirObject)
@@ -14,9 +16,17 @@ namespace AirForce.AirObjects
             Strength--;
         }
 
+        public override void Draw(Graphics graphics)
+        {
+            Rectangle imageRectangle = new Rectangle(
+                new Point(PositionInSpace.X - Radius, PositionInSpace.Y - Radius),
+                new Size(2 * Radius, 2 * Radius));
+
+            graphics.DrawImage(Image, imageRectangle);
+        }
+
         public void Move(Direction direction, Size spaceSize, Line groundLine)
         {
-            const int shift = 15;
             Point nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y);
 
             switch (direction)
@@ -25,28 +35,28 @@ namespace AirForce.AirObjects
                     break;
 
                 case Direction.Up:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - shift);
+                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - SpeedMovingShift);
                     break;
 
                 case Direction.Down:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + shift);
+                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + SpeedMovingShift);
                     break;
 
                 case Direction.Left:
-                    nextPositionInSpace = new Point(PositionInSpace.X - shift, PositionInSpace.Y);
+                    nextPositionInSpace = new Point(PositionInSpace.X - SpeedMovingShift, PositionInSpace.Y);
                     break;
                 case Direction.Right:
-                    nextPositionInSpace = new Point(PositionInSpace.X + shift, PositionInSpace.Y);
+                    nextPositionInSpace = new Point(PositionInSpace.X + SpeedMovingShift, PositionInSpace.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            if (IsBodyInSpace(nextPositionInSpace, CollisionRadius, spaceSize))
+            if (IsNextPositionAreBeingInSpace(nextPositionInSpace, spaceSize))
                 PositionInSpace = nextPositionInSpace;
 
             if (!IsAboveGroundLine(groundLine))
-                Strength = 0;
+                OnDeathObjectEvent();
         }
 
         public void Shoot()

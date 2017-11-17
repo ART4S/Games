@@ -7,30 +7,38 @@ namespace AirForce.AirObjects
     {
         public Point PositionInSpace { get; protected set; }
         public int Strength { get; protected set; }
-        public int CollisionRadius { get; }
+        public int Radius { get; }
+        public event Action DeathObjectEvent;
 
-        protected AirObject(Point positionInSpace, int collisionRadius, int strength)
+        protected int SpeedMovingShift;
+        protected readonly Image Image;
+
+        protected AirObject(Point positionInSpace, int radius, int strength, int speedMovingShift, Image image)
         {
             PositionInSpace = positionInSpace;
-            CollisionRadius = collisionRadius;
+            Radius = radius;
             Strength = strength;
+            SpeedMovingShift = speedMovingShift;
+            Image = image;
         }
 
         public abstract void BumpWithOtherAirObject(AirObject otherAirObject);
 
-        protected bool IsBodyInSpace(Point point, int collisionRadius, Size spaceSize)
+        public abstract void Draw(Graphics graphics);
+
+        protected bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
         {
             bool isUnderTopBorderLine =
-                point.Y - collisionRadius >= 0;
+                nextPosition.Y - Radius >= 0;
 
             bool isAboveBottomBorderLine =
-                point.Y + collisionRadius <= spaceSize.Height;
+                nextPosition.Y + Radius <= spaceSize.Height;
 
             bool isLeftOfRightBorderLine =
-                point.X + collisionRadius <= spaceSize.Width;
+                nextPosition.X + Radius <= spaceSize.Width;
 
             bool isRightOfLeftBorderLine =
-                point.X - collisionRadius >= 0;
+                nextPosition.X - Radius >= 0;
 
             return isUnderTopBorderLine &&
                    isAboveBottomBorderLine &&
@@ -40,8 +48,13 @@ namespace AirForce.AirObjects
 
         protected bool IsAboveGroundLine(Line groundlLine)
         {
-            return PositionInSpace.Y + CollisionRadius < groundlLine.FirstPoint.Y ||
-                   PositionInSpace.Y + CollisionRadius < groundlLine.SecondPoint.Y;
+            return PositionInSpace.Y + Radius < groundlLine.FirstPoint.Y ||
+                   PositionInSpace.Y + Radius < groundlLine.SecondPoint.Y;
+        }
+
+        protected void OnDeathObjectEvent()
+        {
+            DeathObjectEvent?.Invoke();
         }
     }
 }

@@ -10,8 +10,8 @@ namespace AirForce
         private readonly Size gameFieldSize;
         private readonly Line groundLine;
 
-        private readonly PlayerShip playerShip;
-
+        private PlayerShip playerShip;
+          
         public GameController(Size gameFieldSize)
         {
             this.gameFieldSize = gameFieldSize;
@@ -20,32 +20,19 @@ namespace AirForce
                 new Point(0, gameFieldSize.Height - 30),
                 new Point(gameFieldSize.Width, gameFieldSize.Height - 30));
 
-            const int colisionRadius = 30;
-            Point positionInSpace = new Point(colisionRadius, gameFieldSize.Width / 2);
+            playerShip = new PlayerShip(gameFieldSize);
 
-            playerShip = new PlayerShip(positionInSpace, colisionRadius, 5);
+            playerShip.DeathObjectEvent += RecreateAirObjectsOnGameField;
         }
 
         public void DrawAllElements(Graphics graphics)
         {
-            Pen borderLinePen = new Pen(Color.DarkRed, 4);
-            Pen playerShipPen = new Pen(Color.Blue, 4);
+            Brush groundBrush = Brushes.Green;
+            Rectangle groundRectangle = new Rectangle(groundLine.FirstPoint, gameFieldSize);
 
-            // drawing groundLine
+            graphics.FillRectangle(groundBrush, groundRectangle);
 
-            graphics.DrawLine(
-                borderLinePen,
-                groundLine.FirstPoint,
-                groundLine.SecondPoint);
-
-            // drawing playerShip
-
-            graphics.DrawEllipse(
-                playerShipPen,
-                playerShip.PositionInSpace.X - playerShip.CollisionRadius,
-                playerShip.PositionInSpace.Y - playerShip.CollisionRadius,
-                playerShip.CollisionRadius * 2,
-                playerShip.CollisionRadius * 2);
+            playerShip.Draw(graphics);
         }
 
         public void ChangePlayerShipBehaviour(Keys pressedKey)
@@ -85,25 +72,11 @@ namespace AirForce
             playerShip.Move(movingDirection, gameFieldSize, groundLine);
         }
 
-        // modifier "public"  only for Unit test
-        public bool IsAirObjectInGameField(AirObject airObject, Point nextPosition)
+        private void RecreateAirObjectsOnGameField()
         {
-            bool isAirObjectDoesntCrossLeftBorder =
-                nextPosition.X - airObject.CollisionRadius >= 0;
+            playerShip = new PlayerShip(gameFieldSize);
 
-            bool isAirObjectDoesntCrossRightBorder =
-                nextPosition.X + airObject.CollisionRadius <= gameFieldSize.Width;
-
-            bool isAirObjectDoesntCrossTopBorder =
-                nextPosition.Y - airObject.CollisionRadius >= 0;
-
-            bool isAirObjectDoesntCrossDeathLine =
-                nextPosition.Y + airObject.CollisionRadius < groundLine.FirstPoint.Y;
-
-            return isAirObjectDoesntCrossLeftBorder &&
-                isAirObjectDoesntCrossRightBorder &&
-                isAirObjectDoesntCrossTopBorder &&
-                isAirObjectDoesntCrossDeathLine;
+            playerShip.DeathObjectEvent += RecreateAirObjectsOnGameField;
         }
     }
 }
