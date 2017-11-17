@@ -7,7 +7,7 @@ namespace AirForce
     public partial class MainForm : Form
     {
         private readonly GameController gameController;
-        private readonly Timer timer = new Timer();
+        private readonly Timer drawingTimer = new Timer();
 
         public MainForm()
         {
@@ -16,12 +16,12 @@ namespace AirForce
             gameController = new GameController(GameFieldPictureBox.Size);
             GameFieldPictureBox.BackColor = Color.Aqua;
 
-            timer.Interval = 1;
-            timer.Tick += TimerTick;
-            timer.Start();
+            drawingTimer.Interval = 1;
+            drawingTimer.Tick += DrawingTimerTick;
+            drawingTimer.Start();
         }
 
-        private void TimerTick(object sender, EventArgs e)
+        private void DrawingTimerTick(object sender, EventArgs e)
         {
             GameFieldPictureBox.Refresh();
         }

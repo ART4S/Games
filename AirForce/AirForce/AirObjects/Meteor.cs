@@ -7,7 +7,7 @@ namespace AirForce.AirObjects
     {
         public class Meteor : AirObject
         {
-            public Meteor(Point positionInSpace, int collisionRadius) : base(positionInSpace, collisionRadius)
+            public Meteor(Point positionInSpace, int collisionRadius, int strength) : base(positionInSpace, collisionRadius, strength)
             {
             }
 

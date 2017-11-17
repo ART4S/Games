@@ -4,11 +4,8 @@ namespace AirForce.AirObjects
 {
     public class BigEnemyShip : AirObject
     {
-        public int Strength { get; private set; } 
-
-        public BigEnemyShip(Point positionInSpace, int collisionRadius, int strength) : base(positionInSpace, collisionRadius)
+        public BigEnemyShip(Point positionInSpace, int collisionRadius, int strength) : base(positionInSpace, collisionRadius, strength)
         {
-            Strength = strength;
         }
 
         public void Move()
@@ -26,7 +23,6 @@ namespace AirForce.AirObjects
 
         public void Shoot()
         {
-
         }
     }
 }

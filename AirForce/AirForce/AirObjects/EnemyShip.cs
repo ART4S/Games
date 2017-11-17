@@ -4,7 +4,7 @@ namespace AirForce.AirObjects
 {
     public class EnemyShip : AirObject
     {
-        public EnemyShip(Point positionInSpace, int collisionRadius) : base(positionInSpace, collisionRadius)
+        public EnemyShip(Point positionInSpace, int collisionRadius, int strength) : base(positionInSpace, collisionRadius, strength)
         {
         }
 

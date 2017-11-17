@@ -82,7 +82,7 @@ namespace AirForce
                     break;
             }
 
-            playerShip.Move(movingDirection);
+            playerShip.Move(movingDirection, gameFieldSize, groundLine);
         }
 
         // modifier "public"  only for Unit test
