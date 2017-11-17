@@ -1,6 +1,6 @@
 ﻿namespace AirForce.Enums
 {
-    public enum GameStatus
+    public enum GameState
     {
         Play,
         Wait

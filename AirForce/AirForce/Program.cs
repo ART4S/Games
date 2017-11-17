@@ -3,8 +3,10 @@ using System.Windows.Forms;
 
 namespace AirForce
 {
-    static class Program
+    public static class Program
     {
+        public static readonly Random Random = new Random();
+
         [STAThread]
         static void Main()
         {

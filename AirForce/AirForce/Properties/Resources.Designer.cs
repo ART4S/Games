@@ -63,9 +63,9 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap big_enemy_ship {
+        internal static System.Drawing.Bitmap bird {
             get {
-                object obj = ResourceManager.GetObject("big_enemy_ship", resourceCulture);
+                object obj = ResourceManager.GetObject("bird", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bird {
+        internal static System.Drawing.Bitmap bomber_ship {
             get {
-                object obj = ResourceManager.GetObject("bird", resourceCulture);
+                object obj = ResourceManager.GetObject("bomber_ship", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

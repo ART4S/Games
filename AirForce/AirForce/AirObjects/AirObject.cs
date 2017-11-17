@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
@@ -27,6 +28,8 @@ namespace AirForce.AirObjects
         public abstract void BumpWithOtherAirObject(AirObject otherAirObject);
 
         public abstract void Draw(Graphics graphics);
+
+        public abstract void Move(Direction direction, Size spaceSize, Line groundLine);
 
         protected bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
         {
@@ -58,5 +61,7 @@ namespace AirForce.AirObjects
         {
             DeathObjectEvent?.Invoke();
         }
+
+
     }
 }

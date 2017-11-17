@@ -28,7 +28,7 @@ namespace AirForce.AirObjects
             graphics.DrawImage(Image, imageRectangle);
         }
 
-        public void Move(Direction direction, Size spaceSize, Line groundLine)
+        public override void Move(Direction direction, Size spaceSize, Line groundLine)
         {
             Point nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y);
 
@@ -36,15 +36,12 @@ namespace AirForce.AirObjects
             {
                 case Direction.Empty:
                     break;
-
                 case Direction.Up:
                     nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - MovespeedShift);
                     break;
-
                 case Direction.Down:
                     nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + MovespeedShift);
                     break;
-
                 case Direction.Left:
                     nextPositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
                     break;
