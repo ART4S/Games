@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using AirForce.AirObjects;
@@ -18,8 +17,6 @@ namespace AirForce
 
         private readonly Timer airObjectsCreatorTimer = new Timer();
 
-        private readonly List<AirObject> airObjectsList = new List<AirObject>();
-
         private readonly Random random = new Random();
 
         /// -------------------------------------------------------
@@ -36,14 +33,12 @@ namespace AirForce
 
             // airObjectsCreatorTimer setting
             airObjectsCreatorTimer.Interval = 2000;
-            airObjectsCreatorTimer.Tick += AddNewAirObject;
+            airObjectsCreatorTimer.Tick += AddNewRandomEnemyAirObject;
             airObjectsCreatorTimer.Start();
         }
 
         public void DrawAllElements(Graphics graphics)
         {
-            MoveAllAirObjects();
-
             if (gameState == GameState.Wait)
                 DrawWaitingStateString(graphics);
 
@@ -51,9 +46,6 @@ namespace AirForce
                 playerShip.Draw(graphics);
 
             DrawGround(graphics);
-
-            foreach (AirObject airObject in airObjectsList)
-                airObject.Draw(graphics);
         }
 
         private void DrawGround(Graphics graphics)
@@ -81,49 +73,25 @@ namespace AirForce
             graphics.DrawString(contentText, font, brush, gameFieldRectangle, stringFormat);
         }
 
-        public void ChangePlayerShipBehaviour(Keys pressedKey)
+        public void TryPlayerShipMove(Direction movingDirection)
+        {
+            if (gameState == GameState.Wait)
+                return;
+
+            playerShip.Move(movingDirection, gameFieldSize, groundLine);
+        }
+
+        public void TryPlayerShipShoot()
         {
             if (gameState == GameState.Wait)
             {
-                if (pressedKey == Keys.Space)
-                {
-                    CreateAirObjects();
-                    gameState = GameState.Play;
-                }
-
+                gameState = GameState.Play;
+                CreateAirObjects();
                 return;
             }
 
-            Direction movingDirection = Direction.Empty;
+            playerShip.Shoot();
 
-            switch (pressedKey)
-            {
-                case Keys.W:
-                case Keys.Up:
-                    movingDirection = Direction.Up;
-                    break;
-
-                case Keys.S:
-                case Keys.Down:
-                    movingDirection = Direction.Down;
-                    break;
-
-                case Keys.A:
-                case Keys.Left:
-                    movingDirection = Direction.Left;
-                    break;
-
-                case Keys.D:
-                case Keys.Right:
-                    movingDirection = Direction.Right;
-                    break;
-
-                case Keys.Space:
-                    // shoot
-                    break;
-            }
-
-            playerShip.Move(movingDirection, gameFieldSize, groundLine);
         }
 
         private void CreateAirObjects()
@@ -136,25 +104,9 @@ namespace AirForce
             gameState = GameState.Wait;
         }
 
-        private void AddNewAirObject(object sender, EventArgs e)
+        private void AddNewRandomEnemyAirObject(object sender, EventArgs e)
         {
-            Point position = new Point(
-                gameFieldSize.Width + 100,
-                random.Next(100, gameFieldSize.Height - 100 - 100)
-                );
 
-            airObjectsList.Add(new BigEnemyShip(position, DeathBigEnemyShip));
-        }
-
-        private void DeathBigEnemyShip()
-        {
-            airObjectsList.RemoveAt(0);
-        }
-
-        private void MoveAllAirObjects()
-        {
-            foreach (var airObject in airObjectsList)
-                airObject.Move(Direction.Left, gameFieldSize, groundLine);
         }
     }
 }

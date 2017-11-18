@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 
-
 namespace AirForce
 {
     public sealed class Line

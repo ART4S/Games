@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using AirForce.Enums;
 
 namespace AirForce
 {
@@ -35,7 +34,24 @@ namespace AirForce
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            gameController.ChangePlayerShipBehaviour(e.KeyCode);
+            Keys pressedKey = e.KeyCode;
+
+            switch (pressedKey)
+            {
+                case Keys.W:
+                case Keys.Up:
+                    gameController.TryPlayerShipMove(Direction.Up);
+                    break;
+
+                case Keys.S:
+                case Keys.Down:
+                    gameController.TryPlayerShipMove(Direction.Down);
+                    break;
+
+                case Keys.Space:
+                    gameController.TryPlayerShipShoot();
+                    break;
+            }
         }
     }
 }

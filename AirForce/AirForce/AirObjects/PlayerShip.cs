@@ -11,7 +11,7 @@ namespace AirForce.AirObjects
         {
         }
 
-        public override void BumpWithOtherAirObject(AirObject otherAirObject)
+        public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
             Strength--;
 
@@ -19,34 +19,17 @@ namespace AirForce.AirObjects
                 OnDeathObjectEvent();
         }
 
-        public override void Draw(Graphics graphics)
+        public void Move(Direction direction, Size spaceSize, Line groundLine)
         {
-            Rectangle imageRectangle = new Rectangle(
-                new Point(PositionInSpace.X - Radius, PositionInSpace.Y - Radius),
-                new Size(2 * Radius, 2 * Radius));
-
-            graphics.DrawImage(Image, imageRectangle);
-        }
-
-        public override void Move(Direction direction, Size spaceSize, Line groundLine)
-        {
-            Point nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y);
+            Point nextPositionInSpace;
 
             switch (direction)
             {
-                case Direction.Empty:
-                    break;
                 case Direction.Up:
                     nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - MovespeedShift);
                     break;
                 case Direction.Down:
                     nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + MovespeedShift);
-                    break;
-                case Direction.Left:
-                    nextPositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
-                    break;
-                case Direction.Right:
-                    nextPositionInSpace = new Point(PositionInSpace.X + MovespeedShift, PositionInSpace.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
@@ -57,6 +40,31 @@ namespace AirForce.AirObjects
 
             if (!IsAboveGroundLine(groundLine))
                 OnDeathObjectEvent();
+        }
+
+        public void Shoot()
+        {
+            
+        }
+
+        private bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
+        {
+            bool isUnderTopBorderLine =
+                nextPosition.Y - Radius >= 0;
+
+            bool isAboveBottomBorderLine =
+                nextPosition.Y + Radius <= spaceSize.Height;
+
+            bool isLeftOfRightBorderLine =
+                nextPosition.X + Radius <= spaceSize.Width;
+
+            bool isRightOfLeftBorderLine =
+                nextPosition.X - Radius >= 0;
+
+            return isUnderTopBorderLine &&
+                   isAboveBottomBorderLine &&
+                   isLeftOfRightBorderLine &&
+                   isRightOfLeftBorderLine;
         }
     }
 }

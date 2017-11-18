@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
@@ -25,31 +24,7 @@ namespace AirForce.AirObjects
             DeathObjectEvent += deathObjectMethod;
         }
 
-        public abstract void BumpWithOtherAirObject(AirObject otherAirObject);
-
-        public abstract void Draw(Graphics graphics);
-
-        public abstract void Move(Direction direction, Size spaceSize, Line groundLine);
-
-        protected bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
-        {
-            bool isUnderTopBorderLine =
-                nextPosition.Y - Radius >= 0;
-
-            bool isAboveBottomBorderLine =
-                nextPosition.Y + Radius <= spaceSize.Height;
-
-            bool isLeftOfRightBorderLine =
-                nextPosition.X + Radius <= spaceSize.Width;
-
-            bool isRightOfLeftBorderLine =
-                nextPosition.X - Radius >= 0;
-
-            return isUnderTopBorderLine &&
-                   isAboveBottomBorderLine &&
-                   isLeftOfRightBorderLine &&
-                   isRightOfLeftBorderLine;
-        }
+        public abstract void CollisionWithOtherAirObject(AirObject otherAirObject);
 
         protected bool IsAboveGroundLine(Line groundlLine)
         {
@@ -62,6 +37,13 @@ namespace AirForce.AirObjects
             DeathObjectEvent?.Invoke();
         }
 
+        public void Draw(Graphics graphics)
+        {
+            Rectangle imageRectangle = new Rectangle(
+                new Point(PositionInSpace.X - Radius, PositionInSpace.Y - Radius),
+                new Size(2 * Radius, 2 * Radius));
 
+            graphics.DrawImage(Image, imageRectangle);
+        }
     }
 }
