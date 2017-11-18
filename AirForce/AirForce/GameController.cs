@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using AirForce.AirObjects;
@@ -16,8 +17,9 @@ namespace AirForce
         private PlayerShip playerShip;
 
         private readonly Timer airObjectsCreatorTimer = new Timer();
-
         private readonly Random random = new Random();
+
+        private Dictionary<EnemyAirObject, int> enemysDictionary = new Dictionary<EnemyAirObject, int>();
 
         /// -------------------------------------------------------
 
@@ -99,14 +101,26 @@ namespace AirForce
             playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
         }
 
-        private void ChangeGameStatusToWaitingState()
+        private void ChangeGameStatusToWaitingState(AirObject sender)
         {
             gameState = GameState.Wait;
         }
 
         private void AddNewRandomEnemyAirObject(object sender, EventArgs e)
         {
+            int randomNumber = random.Next(0, 2);
 
+            switch (randomNumber)
+            {
+                case 0:
+                    enemysDictionary.Add(new BigEnemyShip(new Point(gameFieldSize.Width / 2, gameFieldSize.Height / 2), DeleteEnemy), 1);
+                    break;
+            }
+        }
+
+        private void DeleteEnemy(AirObject sender)
+        {
+            
         }
     }
 }

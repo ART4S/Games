@@ -5,7 +5,7 @@ namespace AirForce.AirObjects
 {
     public abstract class EnemyAirObject : AirObject
     {
-        protected EnemyAirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action deathObjectMethod) : base(positionInSpace, radius, strength, movespeedShift, image, deathObjectMethod)
+        protected EnemyAirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action<AirObject> deathObjectMethod) : base(positionInSpace, radius, strength, movespeedShift, image, deathObjectMethod)
         {
         }
 

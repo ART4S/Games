@@ -5,7 +5,7 @@ namespace AirForce.AirObjects
 {
     public sealed class BigEnemyShip : EnemyAirObject
     {
-        public BigEnemyShip(Point positionInSpace, Action deathObjectMethod)
+        public BigEnemyShip(Point positionInSpace, Action<AirObject> deathObjectMethod)
             : base(positionInSpace, 50, Program.Random.Next(5, 9), 2, Properties.Resources.bomber_ship, deathObjectMethod)
         {
         }
@@ -22,6 +22,8 @@ namespace AirForce.AirObjects
         {
             if (PositionInSpace.X + Radius >= 0)
                 PositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
+            else
+                OnDeathObjectEvent();
         }
     }
 }

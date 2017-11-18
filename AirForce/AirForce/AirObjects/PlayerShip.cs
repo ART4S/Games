@@ -6,7 +6,7 @@ namespace AirForce.AirObjects
 {
     public sealed class PlayerShip : AirObject
     {
-        public PlayerShip(Size spaceSize, Action deathPlayerShipMethod)
+        public PlayerShip(Size spaceSize, Action<AirObject> deathPlayerShipMethod)
             : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship, deathPlayerShipMethod)
         {
         }

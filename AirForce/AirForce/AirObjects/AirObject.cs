@@ -9,11 +9,11 @@ namespace AirForce.AirObjects
         public int Strength { get; protected set; }
         public int Radius { get; }
 
-        protected event Action DeathObjectEvent;
+        protected event Action<AirObject> DeathObjectEvent;
         protected readonly int MovespeedShift;
         protected readonly Image Image;
 
-        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action deathObjectMethod)
+        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action<AirObject> deathObjectMethod)
         {
             PositionInSpace = positionInSpace;
             Radius = radius;
@@ -34,7 +34,7 @@ namespace AirForce.AirObjects
 
         protected void OnDeathObjectEvent()
         {
-            DeathObjectEvent?.Invoke();
+            DeathObjectEvent?.Invoke(this);
         }
 
         public void Draw(Graphics graphics)
