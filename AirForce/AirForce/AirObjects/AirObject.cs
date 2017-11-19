@@ -9,19 +9,16 @@ namespace AirForce.AirObjects
         public int Strength { get; protected set; }
         public int Radius { get; }
 
-        protected event Action<AirObject> DeathObjectEvent;
         protected readonly int MovespeedShift;
         protected readonly Image Image;
 
-        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image, Action<AirObject> deathObjectMethod)
+        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image)
         {
             PositionInSpace = positionInSpace;
             Radius = radius;
             Strength = strength;
             MovespeedShift = movespeedShift;
             Image = image;
-
-            DeathObjectEvent += deathObjectMethod;
         }
 
         public abstract void CollisionWithOtherAirObject(AirObject otherAirObject);
@@ -30,11 +27,6 @@ namespace AirForce.AirObjects
         {
             return PositionInSpace.Y + Radius < groundlLine.FirstPoint.Y ||
                    PositionInSpace.Y + Radius < groundlLine.SecondPoint.Y;
-        }
-
-        protected void OnDeathObjectEvent()
-        {
-            DeathObjectEvent?.Invoke(this);
         }
 
         public void Draw(Graphics graphics)

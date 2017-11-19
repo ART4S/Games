@@ -6,9 +6,12 @@ namespace AirForce.AirObjects
 {
     public sealed class PlayerShip : AirObject
     {
-        public PlayerShip(Size spaceSize, Action<AirObject> deathPlayerShipMethod)
-            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship, deathPlayerShipMethod)
+        private event Action DeathPlayerShipEvent;
+
+        public PlayerShip(Size spaceSize, Action deathPlayerShipMethod)
+            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship)
         {
+            DeathPlayerShipEvent += deathPlayerShipMethod;
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
@@ -16,7 +19,7 @@ namespace AirForce.AirObjects
             Strength--;
 
             if (Strength == 0)
-                OnDeathObjectEvent();
+                OnDeathPlayerShipEvent();
         }
 
         public void Move(Direction direction, Size spaceSize, Line groundLine)
@@ -39,12 +42,7 @@ namespace AirForce.AirObjects
                 PositionInSpace = nextPositionInSpace;
 
             if (!IsAboveGroundLine(groundLine))
-                OnDeathObjectEvent();
-        }
-
-        public void Shoot()
-        {
-            
+                OnDeathPlayerShipEvent();
         }
 
         private bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
@@ -65,6 +63,16 @@ namespace AirForce.AirObjects
                    isAboveBottomBorderLine &&
                    isLeftOfRightBorderLine &&
                    isRightOfLeftBorderLine;
+        }
+
+        public void Shoot()
+        {
+            
+        }
+
+        private void OnDeathPlayerShipEvent()
+        {
+            DeathPlayerShipEvent?.Invoke();
         }
     }
 }

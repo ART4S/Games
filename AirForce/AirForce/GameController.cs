@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using AirForce.AirObjects;
 using AirForce.Enums;
@@ -16,10 +18,14 @@ namespace AirForce
 
         private PlayerShip playerShip;
 
-        private readonly Timer airObjectsCreatorTimer = new Timer();
+        private readonly Timer enemysCreatorTimer = new Timer();
+        private readonly Timer enemysMoverTimer = new Timer();
+
         private readonly Random random = new Random();
 
-        private Dictionary<EnemyAirObject, int> enemysDictionary = new Dictionary<EnemyAirObject, int>();
+        private readonly HashSet<EnemyAirObject> enemysSet = new HashSet<EnemyAirObject>();
+        private readonly List<EnemyAirObject> deleteEnemyAirObjectsQue = new List<EnemyAirObject>();
+
 
         /// -------------------------------------------------------
 
@@ -33,10 +39,15 @@ namespace AirForce
 
             playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
 
-            // airObjectsCreatorTimer setting
-            airObjectsCreatorTimer.Interval = 2000;
-            airObjectsCreatorTimer.Tick += AddNewRandomEnemyAirObject;
-            airObjectsCreatorTimer.Start();
+            // enemysCreatorTimer setting
+            enemysCreatorTimer.Interval = 2000;
+            enemysCreatorTimer.Tick += AddNewRandomEnemyAirObject;
+            enemysCreatorTimer.Start();
+
+            // enemysMoverTimer setting
+            enemysMoverTimer.Interval = 1;
+            enemysMoverTimer.Tick += MoveEnemyAirObjects;
+            enemysMoverTimer.Start();
         }
 
         public void DrawAllElements(Graphics graphics)
@@ -48,6 +59,9 @@ namespace AirForce
                 playerShip.Draw(graphics);
 
             DrawGround(graphics);
+
+            foreach (EnemyAirObject enemyAirObject in enemysSet)
+                enemyAirObject.Draw(graphics);
         }
 
         private void DrawGround(Graphics graphics)
@@ -99,28 +113,37 @@ namespace AirForce
         private void CreateAirObjects()
         {
             playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
+
+            enemysSet.Clear();
+            deleteEnemyAirObjectsQue.Clear();
         }
 
-        private void ChangeGameStatusToWaitingState(AirObject sender)
+        private void ChangeGameStatusToWaitingState()
         {
             gameState = GameState.Wait;
         }
 
         private void AddNewRandomEnemyAirObject(object sender, EventArgs e)
         {
-            int randomNumber = random.Next(0, 2);
+            int randY = random.Next(60, groundLine.FirstPoint.Y - 60);
 
-            switch (randomNumber)
-            {
-                case 0:
-                    enemysDictionary.Add(new BigEnemyShip(new Point(gameFieldSize.Width / 2, gameFieldSize.Height / 2), DeleteEnemy), 1);
-                    break;
-            }
+            enemysSet.Add(new BigEnemyShip(new Point(gameFieldSize.Width / 2, randY), AddAirObjectToDeleteEnemyAirObjectsQue));
         }
 
-        private void DeleteEnemy(AirObject sender)
+        private void AddAirObjectToDeleteEnemyAirObjectsQue(EnemyAirObject sender)
         {
-            
+            deleteEnemyAirObjectsQue.Add(sender);
+        }
+
+        private void MoveEnemyAirObjects(object sender, EventArgs e)
+        {
+            foreach (EnemyAirObject enemyAirObject in deleteEnemyAirObjectsQue)
+                enemysSet.Remove(enemyAirObject);
+
+            deleteEnemyAirObjectsQue.Clear();
+
+            foreach (EnemyAirObject enemyAirObject in enemysSet)
+                enemyAirObject.Move(groundLine);
         }
     }
 }
