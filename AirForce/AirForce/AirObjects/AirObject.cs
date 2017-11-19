@@ -10,7 +10,7 @@ namespace AirForce.AirObjects
         public int Radius { get; }
 
         protected readonly int MovespeedShift;
-        protected readonly Image Image;
+        protected Image Image;
 
         protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image)
         {

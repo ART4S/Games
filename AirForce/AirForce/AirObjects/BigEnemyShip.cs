@@ -11,15 +11,20 @@ namespace AirForce.AirObjects
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            Strength--;
+            switch (otherAirObject)
+            {
+                case PlayerShip _:
+                    OnDeathThisObjectEvent(this);
+                    break;
 
-            if (Strength == 0)
-                OnDeathThisObjectEvent(this);
+                case Bullet _:
+                    break;
+            }
         }
 
         public override void Move(Line groundLine)
         {
-            if (PositionInSpace.X + Radius >= 50) // 0
+            if (PositionInSpace.X + Radius >= 0) // 0
                 PositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
             else
                 OnDeathThisObjectEvent(this);

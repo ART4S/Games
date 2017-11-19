@@ -48,6 +48,16 @@ namespace AirForce
                     gameController.TryPlayerShipMove(Direction.Down);
                     break;
 
+                case Keys.D:
+                case Keys.Left:
+                    gameController.TryPlayerShipMove(Direction.Left);
+                    break;
+
+                case Keys.A:
+                case Keys.Right:
+                    gameController.TryPlayerShipMove(Direction.Right);
+                    break;
+
                 case Keys.Space:
                     gameController.TryPlayerShipShoot();
                     break;

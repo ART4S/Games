@@ -19,7 +19,10 @@ namespace AirForce.AirObjects
             Strength--;
 
             if (Strength == 0)
+            {
+                PositionInSpace = new Point(-200, -200);
                 OnDeathPlayerShipEvent();
+            }
         }
 
         public void Move(Direction direction, Size spaceSize, Line groundLine)
@@ -33,6 +36,12 @@ namespace AirForce.AirObjects
                     break;
                 case Direction.Down:
                     nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + MovespeedShift);
+                    break;
+                case Direction.Left:
+                    nextPositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
+                    break;
+                case Direction.Right:
+                    nextPositionInSpace = new Point(PositionInSpace.X + MovespeedShift, PositionInSpace.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
