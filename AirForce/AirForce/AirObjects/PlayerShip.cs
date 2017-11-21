@@ -1,60 +1,71 @@
 ﻿using System;
 using System.Drawing;
+using AirForce.AirObjects.Bullets;
+using AirForce.AirObjects.EnemyAI;
 using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
     public sealed class PlayerShip : AirObject
     {
-        private event Action DeathPlayerShipEvent;
+        private event Action PlayerShipDeathEvent;
 
-        public PlayerShip(Size spaceSize, Action deathPlayerShipMethod)
-            : base(new Point(30, spaceSize.Height / 2), 30, 5, 15, Properties.Resources.player_ship)
+        private int strength = 5;
+
+        public PlayerShip(Size spaceSize, Action playerShipDeathMethod)
+            : base(new Point2D(30, spaceSize.Height / 2), 30, 15, Properties.Resources.player_ship)
         {
-            DeathPlayerShipEvent += deathPlayerShipMethod;
+            PlayerShipDeathEvent += playerShipDeathMethod;
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            Strength--;
-
-            if (Strength == 0)
+            switch (otherAirObject)
             {
-                PositionInSpace = new Point(-200, -200);
-                OnDeathPlayerShipEvent();
+                case BigShip _:
+                    strength -= 2;
+                    break;
+
+                case EnemyBullet _:
+                    strength--;
+                    break;
             }
+
+            //if (strength <= 0)
+            //    OnPlayerShipDeathEvent();
+            strength = 0;
         }
 
         public void Move(Direction direction, Size spaceSize, Line groundLine)
         {
-            Point nextPositionInSpace;
+            Point2D nextPosition;
 
             switch (direction)
             {
                 case Direction.Up:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y - MovespeedShift);
+                    nextPosition = new Point2D(Position.X, Position.Y - MovespeedShift);
                     break;
                 case Direction.Down:
-                    nextPositionInSpace = new Point(PositionInSpace.X, PositionInSpace.Y + MovespeedShift);
+                    nextPosition = new Point2D(Position.X, Position.Y + MovespeedShift);
                     break;
                 case Direction.Left:
-                    nextPositionInSpace = new Point(PositionInSpace.X - MovespeedShift, PositionInSpace.Y);
+                    nextPosition = new Point2D(Position.X - MovespeedShift, Position.Y);
                     break;
                 case Direction.Right:
-                    nextPositionInSpace = new Point(PositionInSpace.X + MovespeedShift, PositionInSpace.Y);
+                    nextPosition = new Point2D(Position.X + MovespeedShift, Position.Y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            if (IsNextPositionAreBeingInSpace(nextPositionInSpace, spaceSize))
-                PositionInSpace = nextPositionInSpace;
+            if (IsNextPositionAreBeingInSpace(nextPosition, spaceSize))
+                Position = nextPosition;
 
-            if (!IsAboveGroundLine(groundLine))
-                OnDeathPlayerShipEvent();
+            if (!IsNextPositionAboveGroundLine(nextPosition, groundLine))
+                OnPlayerShipDeathEvent();
         }
 
-        private bool IsNextPositionAreBeingInSpace(Point nextPosition, Size spaceSize)
+        private bool IsNextPositionAreBeingInSpace(Point2D nextPosition, Size spaceSize)
         {
             bool isUnderTopBorderLine =
                 nextPosition.Y - Radius >= 0;
@@ -74,14 +85,23 @@ namespace AirForce.AirObjects
                    isRightOfLeftBorderLine;
         }
 
-        public void Shoot()
+        private void OnPlayerShipDeathEvent()
         {
-            
+            Position = new Point2D(-200, -200);
+
+            PlayerShipDeathEvent?.Invoke();
         }
 
-        private void OnDeathPlayerShipEvent()
+        public bool IsInFrontAirObject(AirObject airObject)
         {
-            DeathPlayerShipEvent?.Invoke();
+            int thisTopBorderY = Position.Y - Radius;
+            int thisBottomBorderY = Position.Y + Radius;
+
+            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
+            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
+
+            return Position.X < airObject.Position.X
+                   && Math.Max(airObjectTopBorderY, thisTopBorderY) < Math.Min(airObjectBottomBorderY, thisBottomBorderY);
         }
     }
 }

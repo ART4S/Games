@@ -1,13 +1,11 @@
-﻿using System.Drawing;
-
-namespace AirForce
+﻿namespace AirForce
 {
-    public sealed class Line
+    public struct Line
     {
-        public Point FirstPoint { get; }
-        public Point SecondPoint { get; }
+        public Point2D FirstPoint { get; }
+        public Point2D SecondPoint { get; }
 
-        public Line(Point firstPoint, Point secondPoint)
+        public Line(Point2D firstPoint, Point2D secondPoint)
         {
             FirstPoint = firstPoint;
             SecondPoint = secondPoint;

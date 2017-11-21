@@ -5,34 +5,32 @@ namespace AirForce.AirObjects
 {
     public abstract class AirObject
     {
-        public Point PositionInSpace { get; protected set; }
-        public int Strength { get; protected set; }
+        public Point2D Position { get; protected set; }
         public int Radius { get; }
 
         protected readonly int MovespeedShift;
         protected Image Image;
 
-        protected AirObject(Point positionInSpace, int radius, int strength, int movespeedShift, Image image)
+        protected AirObject(Point2D position, int radius, int movespeedShift, Image image)
         {
-            PositionInSpace = positionInSpace;
+            Position = position;
             Radius = radius;
-            Strength = strength;
             MovespeedShift = movespeedShift;
             Image = image;
         }
 
         public abstract void CollisionWithOtherAirObject(AirObject otherAirObject);
 
-        protected bool IsAboveGroundLine(Line groundlLine)
+        protected bool IsNextPositionAboveGroundLine(Point2D nextPosition, Line groundlLine)
         {
-            return PositionInSpace.Y + Radius < groundlLine.FirstPoint.Y ||
-                   PositionInSpace.Y + Radius < groundlLine.SecondPoint.Y;
+            return nextPosition.Y + Radius < groundlLine.FirstPoint.Y ||
+                   nextPosition.Y + Radius < groundlLine.SecondPoint.Y;
         }
 
         public void Draw(Graphics graphics)
         {
             Rectangle imageRectangle = new Rectangle(
-                new Point(PositionInSpace.X - Radius, PositionInSpace.Y - Radius),
+                new Point2D(Position.X - Radius, Position.Y - Radius),
                 new Size(2 * Radius, 2 * Radius));
 
             graphics.DrawImage(Image, imageRectangle);

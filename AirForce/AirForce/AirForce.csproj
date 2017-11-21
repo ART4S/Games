@@ -46,9 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirObjects\AirObject.cs" />
-    <Compile Include="AirObjects\BigEnemyShip.cs" />
-    <Compile Include="AirObjects\Bullet.cs" />
-    <Compile Include="AirObjects\EnemyAirObject.cs" />
+    <Compile Include="AirObjects\Bullets\EnemyBullet.cs" />
+    <Compile Include="AirObjects\Bullets\PlayerBullet.cs" />
+    <Compile Include="AirObjects\EnemyAI\BigShip.cs" />
+    <Compile Include="AirObjects\Bullets\Bullet.cs" />
+    <Compile Include="AirObjects\EnemyAI\Bird.cs" />
+    <Compile Include="AirObjects\EnemyAI\ChaserShip.cs" />
+    <Compile Include="AirObjects\EnemyAI\EnemyAI.cs" />
+    <Compile Include="AirObjects\EnemyAI\Meteor.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Enums\GameState.cs" />
@@ -60,6 +65,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AirObjects\PlayerShip.cs" />
+    <Compile Include="Point2D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using AirForce.AirObjects;
+using AirForce.AirObjects.Bullets;
+using AirForce.AirObjects.EnemyAI;
 using AirForce.Enums;
 
 namespace AirForce
@@ -16,13 +19,16 @@ namespace AirForce
 
         private PlayerShip playerShip;
 
-        private readonly Timer enemysCreatorTimer = new Timer();
-        private readonly Timer enemysMoverTimer = new Timer();
+        private readonly Timer enemyCreatorTimer = new Timer();
+        private readonly Timer enemyMovingTimer = new Timer();
 
         private readonly Random random = new Random();
 
-        private readonly HashSet<EnemyAirObject> enemysSet = new HashSet<EnemyAirObject>();
-        private readonly List<EnemyAirObject> enemyObjectsToDeleteQue = new List<EnemyAirObject>();
+        private readonly HashSet<EnemyAI> enemies = new HashSet<EnemyAI>();
+        private readonly List<EnemyAI> enemiesToDelete = new List<EnemyAI>();
+
+        private readonly HashSet<Bullet> bullets = new HashSet<Bullet>();
+        private readonly List<Bullet> bulletsToDelete = new List<Bullet>();
 
         /// -------------------------------------------------------
 
@@ -31,36 +37,193 @@ namespace AirForce
             this.gameFieldSize = gameFieldSize;
 
             groundLine = new Line(
-                new Point(0, gameFieldSize.Height - 30),
-                new Point(gameFieldSize.Width, gameFieldSize.Height - 30));
+                new Point2D(0, gameFieldSize.Height - 30),
+                new Point2D(gameFieldSize.Width, gameFieldSize.Height - 30));
 
-            playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
+            playerShip = new PlayerShip(gameFieldSize, () => gameState = GameState.Wait);
 
-            // enemysCreatorTimer setting
-            enemysCreatorTimer.Interval = 2000;
-            enemysCreatorTimer.Tick += AddNewRandomEnemyAirObject;
-            enemysCreatorTimer.Start();
+            // enemyCreatorTimer setting
+            enemyCreatorTimer.Interval = 1;
+            enemyCreatorTimer.Tick += AddNewRandomEnemyAI;
 
-            // enemysMoverTimer setting
-            enemysMoverTimer.Interval = 1;
-            enemysMoverTimer.Tick += ClearEnemyObjectsToDeleteQue;
-            enemysMoverTimer.Tick += MoveEnemyAirObjects;
-            enemysMoverTimer.Tick += FindCollisionAllAirObjects;
-            enemysMoverTimer.Start();
+            enemyCreatorTimer.Start();
+
+            // enemyMovingTimer setting
+            enemyMovingTimer.Interval = 1;
+            enemyMovingTimer.Tick += MoveEnemies;
+            enemyMovingTimer.Tick += MoveBullets;
+            enemyMovingTimer.Tick += FindAllAirObjectsCollisions;
+            enemyMovingTimer.Tick += ClearEnemiesToDelete;
+            enemyMovingTimer.Tick += ClearBulletsToDelete;
+
+            enemyMovingTimer.Start();
         }
+
+        public void TryPlayerShipMove(Direction movingDirection)
+        {
+            if (gameState == GameState.Wait)
+                return;
+
+            playerShip.Move(movingDirection, gameFieldSize, groundLine);
+        }
+
+        public void TryCreatePlayerBullet()
+        {
+            if (gameState == GameState.Wait)
+            {
+                gameState = GameState.Play;
+                Restart();
+                return;
+            }
+
+            Point2D playerBulletStartPosition = new Point2D(playerShip.Position.X + playerShip.Radius, playerShip.Position.Y);
+
+            bullets.Add(new PlayerBullet(playerBulletStartPosition, AddBulletInBulletsToDelete));
+        }
+
+        public void Restart()
+        {
+            gameState = GameState.Play;
+
+            playerShip = new PlayerShip(gameFieldSize, () => gameState = GameState.Wait);
+
+            enemies.Clear();
+            bullets.Clear();
+
+            enemiesToDelete.Clear();
+            bulletsToDelete.Clear();
+        }
+
+        private void FindAllAirObjectsCollisions(object sender, EventArgs e)
+        {
+            List<EnemyBullet> enemyBullets = bullets.OfType<EnemyBullet>().ToList();
+            List<PlayerBullet> playerBullets = bullets.OfType<PlayerBullet>().ToList();
+
+            foreach (EnemyAI enemy in enemies)
+            {
+                if (IsAirObjectsHaveCollision(playerShip, enemy))
+                {
+                    enemy.CollisionWithOtherAirObject(playerShip);
+                    playerShip.CollisionWithOtherAirObject(enemy);
+                }
+
+                foreach (PlayerBullet playerBullet in playerBullets)
+                {
+                    if (IsAirObjectsHaveCollision(enemy, playerBullet))
+                    {
+                        enemy.CollisionWithOtherAirObject(playerBullet);
+                        playerBullet.CollisionWithOtherAirObject(enemy);
+                    }
+                }
+            }
+
+            foreach (EnemyBullet enemyBullet in enemyBullets)
+            {
+                if (IsAirObjectsHaveCollision(playerShip, enemyBullet))
+                {
+                    enemyBullet.CollisionWithOtherAirObject(playerShip);
+                    playerShip.CollisionWithOtherAirObject(enemyBullet);
+                }
+            }
+        }
+
+        private bool IsAirObjectsHaveCollision(AirObject firstAirObject, AirObject secondAirObject)
+        {
+            return Math.Pow(firstAirObject.Radius + secondAirObject.Radius, 2) >=
+                   Math.Pow(firstAirObject.Position.X - secondAirObject.Position.X, 2)
+                   + Math.Pow(firstAirObject.Position.Y - secondAirObject.Position.Y, 2);
+        }
+
+
+
+        #region enemiesMethods
+
+        private void AddNewRandomEnemyAI(object sender, EventArgs e)
+        {
+            int randY = random.Next(60, groundLine.FirstPoint.Y - 60);
+
+            enemies.Add(new BigShip(new Point2D(gameFieldSize.Width + 60, randY), AddEnemyInEnemiesToDelete));
+
+            enemies.Add(new ChaserShip(new Point2D(gameFieldSize.Width + 60, randY), AddEnemyInEnemiesToDelete, CreateEnemyBullet, playerShip));
+            //enemies.Add(new ChaserShip(new Point2D(gameFieldSize.Width, gameFieldSize.Height / 2), AddEnemyInEnemiesToDelete, CreateEnemyBullet, playerShip));
+
+            //enemies.Add(new Bird(new Point2D(gameFieldSize.Width - 60, groundLine.FirstPoint.Y - 100 ), AddEnemyInEnemiesToDelete));
+            enemies.Add(new Bird(new Point2D(gameFieldSize.Width - 60, randY), AddEnemyInEnemiesToDelete));
+
+            enemies.Add(new Meteor(new Point2D(random.Next(0, gameFieldSize.Width), 0), AddEnemyInEnemiesToDelete));
+            //random.Next(100, gameFieldSize.Width)
+        }
+
+        private void MoveEnemies(object sender, EventArgs e)
+        {
+            foreach (EnemyAI enemy in enemies)
+                enemy.Move(groundLine);
+        }
+
+        private void AddEnemyInEnemiesToDelete(EnemyAI enemy)
+        {
+            enemiesToDelete.Add(enemy);
+        }
+
+        private void ClearEnemiesToDelete(object sender, EventArgs e)
+        {
+            foreach (EnemyAI enemyToDelete in enemiesToDelete)
+                enemies.Remove(enemyToDelete);
+
+            enemiesToDelete.Clear();
+        }
+
+        #endregion enemiesMethods
+
+
+
+        #region bulletsMethods
+
+        private void CreateEnemyBullet(Point2D enemyBulletStartPoint)
+        {
+            bullets.Add(new EnemyBullet(enemyBulletStartPoint, AddBulletInBulletsToDelete));
+        }
+
+        private void MoveBullets(object sender, EventArgs e) //
+        {
+            foreach (Bullet bullet in bullets)
+                bullet.Move(gameFieldSize);
+        }
+
+        private void AddBulletInBulletsToDelete(Bullet bullet)
+        {
+            bulletsToDelete.Add(bullet);
+        }
+
+        private void ClearBulletsToDelete(object sender, EventArgs e)
+        {
+            foreach (Bullet bulletToDelete in bulletsToDelete)
+                bullets.Remove(bulletToDelete);
+
+            bulletsToDelete.Clear();
+        }
+
+        #endregion bulletsMethods
+
+
+
+        #region drawingMethods
 
         public void DrawAllElements(Graphics graphics)
         {
+            DrawGround(graphics);
+
+            foreach (EnemyAI enemy in enemies)
+                enemy.Draw(graphics);
+
+            foreach (Bullet bullet in bullets)
+                bullet.Draw(graphics);
+
             if (gameState == GameState.Wait)
                 DrawWaitingStateString(graphics);
 
             if (gameState == GameState.Play)
                 playerShip.Draw(graphics);
-
-            DrawGround(graphics);
-
-            foreach (EnemyAirObject enemyAirObject in enemysSet)
-                enemyAirObject.Draw(graphics);
         }
 
         private void DrawGround(Graphics graphics)
@@ -88,77 +251,6 @@ namespace AirForce
             graphics.DrawString(contentText, font, brush, gameFieldRectangle, stringFormat);
         }
 
-        public void TryPlayerShipMove(Direction movingDirection)
-        {
-            if (gameState == GameState.Wait)
-                return;
-
-            playerShip.Move(movingDirection, gameFieldSize, groundLine);
-        }
-
-        public void TryPlayerShipShoot()
-        {
-            if (gameState == GameState.Wait)
-            {
-                gameState = GameState.Play;
-                CreateAirObjects();
-                return;
-            }
-
-            playerShip.Shoot();
-        }
-
-        private void CreateAirObjects()
-        {
-            playerShip = new PlayerShip(gameFieldSize, ChangeGameStatusToWaitingState);
-
-            enemysSet.Clear();
-            enemyObjectsToDeleteQue.Clear();
-        }
-
-        private void ChangeGameStatusToWaitingState()
-        {
-            gameState = GameState.Wait;
-        }
-
-        private void AddNewRandomEnemyAirObject(object sender, EventArgs e)
-        {
-            int randY = random.Next(60, groundLine.FirstPoint.Y - 60);
-
-            enemysSet.Add(new BigEnemyShip(new Point(gameFieldSize.Width + 60, randY), AddAirObjectToDeleteEnemyAirObjectsQue));
-        }
-
-        private void AddAirObjectToDeleteEnemyAirObjectsQue(EnemyAirObject sender)
-        {
-            enemyObjectsToDeleteQue.Add(sender);
-        }
-
-        private void MoveEnemyAirObjects(object sender, EventArgs e)
-        {
-            foreach (EnemyAirObject enemyAirObject in enemysSet)
-                enemyAirObject.Move(groundLine);
-        }
-
-        private void ClearEnemyObjectsToDeleteQue(object sender, EventArgs e)
-        {
-            foreach (EnemyAirObject enemyObject in enemyObjectsToDeleteQue)
-                enemysSet.Remove(enemyObject);
-
-            enemyObjectsToDeleteQue.Clear();
-        }
-
-        private void FindCollisionAllAirObjects(object sender, EventArgs e)
-        {
-            foreach (EnemyAirObject enemyAirObject in enemysSet)
-            {
-                if (Math.Pow(playerShip.Radius + enemyAirObject.Radius, 2) >=
-                    Math.Pow(enemyAirObject.PositionInSpace.X - playerShip.PositionInSpace.X, 2)
-                    + Math.Pow(enemyAirObject.PositionInSpace.Y - playerShip.PositionInSpace.Y, 2))
-                {
-                    enemyAirObject.CollisionWithOtherAirObject(playerShip);
-                    playerShip.CollisionWithOtherAirObject(enemyAirObject);
-                }
-            }
-        }
+        #endregion drawingMethods
     }
 }

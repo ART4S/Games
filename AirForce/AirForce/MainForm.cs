@@ -8,18 +8,23 @@ namespace AirForce
     public sealed partial class MainForm : Form
     {
         private readonly GameController gameController;
+
         private readonly Timer drawingTimer = new Timer();
+        private readonly Timer shootTimer = new Timer();
 
         public MainForm()
         {
             InitializeComponent();
 
             gameController = new GameController(GameFieldPictureBox.Size);
-            GameFieldPictureBox.BackColor = Color.Aqua;
+            GameFieldPictureBox.BackColor = Color.DarkBlue;
 
             drawingTimer.Interval = 1;
             drawingTimer.Tick += DrawingTimerTick;
             drawingTimer.Start();
+
+            shootTimer.Interval = 400;
+            shootTimer.Tick += MakePlayerShot;
         }
 
         private void DrawingTimerTick(object sender, EventArgs e)
@@ -30,6 +35,7 @@ namespace AirForce
         private void GameFieldPictureBox_Paint(object sender, PaintEventArgs e)
         {
             gameController.DrawAllElements(e.Graphics);
+            //label1.Text = gameController.PlayerShipKillAmount.ToString();
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -59,9 +65,28 @@ namespace AirForce
                     break;
 
                 case Keys.Space:
-                    gameController.TryPlayerShipShoot();
+                    if (shootTimer.Enabled == false)
+                    {
+                        gameController.TryCreatePlayerBullet();
+                        shootTimer.Start();
+                    }
+                    break;
+
+                case Keys.R:
+                    gameController.Restart();
                     break;
             }
+        }
+
+        private void MakePlayerShot(object sender, EventArgs e)
+        {
+            gameController.TryCreatePlayerBullet();
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+                shootTimer.Stop();
         }
     }
 }

@@ -63,6 +63,16 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap big_enemy_ship {
+            get {
+                object obj = ResourceManager.GetObject("big_enemy_ship", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bird {
             get {
                 object obj = ResourceManager.GetObject("bird", resourceCulture);
@@ -73,9 +83,9 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bomber_ship {
+        internal static System.Drawing.Bitmap enemy_bullet {
             get {
-                object obj = ResourceManager.GetObject("bomber_ship", resourceCulture);
+                object obj = ResourceManager.GetObject("enemy_bullet", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,16 +96,6 @@ namespace AirForce.Properties {
         internal static System.Drawing.Bitmap enemy_ship {
             get {
                 object obj = ResourceManager.GetObject("enemy_ship", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap enemy_shot {
-            get {
-                object obj = ResourceManager.GetObject("enemy_shot", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap player_ship {
+        internal static System.Drawing.Bitmap player_bullet {
             get {
-                object obj = ResourceManager.GetObject("player_ship", resourceCulture);
+                object obj = ResourceManager.GetObject("player_bullet", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,9 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap player_shot {
+        internal static System.Drawing.Bitmap player_ship {
             get {
-                object obj = ResourceManager.GetObject("player_shot", resourceCulture);
+                object obj = ResourceManager.GetObject("player_ship", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
