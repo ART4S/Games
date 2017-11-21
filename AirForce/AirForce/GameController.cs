@@ -42,8 +42,8 @@ namespace AirForce
             playerShip = new PlayerShip(gameFieldSize, () => gameState = GameState.Wait);
 
             // enemyCreatorTimer setting
-            enemyCreatorTimer.Interval = 2000;
-            enemyCreatorTimer.Tick += (s, e) => AddNewRandomEnemyAI();
+            enemyCreatorTimer.Interval = 1500;
+            enemyCreatorTimer.Tick += (s, e) => AddNewRandomEnemy();
             enemyCreatorTimer.Start();
 
             // enemyMovingTimer setting
@@ -121,15 +121,64 @@ namespace AirForce
 
         #region enemiesMethods
 
-        private void AddNewRandomEnemyAI()
+        private void AddNewRandomEnemy()
         {
-            int randY = random.Next(60, groundLine.FirstPoint.Y - 60);
+            Point2D startPosition;
+            int radius;
+            int movespeedShift;
 
-            enemies.Add(new ChaserShip(new Point2D(gameFieldSize.Width + 60, randY), AddEnemyInEnemiesToDelete, CreateEnemyBullet, playerShip));
-            enemies.Add(new BigShip(new Point2D(gameFieldSize.Width + 60, randY), AddEnemyInEnemiesToDelete));
-            enemies.Add(new Bird(new Point2D(gameFieldSize.Width - 60, randY), AddEnemyInEnemiesToDelete));
-            enemies.Add(new Meteor(new Point2D(random.Next(0, gameFieldSize.Width), 0), AddEnemyInEnemiesToDelete));
+            int randomNumber = random.Next(0, 4);
 
+            switch (randomNumber)
+            {
+                case 0:
+                    radius = 50;
+                    startPosition = new Point2D
+                    {
+                        X = gameFieldSize.Width + radius,
+                        Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
+                    };
+                    movespeedShift = 5;
+
+                    enemies.Add(new BigShip(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
+                    break;
+
+                case 1:
+                    radius = 30;
+                    startPosition = new Point2D
+                    {
+                        X = gameFieldSize.Width + radius,
+                        Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
+                    };
+                    movespeedShift = 2;
+
+                    enemies.Add(new ChaserShip(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete, CreateEnemyBullet, playerShip));
+                    break;
+
+                case 2:
+                    radius = 15;
+                    startPosition = new Point2D
+                    {
+                        X = gameFieldSize.Width + radius,
+                        Y = random.Next(groundLine.FirstPoint.Y - 10 * radius, groundLine.FirstPoint.Y - radius)
+                    };
+                    movespeedShift = 2;
+
+                    enemies.Add(new Bird(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
+                    break;
+
+                case 3:
+                    radius = 70;
+                    startPosition = new Point2D
+                    {
+                        X = random.Next(0, gameFieldSize.Width),
+                        Y = 0
+                    };
+                    movespeedShift = 3;
+
+                    enemies.Add(new Meteor(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
+                    break;
+            }
         }
 
         private void MoveEnemies()

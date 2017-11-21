@@ -10,7 +10,7 @@ namespace AirForce.AirObjects
     {
         private event Action PlayerShipDeathEvent;
 
-        private int strength = 5;
+        public int Strength { get; private set; } = 5;
 
         public PlayerShip(Size spaceSize, Action playerShipDeathMethod)
             : base(new Point2D(30, spaceSize.Height / 2), 30, 15, Properties.Resources.player_ship)
@@ -23,23 +23,23 @@ namespace AirForce.AirObjects
             switch (otherAirObject)
             {
                 case BigShip _:
-                    strength -= 2;
+                    Strength -= 2;
                     break;
 
                 case Bird _:
                 case ChaserShip _:
                 case EnemyBullet _:
-                    strength--;
+                    Strength--;
                     break;
 
                 case Meteor _:
-                    strength = 0;
+                    Strength = 0;
                     break;
             }
 
-            //if (strength <= 0)
+            //if (Strength <= 0)
             //    OnPlayerShipDeathEvent();
-            strength = 0;
+            Strength = 0;
         }
 
         public void Move(Direction direction, Size spaceSize, Line groundLine)

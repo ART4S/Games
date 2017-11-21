@@ -7,8 +7,8 @@ namespace AirForce.AirObjects.EnemyAI
     {
         private readonly Random random = new Random();
 
-        public Bird(Point2D position, Action<EnemyAI> objectDeathMethod)
-            : base(position, 15, 1, Properties.Resources.bird, objectDeathMethod)
+        public Bird(Point2D position, int radius, int movespeedShift, Action<EnemyAI> objectDeathMethod)
+            : base(position, radius, movespeedShift, Properties.Resources.bird, objectDeathMethod)
         {
         }
 
@@ -43,7 +43,7 @@ namespace AirForce.AirObjects.EnemyAI
 
         private Direction FindMovingDirrection(Line groundLine)
         {
-            int minFlyBorderY = 2 * Position.Y - groundLine.FirstPoint.Y;
+            int minFlyBorderY = groundLine.FirstPoint.Y - 10 * Radius;
             int maxFlyBorderY = groundLine.FirstPoint.Y;
 
             int birdTopBorderY = Position.Y - Radius;

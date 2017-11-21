@@ -7,7 +7,8 @@ namespace AirForce.AirObjects.EnemyAI
     {
         private int strength;
 
-        public Meteor(Point2D position, Action<EnemyAI> objectDeathMethod) : base(position, 80, 3, Properties.Resources.meteor, objectDeathMethod)
+        public Meteor(Point2D position, int radius, int movespeedShift, Action<EnemyAI> objectDeathMethod)
+            : base(position, radius, movespeedShift, Properties.Resources.meteor, objectDeathMethod)
         {
             strength = new Random().Next(5, 9);
         }

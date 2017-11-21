@@ -7,7 +7,8 @@ namespace AirForce.AirObjects.EnemyAI
     {
         private int strength = 3;
 
-        public BigShip(Point2D position, Action<EnemyAI> objectDeathMethod) : base(position, 50, 5, Properties.Resources.big_enemy_ship, objectDeathMethod)
+        public BigShip(Point2D position, int radius, int movespeedShift, Action<EnemyAI> objectDeathMethod)
+            : base(position, radius, movespeedShift, Properties.Resources.big_enemy_ship, objectDeathMethod)
         {
         }
 

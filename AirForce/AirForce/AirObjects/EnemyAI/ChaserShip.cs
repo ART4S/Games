@@ -11,8 +11,8 @@ namespace AirForce.AirObjects.EnemyAI
 
         private readonly Timer shootTimer = new Timer();
 
-        public ChaserShip(Point2D position, Action<EnemyAI> objectDeathMethod, Action<Point2D> shootMethod, PlayerShip playerShip)
-            : base(position, 30, 3, Properties.Resources.enemy_ship, objectDeathMethod)
+        public ChaserShip(Point2D position, int radius, int movespeedShift, Action<EnemyAI> objectDeathMethod, Action<Point2D> shootMethod, PlayerShip playerShip)
+            : base(position, radius, movespeedShift, Properties.Resources.enemy_ship, objectDeathMethod)
         {
             this.playerShip = playerShip;
             
@@ -24,10 +24,14 @@ namespace AirForce.AirObjects.EnemyAI
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            if (otherAirObject is PlayerShip || otherAirObject is PlayerBullet || otherAirObject is Meteor)
+            switch (otherAirObject)
             {
-                shootTimer.Dispose();
-                OnObjectDeathEvent(this);
+                case PlayerShip _:
+                case PlayerBullet _:
+                case Meteor _:
+                    shootTimer.Dispose();
+                    OnObjectDeathEvent(this);
+                    break;
             }
         }
 
