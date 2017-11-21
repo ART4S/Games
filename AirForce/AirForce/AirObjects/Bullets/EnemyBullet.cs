@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using AirForce.AirObjects.EnemyAI;
 
 namespace AirForce.AirObjects.Bullets
 {
@@ -19,7 +20,7 @@ namespace AirForce.AirObjects.Bullets
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            if (otherAirObject is PlayerShip)
+            if (otherAirObject is PlayerShip || otherAirObject is Meteor)
                 OnObjectDeathEvent(this);
         }
     }

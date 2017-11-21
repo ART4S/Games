@@ -10,7 +10,6 @@ namespace AirForce.AirObjects.EnemyAI
         public Bird(Point2D position, Action<EnemyAI> objectDeathMethod)
             : base(position, 15, 1, Properties.Resources.bird, objectDeathMethod)
         {
-
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)

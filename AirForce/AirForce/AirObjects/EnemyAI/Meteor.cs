@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AirForce.AirObjects.Bullets;
 
 namespace AirForce.AirObjects.EnemyAI
@@ -12,17 +7,22 @@ namespace AirForce.AirObjects.EnemyAI
     {
         private int strength;
 
-        public Meteor(Point2D position, Action<EnemyAI> objectDeathMethod) : base(position, 70, 3, Properties.Resources.meteor, objectDeathMethod)
+        public Meteor(Point2D position, Action<EnemyAI> objectDeathMethod) : base(position, 80, 3, Properties.Resources.meteor, objectDeathMethod)
         {
             strength = new Random().Next(5, 9);
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            if (otherAirObject is Bird)
-                return;
-
-            strength--;
+            switch (otherAirObject)
+            {
+                case PlayerShip _:
+                case ChaserShip _:
+                case BigShip _:
+                case Bullet _:
+                    strength--;
+                    break;
+            }
 
             if (strength == 0)
                 OnObjectDeathEvent(this);

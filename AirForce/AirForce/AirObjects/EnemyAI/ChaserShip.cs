@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using AirForce.AirObjects.Bullets;
 
 namespace AirForce.AirObjects.EnemyAI
 {
@@ -18,13 +19,16 @@ namespace AirForce.AirObjects.EnemyAI
             ShootEvent += shootMethod;
 
             shootTimer.Interval = 500;
-            shootTimer.Tick += RunShootEvent;
+            shootTimer.Tick += (s, e) => OnShootEvent();
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            shootTimer.Dispose();
-            OnObjectDeathEvent(this);
+            if (otherAirObject is PlayerShip || otherAirObject is PlayerBullet || otherAirObject is Meteor)
+            {
+                shootTimer.Dispose();
+                OnObjectDeathEvent(this);
+            }
         }
 
         public override void Move(Line groundLine)
@@ -37,13 +41,14 @@ namespace AirForce.AirObjects.EnemyAI
                 OnObjectDeathEvent(this);
             }
 
-            if (playerShip.IsInFrontAirObject(this) && shootTimer.Enabled == false)
+            if (playerShip.IsInFrontAirObject(this))
             {
-                shootTimer.Start();
-                OnShootEvent();
-            }
+                if (shootTimer.Enabled == false)
+                    OnShootEvent();
 
-            if (!playerShip.IsInFrontAirObject(this))
+                shootTimer.Start();
+            }
+            else
                 shootTimer.Stop();
         }
 
@@ -52,11 +57,6 @@ namespace AirForce.AirObjects.EnemyAI
             Point2D startShootPosition = new Point2D(Position.X - Radius, Position.Y);
 
             ShootEvent?.Invoke(startShootPosition);
-        }
-
-        public void RunShootEvent(object sender, EventArgs e)
-        {
-            OnShootEvent();
         }
     }
 }

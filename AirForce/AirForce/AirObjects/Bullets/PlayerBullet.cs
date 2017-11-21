@@ -20,10 +20,14 @@ namespace AirForce.AirObjects.Bullets
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            if (otherAirObject is Bird)
-                return;
-
-            OnObjectDeathEvent(this);
+            switch (otherAirObject)
+            {
+                case BigShip _:
+                case ChaserShip _:
+                case Meteor _:
+                    OnObjectDeathEvent(this);
+                    break;
+            } 
         }
     }
 }

@@ -26,8 +26,14 @@ namespace AirForce.AirObjects
                     strength -= 2;
                     break;
 
+                case Bird _:
+                case ChaserShip _:
                 case EnemyBullet _:
                     strength--;
+                    break;
+
+                case Meteor _:
+                    strength = 0;
                     break;
             }
 
@@ -65,6 +71,18 @@ namespace AirForce.AirObjects
                 OnPlayerShipDeathEvent();
         }
 
+        public bool IsInFrontAirObject(AirObject airObject)
+        {
+            int thisTopBorderY = Position.Y - Radius;
+            int thisBottomBorderY = Position.Y + Radius;
+
+            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
+            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
+
+            return Position.X < airObject.Position.X
+                   && Math.Max(airObjectTopBorderY, thisTopBorderY) < Math.Min(airObjectBottomBorderY, thisBottomBorderY);
+        }
+
         private bool IsNextPositionAreBeingInSpace(Point2D nextPosition, Size spaceSize)
         {
             bool isUnderTopBorderLine =
@@ -92,16 +110,5 @@ namespace AirForce.AirObjects
             PlayerShipDeathEvent?.Invoke();
         }
 
-        public bool IsInFrontAirObject(AirObject airObject)
-        {
-            int thisTopBorderY = Position.Y - Radius;
-            int thisBottomBorderY = Position.Y + Radius;
-
-            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
-            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
-
-            return Position.X < airObject.Position.X
-                   && Math.Max(airObjectTopBorderY, thisTopBorderY) < Math.Min(airObjectBottomBorderY, thisBottomBorderY);
-        }
     }
 }
