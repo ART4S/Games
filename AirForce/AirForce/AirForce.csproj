@@ -54,7 +54,6 @@
     <Compile Include="AirObjects\EnemyAI\ChaserShip.cs" />
     <Compile Include="AirObjects\EnemyAI\EnemyAI.cs" />
     <Compile Include="AirObjects\EnemyAI\Meteor.cs" />
-    <Compile Include="Enums\Direction.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Enums\GameState.cs" />
     <Compile Include="Line.cs" />

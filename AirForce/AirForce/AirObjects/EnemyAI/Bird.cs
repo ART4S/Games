@@ -1,5 +1,4 @@
 ﻿using System;
-using AirForce.Enums;
 
 namespace AirForce.AirObjects.EnemyAI
 {
@@ -20,52 +19,22 @@ namespace AirForce.AirObjects.EnemyAI
 
         public override void Move(Line groundLine)
         {
-            Direction newMovingDirection =
-                FindMovingDirrection(groundLine);
+            Point2D nextPosition;
 
-            switch (newMovingDirection)
-            {
-                case Direction.Up:
-                    Position = new Point2D(Position.X, Position.Y - MovespeedShift);
-                    break;
-                case Direction.Down:
-                    Position = new Point2D(Position.X, Position.Y + MovespeedShift);
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
-
-            if (Position.X + Radius >= 0)
-                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
-            else
-                OnObjectDeathEvent(this);
-        }
-
-        private Direction FindMovingDirrection(Line groundLine)
-        {
-            int minFlyBorderY = groundLine.FirstPoint.Y - 10 * Radius;
-            int maxFlyBorderY = groundLine.FirstPoint.Y;
-
-            int birdTopBorderY = Position.Y - Radius;
-            int birdBottomBorderY = Position.Y + Radius;
-
-            while (true)
-            {
-                switch ((Direction)random.Next(0, 2))
+            do
+                nextPosition = new Point2D
                 {
-                    case Direction.Up:
-                        if (birdTopBorderY - MovespeedShift > minFlyBorderY)
-                            return Direction.Up;
-                        break;
+                    X = Position.X,
+                    Y = Position.Y + MovespeedShift * random.Next(-1, 2) // random values: -1 0 1
+                };
+            while (!IsNextPositionAboveGroundLine(nextPosition, groundLine));
 
-                    case Direction.Down:
-                        if (birdBottomBorderY + MovespeedShift < maxFlyBorderY)
-                            return Direction.Down;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            Position = nextPosition;
+
+            if (IsPositionBehindGameFieldLeftBorder())
+                OnObjectDeathEvent(this);
+            else
+                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
         }
     }
 }

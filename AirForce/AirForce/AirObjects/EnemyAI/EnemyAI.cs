@@ -18,5 +18,10 @@ namespace AirForce.AirObjects.EnemyAI
         {
             ObjectDeathEvent?.Invoke(deathObject);
         }
+
+        protected bool IsPositionBehindGameFieldLeftBorder()
+        {
+            return Position.X + Radius < 0;
+        }
     }
 }

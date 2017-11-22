@@ -16,10 +16,11 @@ namespace AirForce
         private readonly Size gameFieldSize;
         private readonly Line groundLine;
 
-        private PlayerShip playerShip;
+        private readonly PlayerShip playerShip;
+        private readonly Point2D playerShipStartPosition;
 
         private readonly Timer enemyCreatorTimer = new Timer();
-        private readonly Timer enemyMovingTimer = new Timer();
+        private readonly Timer objectMovingTimer = new Timer();
 
         private readonly Random random = new Random();
 
@@ -39,32 +40,39 @@ namespace AirForce
                 new Point2D(0, gameFieldSize.Height - 30),
                 new Point2D(gameFieldSize.Width, gameFieldSize.Height - 30));
 
-            playerShip = new PlayerShip(gameFieldSize, () => gameState = GameState.Wait);
+            playerShipStartPosition = new Point2D
+            {
+                X = 150,
+                Y = groundLine.FirstPoint.Y / 2
+            };
+
+            playerShip = new PlayerShip(playerShipStartPosition, 30, 6, () => gameState = GameState.Wait);
 
             // enemyCreatorTimer setting
-            enemyCreatorTimer.Interval = 1500;
+            enemyCreatorTimer.Interval = 100; // 1500
             enemyCreatorTimer.Tick += (s, e) => AddNewRandomEnemy();
             enemyCreatorTimer.Start();
 
-            // enemyMovingTimer setting
-            enemyMovingTimer.Interval = 1;
-            enemyMovingTimer.Tick += (s, e) => MoveEnemies();
-            enemyMovingTimer.Tick += (s, e) => MoveBullets();
-            enemyMovingTimer.Tick += (s, e) => FindAllAirObjectsCollisions();
-            enemyMovingTimer.Tick += (s, e) => ClearEnemiesToDelete();
-            enemyMovingTimer.Tick += (s, e) => ClearBulletsToDelete();
-            enemyMovingTimer.Start();
+            // objectMovingTimer setting
+            objectMovingTimer.Interval = 1;
+            objectMovingTimer.Tick += (s, e) => MoveEnemies();
+            objectMovingTimer.Tick += (s, e) => MoveBullets();
+            objectMovingTimer.Tick += (s, e) => FindAllAirObjectsCollisions();
+            objectMovingTimer.Tick += (s, e) => ClearEnemiesToDelete();
+            objectMovingTimer.Tick += (s, e) => ClearBulletsToDelete();
+            objectMovingTimer.Start();
         }
 
         public void Restart()
         {
-            playerShip = new PlayerShip(gameFieldSize, () => gameState = GameState.Wait);
-            gameState = GameState.Play;
-
             enemies.Clear();
             bullets.Clear();
             enemiesToDelete.Clear();
             bulletsToDelete.Clear();
+
+            playerShip.SetPosition(playerShipStartPosition);
+
+            gameState = GameState.Play;
         }
 
         private void FindAllAirObjectsCollisions()
@@ -93,12 +101,12 @@ namespace AirForce
 
         #region playerMethods
 
-        public void TryPlayerShipMove(Direction movingDirection)
+        public void TryPlayerShipMove(int playerMovespeedModiferX, int playerMovespeedModiferY)
         {
             if (gameState == GameState.Wait)
                 return;
 
-            playerShip.Move(movingDirection, gameFieldSize, groundLine);
+            playerShip.Move(playerMovespeedModiferX, playerMovespeedModiferY, gameFieldSize, groundLine);
         }
 
         public void TryCreatePlayerBullet()
@@ -110,14 +118,16 @@ namespace AirForce
                 return;
             }
 
-            Point2D playerBulletStartPosition = new Point2D(playerShip.Position.X + playerShip.Radius, playerShip.Position.Y);
+            Point2D bulletStartPosition = new Point2D
+            {
+                X = playerShip.Position.X + playerShip.Radius,
+                Y = playerShip.Position.Y
+            };
 
-            bullets.Add(new PlayerBullet(playerBulletStartPosition, AddBulletInBulletsToDelete));
+            bullets.Add(new PlayerBullet(bulletStartPosition, AddBulletInBulletsToDelete));
         }
 
         #endregion playerMethods
-
-
 
         #region enemiesMethods
 
@@ -133,48 +143,48 @@ namespace AirForce
             {
                 case 0:
                     radius = 50;
+                    movespeedShift = 5;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
                         Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
                     };
-                    movespeedShift = 5;
 
                     enemies.Add(new BigShip(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
                     break;
 
                 case 1:
                     radius = 30;
+                    movespeedShift = 2;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
                         Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
                     };
-                    movespeedShift = 2;
 
                     enemies.Add(new ChaserShip(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete, CreateEnemyBullet, playerShip));
                     break;
 
                 case 2:
                     radius = 15;
+                    movespeedShift = 2;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
                         Y = random.Next(groundLine.FirstPoint.Y - 10 * radius, groundLine.FirstPoint.Y - radius)
                     };
-                    movespeedShift = 2;
 
                     enemies.Add(new Bird(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
                     break;
 
                 case 3:
                     radius = 70;
+                    movespeedShift = 3;
                     startPosition = new Point2D
                     {
                         X = random.Next(0, gameFieldSize.Width),
                         Y = 0
                     };
-                    movespeedShift = 3;
 
                     enemies.Add(new Meteor(startPosition, radius, movespeedShift, AddEnemyInEnemiesToDelete));
                     break;
@@ -201,8 +211,6 @@ namespace AirForce
         }
 
         #endregion enemiesMethods
-
-
 
         #region bulletsMethods
 
@@ -231,8 +239,6 @@ namespace AirForce
         }
 
         #endregion bulletsMethods
-
-
 
         #region drawingMethods
 

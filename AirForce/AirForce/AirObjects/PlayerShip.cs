@@ -2,7 +2,6 @@
 using System.Drawing;
 using AirForce.AirObjects.Bullets;
 using AirForce.AirObjects.EnemyAI;
-using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
@@ -12,8 +11,8 @@ namespace AirForce.AirObjects
 
         public int Strength { get; private set; } = 5;
 
-        public PlayerShip(Size spaceSize, Action playerShipDeathMethod)
-            : base(new Point2D(30, spaceSize.Height / 2), 30, 15, Properties.Resources.player_ship)
+        public PlayerShip(Point2D startPosition, int radius, int movespeedShift, Action playerShipDeathMethod)
+            : base(startPosition, radius, movespeedShift, Properties.Resources.player_ship)
         {
             PlayerShipDeathEvent += playerShipDeathMethod;
         }
@@ -42,27 +41,13 @@ namespace AirForce.AirObjects
             Strength = 0;
         }
 
-        public void Move(Direction direction, Size spaceSize, Line groundLine)
+        public void Move(int movespeedModiferX, int movespeedModiferY, Size spaceSize, Line groundLine)
         {
-            Point2D nextPosition;
-
-            switch (direction)
+            Point2D nextPosition = new Point2D
             {
-                case Direction.Up:
-                    nextPosition = new Point2D(Position.X, Position.Y - MovespeedShift);
-                    break;
-                case Direction.Down:
-                    nextPosition = new Point2D(Position.X, Position.Y + MovespeedShift);
-                    break;
-                case Direction.Left:
-                    nextPosition = new Point2D(Position.X - MovespeedShift, Position.Y);
-                    break;
-                case Direction.Right:
-                    nextPosition = new Point2D(Position.X + MovespeedShift, Position.Y);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
+                X = Position.X + MovespeedShift * movespeedModiferX,
+                Y = Position.Y + MovespeedShift * movespeedModiferY
+            };
 
             if (IsNextPositionAreBeingInSpace(nextPosition, spaceSize))
                 Position = nextPosition;
@@ -110,5 +95,9 @@ namespace AirForce.AirObjects
             PlayerShipDeathEvent?.Invoke();
         }
 
+        public void SetPosition(Point2D position)
+        {
+            Position = position;
+        }
     }
 }

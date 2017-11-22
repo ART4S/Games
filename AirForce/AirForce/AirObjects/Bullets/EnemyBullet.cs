@@ -12,10 +12,12 @@ namespace AirForce.AirObjects.Bullets
 
         public override void Move(Size gameFieldSize)
         {
-            if (Position.X + Radius >= 0)
-                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
-            else
+            bool isPositionBehindLeftGameFiledBorder = Position.X + Radius < 0;
+
+            if (isPositionBehindLeftGameFiledBorder)
                 OnObjectDeathEvent(this);
+            else
+                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)

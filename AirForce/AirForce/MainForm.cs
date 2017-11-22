@@ -10,7 +10,11 @@ namespace AirForce
         private readonly GameController gameController;
 
         private readonly Timer drawingTimer = new Timer();
-        private readonly Timer shootTimer = new Timer();
+        private readonly Timer playerShootTimer = new Timer();
+        private readonly Timer playerMoveTimer = new Timer();
+
+        private int playerMovespeedModiferX;
+        private int playerMovespeedModiferY;
 
         public MainForm()
         {
@@ -20,22 +24,21 @@ namespace AirForce
             GameFieldPictureBox.BackColor = Color.DarkBlue;
 
             drawingTimer.Interval = 1;
-            drawingTimer.Tick += DrawingTimerTick;
+            drawingTimer.Tick += (s, e) => GameFieldPictureBox.Refresh();
             drawingTimer.Start();
 
-            shootTimer.Interval = 400;
-            shootTimer.Tick += MakePlayerShot;
-        }
+            playerShootTimer.Interval = 400;
+            playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
 
-        private void DrawingTimerTick(object sender, EventArgs e)
-        {
-            GameFieldPictureBox.Refresh();
+            playerMoveTimer.Interval = 1;
+            playerMoveTimer.Tick += (s, e) => gameController.TryPlayerShipMove(playerMovespeedModiferX, playerMovespeedModiferY);
+
+            playerMoveTimer.Start();
         }
 
         private void GameFieldPictureBox_Paint(object sender, PaintEventArgs e)
         {
             gameController.DrawAllElements(e.Graphics);
-            //label1.Text = gameController.PlayerShipKillAmount.ToString();
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -46,29 +49,33 @@ namespace AirForce
             {
                 case Keys.W:
                 case Keys.Up:
-                    gameController.TryPlayerShipMove(Direction.Up);
+                    playerMovespeedModiferX = 0;
+                    playerMovespeedModiferY = -1;
                     break;
 
                 case Keys.S:
                 case Keys.Down:
-                    gameController.TryPlayerShipMove(Direction.Down);
-                    break;
-
-                case Keys.D:
-                case Keys.Left:
-                    gameController.TryPlayerShipMove(Direction.Left);
+                    playerMovespeedModiferX = 0;
+                    playerMovespeedModiferY = 1;
                     break;
 
                 case Keys.A:
+                case Keys.Left:
+                    playerMovespeedModiferX = -1;
+                    playerMovespeedModiferY = 0;
+                    break;
+
+                case Keys.D:
                 case Keys.Right:
-                    gameController.TryPlayerShipMove(Direction.Right);
+                    playerMovespeedModiferX = 1;
+                    playerMovespeedModiferY = 0;
                     break;
 
                 case Keys.Space:
-                    if (shootTimer.Enabled == false)
+                    if (playerShootTimer.Enabled == false)
                     {
                         gameController.TryCreatePlayerBullet();
-                        shootTimer.Start();
+                        playerShootTimer.Start();
                     }
                     break;
 
@@ -78,15 +85,38 @@ namespace AirForce
             }
         }
 
-        private void MakePlayerShot(object sender, EventArgs e)
-        {
-            gameController.TryCreatePlayerBullet();
-        }
-
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space)
-                shootTimer.Stop();
+                playerShootTimer.Stop();
+
+            playerMovespeedModiferX = 0;
+            playerMovespeedModiferY = 0;
         }
     }
+
+    //public sealed class PlayerBehaviourController
+    //{
+    //    private GameController gameController;
+
+    //    private readonly Timer playerShootTimer = new Timer();
+    //    private readonly Timer playerMoveTimer = new Timer();
+
+    //    public PlayerBehaviourController(GameController gameController)
+    //    {
+    //        this.gameController = gameController;
+
+    //        playerShootTimer.Interval = 400;
+    //        playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
+
+    //        playerMoveTimer.Interval = 1;
+    //        playerMoveTimer.Tick += (s, e) => gameController.TryPlayerShipMove(1, 1);
+    //    }
+
+    //    public void Start()
+    //    {
+    //        playerMoveTimer.Start();
+    //        playerShootTimer.Start();
+    //    }
+    //}
 }

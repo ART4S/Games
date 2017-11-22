@@ -37,13 +37,13 @@ namespace AirForce.AirObjects.EnemyAI
 
         public override void Move(Line groundLine)
         {
-            if (Position.X + Radius >= 0) // 0
-                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
-            else
+            if (IsPositionBehindGameFieldLeftBorder())
             {
                 shootTimer.Dispose();
                 OnObjectDeathEvent(this);
             }
+            else
+                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
 
             if (playerShip.IsInFrontAirObject(this))
             {

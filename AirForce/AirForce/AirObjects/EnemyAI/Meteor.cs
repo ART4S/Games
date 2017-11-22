@@ -33,7 +33,7 @@ namespace AirForce.AirObjects.EnemyAI
         {
             Point2D nextPosition = new Point2D(Position.X - 2 * MovespeedShift, Position.Y + MovespeedShift);
 
-            if (nextPosition.X + Radius < 0 || !IsNextPositionAboveGroundLine(nextPosition, groundLine))
+            if (IsPositionBehindGameFieldLeftBorder() || !IsNextPositionAboveGroundLine(nextPosition, groundLine))
                 OnObjectDeathEvent(this);
             else
                 Position = nextPosition;
