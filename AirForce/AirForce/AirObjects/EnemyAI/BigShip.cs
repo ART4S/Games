@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AirForce.AirObjects.Bullets;
 
 namespace AirForce.AirObjects.EnemyAI
@@ -30,9 +31,9 @@ namespace AirForce.AirObjects.EnemyAI
                 OnObjectDeathEvent(this);
         }
 
-        public override void Move(Line groundLine)
+        public override void Move(Line groundLine, HashSet<Bullet> bullets)
         {
-            if (IsPositionBehindGameFieldLeftBorder())
+            if (IsPositionOutOfGameFieldLeftBorder())
                 OnObjectDeathEvent(this);
             else
                 Position = new Point2D(Position.X - MovespeedShift, Position.Y);

@@ -28,9 +28,11 @@ namespace AirForce.AirObjects
 
         public void Draw(Graphics graphics)
         {
-            Rectangle imageRectangle = new Rectangle(
-                new Point2D(Position.X - Radius, Position.Y - Radius),
-                new Size(2 * Radius, 2 * Radius));
+            Rectangle imageRectangle = new Rectangle
+            {
+                Location = new Point2D(Position.X - Radius, Position.Y - Radius),
+                Size = new Size(2 * Radius, 2 * Radius)
+            };
 
             graphics.DrawImage(Image, imageRectangle);
         }

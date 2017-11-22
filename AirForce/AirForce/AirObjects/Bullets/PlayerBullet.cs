@@ -31,5 +31,17 @@ namespace AirForce.AirObjects.Bullets
                     break;
             } 
         }
+
+        public bool IsInFrontAirObject(AirObject airObject)
+        {
+            int playerBulletTopBorderY = Position.Y - Radius;
+            int playerBulletBottomBorderY = Position.Y + Radius;
+
+            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
+            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
+
+            return Position.X < airObject.Position.X
+                   && Math.Max(airObjectTopBorderY, playerBulletTopBorderY) < Math.Min(airObjectBottomBorderY, playerBulletBottomBorderY);
+        }
     }
 }

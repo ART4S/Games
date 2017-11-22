@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using AirForce.AirObjects;
 using AirForce.AirObjects.Bullets;
@@ -65,12 +66,13 @@ namespace AirForce
 
         public void Restart()
         {
-            enemies.Clear();
-            bullets.Clear();
             enemiesToDelete.Clear();
             bulletsToDelete.Clear();
 
-            playerShip.SetPosition(playerShipStartPosition);
+            enemies.Clear();
+            bullets.Clear();
+
+            playerShip.Restore(playerShipStartPosition);
 
             gameState = GameState.Play;
         }
@@ -83,12 +85,12 @@ namespace AirForce
             allAirObjets.AddRange(bullets);
             allAirObjets.Add(playerShip);
 
-            foreach (var airObject1 in allAirObjets)
-                foreach (var airObject2 in allAirObjets)
-                    if (IsAirObjectsHaveCollision(airObject1, airObject2))
+            for (int i = 0; i < allAirObjets.Count; i++)
+                for (int j = i + 1; j < allAirObjets.Count; j++)
+                    if (IsAirObjectsHaveCollision(allAirObjets[i], allAirObjets[j]))
                     {
-                        airObject1.CollisionWithOtherAirObject(airObject2);
-                        airObject2.CollisionWithOtherAirObject(airObject1);
+                        allAirObjets[i].CollisionWithOtherAirObject(allAirObjets[j]);
+                        allAirObjets[j].CollisionWithOtherAirObject(allAirObjets[i]);
                     }
         }
 
@@ -155,7 +157,7 @@ namespace AirForce
 
                 case 1:
                     radius = 30;
-                    movespeedShift = 2;
+                    movespeedShift = 1; //
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
@@ -194,7 +196,7 @@ namespace AirForce
         private void MoveEnemies()
         {
             foreach (EnemyAI enemy in enemies)
-                enemy.Move(groundLine);
+                enemy.Move(groundLine, bullets);
         }
 
         private void AddEnemyInEnemiesToDelete(EnemyAI enemy)
@@ -244,19 +246,18 @@ namespace AirForce
 
         public void DrawAllElements(Graphics graphics)
         {
-            DrawGround(graphics);
-
             foreach (EnemyAI enemy in enemies)
                 enemy.Draw(graphics);
 
             foreach (Bullet bullet in bullets)
                 bullet.Draw(graphics);
 
+            DrawGround(graphics);
+            DrawPlayerStrength(graphics);
+            playerShip.Draw(graphics);
+
             if (gameState == GameState.Wait)
                 DrawWaitingStateString(graphics);
-
-            if (gameState == GameState.Play)
-                playerShip.Draw(graphics);
         }
 
         private void DrawGround(Graphics graphics)
@@ -282,6 +283,14 @@ namespace AirForce
             };
 
             graphics.DrawString(contentText, font, brush, gameFieldRectangle, stringFormat);
+        }
+
+        private void DrawPlayerStrength(Graphics graphics)
+        {
+            Image image = Properties.Resources.heart;
+
+            for (int i = 0; i < playerShip.Strength; i++)
+                graphics.DrawImage(image, new Rectangle(location: new Point2D(i * 20, 0), size: new Size(20, 20)));
         }
 
         #endregion drawingMethods

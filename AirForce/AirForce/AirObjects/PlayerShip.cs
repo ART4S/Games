@@ -9,7 +9,18 @@ namespace AirForce.AirObjects
     {
         private event Action PlayerShipDeathEvent;
 
-        public int Strength { get; private set; } = 5;
+        private int strength = 5;
+        public int Strength
+        {
+            get => strength;
+            private set
+            {
+                strength = value;
+
+                if (strength <= 0)
+                    OnPlayerShipDeathEvent();
+            }
+        }
 
         public PlayerShip(Point2D startPosition, int radius, int movespeedShift, Action playerShipDeathMethod)
             : base(startPosition, radius, movespeedShift, Properties.Resources.player_ship)
@@ -35,10 +46,6 @@ namespace AirForce.AirObjects
                     Strength = 0;
                     break;
             }
-
-            //if (Strength <= 0)
-            //    OnPlayerShipDeathEvent();
-            Strength = 0;
         }
 
         public void Move(int movespeedModiferX, int movespeedModiferY, Size spaceSize, Line groundLine)
@@ -53,19 +60,19 @@ namespace AirForce.AirObjects
                 Position = nextPosition;
 
             if (!IsNextPositionAboveGroundLine(nextPosition, groundLine))
-                OnPlayerShipDeathEvent();
+                Strength = 0;
         }
 
         public bool IsInFrontAirObject(AirObject airObject)
         {
-            int thisTopBorderY = Position.Y - Radius;
-            int thisBottomBorderY = Position.Y + Radius;
+            int playerTopBorderY = Position.Y - Radius;
+            int playerBottomBorderY = Position.Y + Radius;
 
             int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
             int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
 
             return Position.X < airObject.Position.X
-                   && Math.Max(airObjectTopBorderY, thisTopBorderY) < Math.Min(airObjectBottomBorderY, thisBottomBorderY);
+                   && Math.Max(airObjectTopBorderY, playerTopBorderY) < Math.Min(airObjectBottomBorderY, playerBottomBorderY);
         }
 
         private bool IsNextPositionAreBeingInSpace(Point2D nextPosition, Size spaceSize)
@@ -95,9 +102,10 @@ namespace AirForce.AirObjects
             PlayerShipDeathEvent?.Invoke();
         }
 
-        public void SetPosition(Point2D position)
+        public void Restore(Point2D position)
         {
             Position = position;
+            Strength = 5;
         }
     }
 }

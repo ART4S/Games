@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using AirForce.AirObjects.Bullets;
 
 namespace AirForce.AirObjects.EnemyAI
 {
@@ -12,14 +14,14 @@ namespace AirForce.AirObjects.EnemyAI
             ObjectDeathEvent += objectDeathMethod;
         }
 
-        public abstract void Move(Line groundLine);
+        public abstract void Move(Line groundLine, HashSet<Bullet> bullets);
 
         protected void OnObjectDeathEvent(EnemyAI deathObject)
         {
             ObjectDeathEvent?.Invoke(deathObject);
         }
 
-        protected bool IsPositionBehindGameFieldLeftBorder()
+        protected bool IsPositionOutOfGameFieldLeftBorder()
         {
             return Position.X + Radius < 0;
         }
