@@ -46,14 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirObjects\AirObject.cs" />
-    <Compile Include="AirObjects\Bullets\EnemyBullet.cs" />
-    <Compile Include="AirObjects\Bullets\PlayerBullet.cs" />
-    <Compile Include="AirObjects\EnemyAI\BigShip.cs" />
-    <Compile Include="AirObjects\Bullets\Bullet.cs" />
-    <Compile Include="AirObjects\EnemyAI\Bird.cs" />
-    <Compile Include="AirObjects\EnemyAI\ChaserShip.cs" />
-    <Compile Include="AirObjects\EnemyAI\EnemyAI.cs" />
-    <Compile Include="AirObjects\EnemyAI\Meteor.cs" />
+    <Compile Include="AirObjects\EnemyBullet.cs" />
+    <Compile Include="AirObjects\PlayerBullet.cs" />
+    <Compile Include="AirObjects\BigShip.cs" />
+    <Compile Include="AirObjects\Bird.cs" />
+    <Compile Include="AirObjects\ChaserShip.cs" />
+    <Compile Include="AirObjects\Meteor.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Enums\GameState.cs" />
     <Compile Include="Line.cs" />

@@ -1,54 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using AirForce.AirObjects.Bullets;
-using AirForce.AirObjects.EnemyAI;
 
 namespace AirForce.AirObjects
 {
     public sealed class PlayerShip : AirObject
     {
-        private event Action PlayerShipDeathEvent;
-
-        private int strength = 5;
-        public int Strength
-        {
-            get => strength;
-            private set
-            {
-                strength = value;
-
-                if (strength <= 0)
-                    OnPlayerShipDeathEvent();
-            }
-        }
-
-        public PlayerShip(Point2D startPosition, int radius, int movespeedShift, Action playerShipDeathMethod)
+        public PlayerShip(Point2D startPosition, int radius, int movespeedShift)
             : base(startPosition, radius, movespeedShift, Properties.Resources.player_ship)
         {
-            PlayerShipDeathEvent += playerShipDeathMethod;
+            Durability = 5;
         }
 
-        public override void CollisionWithOtherAirObject(AirObject otherAirObject)
+        public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            switch (otherAirObject)
-            {
-                case BigShip _:
-                    Strength -= 2;
-                    break;
-
-                case Bird _:
-                case ChaserShip _:
-                case EnemyBullet _:
-                    Strength--;
-                    break;
-
-                case Meteor _:
-                    Strength = 0;
-                    break;
-            }
+            //Move(0, 0, gameFieldSize, groundLine);
         }
 
-        public void Move(int movespeedModiferX, int movespeedModiferY, Size spaceSize, Line groundLine)
+        public void Move(int movespeedModiferX, int movespeedModiferY, Size gameFieldSize, Line groundLine)
         {
             Point2D nextPosition = new Point2D
             {
@@ -56,11 +25,31 @@ namespace AirForce.AirObjects
                 Y = Position.Y + MovespeedShift * movespeedModiferY
             };
 
-            if (IsNextPositionAreBeingInSpace(nextPosition, spaceSize))
+            if (IsNextPositionAreBeingInGameField(nextPosition, gameFieldSize))
                 Position = nextPosition;
 
-            if (!IsNextPositionAboveGroundLine(nextPosition, groundLine))
-                Strength = 0;
+            if (!IsPositionAboveGroundLine(nextPosition, groundLine))
+                Durability = 0;
+        }
+
+        public override void CollisionWithOtherAirObject(AirObject otherAirObject)
+        {
+            //switch (otherAirObject)
+            //{
+            //    case BigShip _:
+            //        Durability -= 2;
+            //        break;
+
+            //    case Bird _:
+            //    case ChaserShip _:
+            //    case EnemyBullet _:
+            //        Durability--;
+            //        break;
+
+            //    case Meteor _:
+            //        Durability = 0;
+            //        break;
+            //}
         }
 
         public bool IsInFrontAirObject(AirObject airObject)
@@ -75,16 +64,22 @@ namespace AirForce.AirObjects
                    && Math.Max(airObjectTopBorderY, playerTopBorderY) < Math.Min(airObjectBottomBorderY, playerBottomBorderY);
         }
 
-        private bool IsNextPositionAreBeingInSpace(Point2D nextPosition, Size spaceSize)
+        public void Restore(Point2D position, int durability)
+        {
+            Position = position;
+            Durability = durability;
+        }
+
+        private bool IsNextPositionAreBeingInGameField(Point2D nextPosition, Size gameFieldSize)
         {
             bool isUnderTopBorderLine =
                 nextPosition.Y - Radius >= 0;
 
             bool isAboveBottomBorderLine =
-                nextPosition.Y + Radius <= spaceSize.Height;
+                nextPosition.Y + Radius <= gameFieldSize.Height;
 
             bool isLeftOfRightBorderLine =
-                nextPosition.X + Radius <= spaceSize.Width;
+                nextPosition.X + Radius <= gameFieldSize.Width;
 
             bool isRightOfLeftBorderLine =
                 nextPosition.X - Radius >= 0;
@@ -93,19 +88,6 @@ namespace AirForce.AirObjects
                    isAboveBottomBorderLine &&
                    isLeftOfRightBorderLine &&
                    isRightOfLeftBorderLine;
-        }
-
-        private void OnPlayerShipDeathEvent()
-        {
-            Position = new Point2D(-200, -200);
-
-            PlayerShipDeathEvent?.Invoke();
-        }
-
-        public void Restore(Point2D position)
-        {
-            Position = position;
-            Strength = 5;
         }
     }
 }

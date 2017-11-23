@@ -1,27 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using AirForce.AirObjects.Bullets;
 
-namespace AirForce.AirObjects.EnemyAI
+namespace AirForce.AirObjects
 {
-    public sealed class ChaserShip : EnemyAI
+    public sealed class ChaserShip : AirObject
     {
-        private event Action<Point2D> ShootEvent;
+        public delegate void Method(Point2D startPosition);
+
+        public event Method Shooted;
         private readonly PlayerShip playerShip;
 
         private readonly Timer shootTimer = new Timer();
 
-        public ChaserShip(Point2D position, int radius, int movespeedShift, Action<EnemyAI> objectDeathMethod, Action<Point2D> shootMethod, PlayerShip playerShip)
-            : base(position, radius, movespeedShift, Properties.Resources.enemy_ship, objectDeathMethod) // ref
+        public ChaserShip(Point2D position, int radius, int movespeedShift, PlayerShip playerShip)
+            : base(position, radius, movespeedShift, Properties.Resources.enemy_ship)
         {
             this.playerShip = playerShip;
 
-            ShootEvent += shootMethod;
-
-            shootTimer.Interval = 500;
+            shootTimer.Interval = 800;
             shootTimer.Tick += (s, e) => OnShootEvent();
+        }
+
+        public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
+        {
+            Position = new Point2D(Position.X - MovespeedShift, Position.Y);
+
+            if (IsPositionOutOfGameFieldLeftBorder(Position))
+                Durability = 0;
+
+            TryRunShootTimer();
+            TryDodgePlayerBullets(playerBullets: airObjects.OfType<PlayerBullet>().ToList(), groundLine: groundLine);
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
@@ -31,24 +42,9 @@ namespace AirForce.AirObjects.EnemyAI
                 case PlayerShip _:
                 case PlayerBullet _:
                 case Meteor _:
-                    shootTimer.Dispose();
-                    OnObjectDeathEvent(this);
+                    Durability = 0;
                     break;
             }
-        }
-
-        public override void Move(Line groundLine, HashSet<Bullet> bullets)
-        {
-            if (IsPositionOutOfGameFieldLeftBorder())
-            {
-                shootTimer.Dispose();
-                OnObjectDeathEvent(this);
-            }
-            else
-                Position = new Point2D(Position.X - MovespeedShift, Position.Y);
-
-            TryRunShootTimer();
-            TryDodgePlayerBullets(playerBullets: bullets.OfType<PlayerBullet>().ToList(), groundLine: groundLine);
         }
 
         private void TryRunShootTimer()
@@ -77,7 +73,7 @@ namespace AirForce.AirObjects.EnemyAI
             //    {
             //        nextPosition = new Point2D(Position.X, Position.Y + MovespeedShift);
 
-            //        if (IsNextPositionAboveGroundLine(nextPosition, groundLine))
+            //        if (IsPositionAboveGroundLine(nextPosition, groundLine))
             //        {
             //            Position = nextPosition;
             //        }
@@ -86,7 +82,7 @@ namespace AirForce.AirObjects.EnemyAI
             //    {
             //        nextPosition = new Point2D(Position.X, Position.Y - MovespeedShift);
 
-            //        if (IsNextPositionAboveGroundLine(nextPosition, groundLine))
+            //        if (IsPositionAboveGroundLine(nextPosition, groundLine))
             //        {
             //            Position = nextPosition;
             //        }
@@ -98,7 +94,7 @@ namespace AirForce.AirObjects.EnemyAI
         {
             Point2D startShootPosition = new Point2D(Position.X - Radius, Position.Y);
 
-            ShootEvent?.Invoke(startShootPosition);
+            Shooted?.Invoke(startShootPosition);
         }
     }
 }

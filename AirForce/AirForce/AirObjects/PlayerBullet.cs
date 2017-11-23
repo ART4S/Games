@@ -1,23 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using AirForce.AirObjects.EnemyAI;
 
-namespace AirForce.AirObjects.Bullets
+namespace AirForce.AirObjects
 {
-    public sealed class PlayerBullet : Bullet
+    public sealed class PlayerBullet : AirObject
     {
-        public PlayerBullet(Point2D position, Action<Bullet> objectDeathMethod) : base(position, Properties.Resources.player_bullet, objectDeathMethod)
+        public PlayerBullet(Point2D position, int radius, int movespeedShift)
+            : base(position, radius, movespeedShift, Properties.Resources.player_bullet)
         {
         }
 
-        public override void Move(Size gameFieldSize)
+        public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            bool isPositionBehindRightGameFieldBorder = Position.X - Radius > gameFieldSize.Width;
+            Position = new Point2D(Position.X + MovespeedShift, Position.Y);
 
-            if (isPositionBehindRightGameFieldBorder)
-                OnObjectDeathEvent(this);
-            else
-                Position = new Point2D(Position.X + MovespeedShift, Position.Y);
+            if (IsPositionOutOfGameFieldRightBorder(Position, gameFieldSize))
+                Durability = 0;
         }
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
@@ -27,9 +26,9 @@ namespace AirForce.AirObjects.Bullets
                 case BigShip _:
                 case ChaserShip _:
                 case Meteor _:
-                    OnObjectDeathEvent(this);
+                    Durability = 0;
                     break;
-            } 
+            }
         }
 
         public bool IsInFrontAirObject(AirObject airObject)
