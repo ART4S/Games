@@ -6,8 +6,8 @@ namespace AirForce.AirObjects
 {
     public sealed class PlayerShip : AirObject
     {
-        public PlayerShip(Point2D startPosition, int radius, int movespeedShift)
-            : base(startPosition, radius, movespeedShift, Properties.Resources.player_ship)
+        public PlayerShip(Point2D startPosition, int radius, int movespeed)
+            : base(startPosition, radius, movespeed, Properties.Resources.player_ship)
         {
             Durability = 5;
         }
@@ -17,18 +17,21 @@ namespace AirForce.AirObjects
             //Move(0, 0, gameFieldSize, groundLine);
         }
 
-        public void Move(int movespeedModiferX, int movespeedModiferY, Size gameFieldSize, Line groundLine)
+        public void Move(Point2D movespeedModifer, Size gameFieldSize, Line groundLine)
         {
             Point2D nextPosition = new Point2D
             {
-                X = Position.X + MovespeedShift * movespeedModiferX,
-                Y = Position.Y + MovespeedShift * movespeedModiferY
+                X = Position.X + Movespeed * movespeedModifer.X,
+                Y = Position.Y + Movespeed * movespeedModifer.Y
             };
 
-            if (IsNextPositionAreBeingInGameField(nextPosition, gameFieldSize))
+            if (!IsPositionOutOfGameFieldTopBorder(nextPosition) &&
+                !IsPositionOutOfGameFieldBottomBorder(nextPosition, gameFieldSize) &&
+                !IsPositionOutOfGameFieldLeftBorder(nextPosition) &&
+                !IsPositionOutOfGameFieldRightBorder(nextPosition, gameFieldSize))
                 Position = nextPosition;
 
-            if (!IsPositionAboveGroundLine(nextPosition, groundLine))
+            if (IsPositionOutOfGroundLine(nextPosition, groundLine))
                 Durability = 0;
         }
 
@@ -52,6 +55,12 @@ namespace AirForce.AirObjects
             //}
         }
 
+        public void Refresh(Point2D position, int durability)
+        {
+            Position = position;
+            Durability = durability;
+        }
+
         public bool IsInFrontAirObject(AirObject airObject)
         {
             int playerTopBorderY = Position.Y - Radius;
@@ -60,34 +69,8 @@ namespace AirForce.AirObjects
             int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
             int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
 
-            return Position.X < airObject.Position.X
+            return Position.X + Radius < airObject.Position.X - airObject.Radius
                    && Math.Max(airObjectTopBorderY, playerTopBorderY) < Math.Min(airObjectBottomBorderY, playerBottomBorderY);
-        }
-
-        public void Restore(Point2D position, int durability)
-        {
-            Position = position;
-            Durability = durability;
-        }
-
-        private bool IsNextPositionAreBeingInGameField(Point2D nextPosition, Size gameFieldSize)
-        {
-            bool isUnderTopBorderLine =
-                nextPosition.Y - Radius >= 0;
-
-            bool isAboveBottomBorderLine =
-                nextPosition.Y + Radius <= gameFieldSize.Height;
-
-            bool isLeftOfRightBorderLine =
-                nextPosition.X + Radius <= gameFieldSize.Width;
-
-            bool isRightOfLeftBorderLine =
-                nextPosition.X - Radius >= 0;
-
-            return isUnderTopBorderLine &&
-                   isAboveBottomBorderLine &&
-                   isLeftOfRightBorderLine &&
-                   isRightOfLeftBorderLine;
         }
     }
 }

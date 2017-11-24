@@ -5,15 +5,15 @@ namespace AirForce.AirObjects
 {
     public sealed class BigShip : AirObject
     {
-        public BigShip(Point2D position, int radius, int movespeedShift)
-            : base(position, radius, movespeedShift, Properties.Resources.big_enemy_ship)
+        public BigShip(Point2D position, int radius, int movespeed)
+            : base(position, radius, movespeed, Properties.Resources.big_enemy_ship)
         {
             Durability = 3;
         }
 
         public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            Position = new Point2D(Position.X - MovespeedShift, Position.Y);
+            Position -= new Point2D(Movespeed, 0);
 
             if (IsPositionOutOfGameFieldLeftBorder(Position))
                 Durability = 0;

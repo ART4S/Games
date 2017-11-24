@@ -34,10 +34,11 @@
             // 
             // GameFieldPictureBox
             // 
+            this.GameFieldPictureBox.BackColor = System.Drawing.Color.Black;
             this.GameFieldPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GameFieldPictureBox.Location = new System.Drawing.Point(0, 0);
             this.GameFieldPictureBox.Name = "GameFieldPictureBox";
-            this.GameFieldPictureBox.Size = new System.Drawing.Size(884, 561);
+            this.GameFieldPictureBox.Size = new System.Drawing.Size(1284, 561);
             this.GameFieldPictureBox.TabIndex = 0;
             this.GameFieldPictureBox.TabStop = false;
             this.GameFieldPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.GameFieldPictureBox_Paint);
@@ -46,7 +47,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 561);
+            this.ClientSize = new System.Drawing.Size(1284, 561);
             this.Controls.Add(this.GameFieldPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

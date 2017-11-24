@@ -6,14 +6,14 @@ namespace AirForce.AirObjects
 {
     public sealed class PlayerBullet : AirObject
     {
-        public PlayerBullet(Point2D position, int radius, int movespeedShift)
-            : base(position, radius, movespeedShift, Properties.Resources.player_bullet)
+        public PlayerBullet(Point2D position, int radius, int movespeed)
+            : base(position, radius, movespeed, Properties.Resources.player_bullet)
         {
         }
 
         public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            Position = new Point2D(Position.X + MovespeedShift, Position.Y);
+            Position += new Point2D(Movespeed, 0);
 
             if (IsPositionOutOfGameFieldRightBorder(Position, gameFieldSize))
                 Durability = 0;

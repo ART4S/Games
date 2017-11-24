@@ -6,17 +6,17 @@ namespace AirForce.AirObjects
 {
     public sealed class Meteor : AirObject
     {
-        public Meteor(Point2D position, int radius, int movespeedShift)
-            : base(position, radius, movespeedShift, Properties.Resources.meteor)
+        public Meteor(Point2D position, int radius, int movespeed)
+            : base(position, radius, movespeed, Properties.Resources.meteor)
         {
             Durability = new Random().Next(5, 9);
         }
 
         public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            Position = new Point2D(Position.X - 2 * MovespeedShift, Position.Y + MovespeedShift);
+            Position += new Point2D(-2 * Movespeed, Movespeed);
 
-            if (IsPositionOutOfGameFieldLeftBorder(Position) || !IsPositionAboveGroundLine(Position, groundLine))
+            if (IsPositionOutOfGameFieldLeftBorder(Position) || IsPositionOutOfGroundLine(Position, groundLine))
                 Durability = 0;
         }
 

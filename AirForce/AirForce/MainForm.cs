@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace AirForce
 {
@@ -12,26 +10,26 @@ namespace AirForce
         private readonly Timer playerShootTimer = new Timer();
         private readonly Timer playerMoveTimer = new Timer();
 
-        private int playerMovespeedModiferX;
-        private int playerMovespeedModiferY;
+        private Point2D playerMovespeedModifer;
 
         public MainForm()
         {
             InitializeComponent();
 
             gameController = new GameController(GameFieldPictureBox.Size);
-            GameFieldPictureBox.BackColor = Color.DarkBlue;
 
+            // drawingTimer setting
             drawingTimer.Interval = 1;
             drawingTimer.Tick += (s, e) => GameFieldPictureBox.Refresh();
             drawingTimer.Start();
 
+            // playerShootTimer setting
             playerShootTimer.Interval = 400;
             playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
 
+            // playerMoveTimer setting
             playerMoveTimer.Interval = 1;
-            playerMoveTimer.Tick += (s, e) => gameController.TryPlayerShipMove(playerMovespeedModiferX, playerMovespeedModiferY);
-
+            playerMoveTimer.Tick += (s, e) => gameController.TryPlayerMove(playerMovespeedModifer);
             playerMoveTimer.Start();
         }
 
@@ -48,26 +46,22 @@ namespace AirForce
             {
                 case Keys.W:
                 case Keys.Up:
-                    playerMovespeedModiferX = 0;
-                    playerMovespeedModiferY = -1;
+                    playerMovespeedModifer = new Point2D(0, -1);
                     break;
 
                 case Keys.S:
                 case Keys.Down:
-                    playerMovespeedModiferX = 0;
-                    playerMovespeedModiferY = 1;
+                    playerMovespeedModifer = new Point2D(0, 1);
                     break;
 
                 case Keys.A:
                 case Keys.Left:
-                    playerMovespeedModiferX = -1;
-                    playerMovespeedModiferY = 0;
+                    playerMovespeedModifer = new Point2D(-1, 0);
                     break;
 
                 case Keys.D:
                 case Keys.Right:
-                    playerMovespeedModiferX = 1;
-                    playerMovespeedModiferY = 0;
+                    playerMovespeedModifer = new Point2D(1, 0);
                     break;
 
                 case Keys.Space:
@@ -77,10 +71,6 @@ namespace AirForce
                         playerShootTimer.Start();
                     }
                     break;
-
-                case Keys.R:
-                    gameController.Restart();
-                    break;
             }
         }
 
@@ -89,33 +79,7 @@ namespace AirForce
             if (e.KeyCode == Keys.Space)
                 playerShootTimer.Stop();
 
-            playerMovespeedModiferX = 0;
-            playerMovespeedModiferY = 0;
+            playerMovespeedModifer = new Point2D();
         }
     }
-
-    //public sealed class PlayerBehaviourController
-    //{
-    //    private GameController gameController;
-
-    //    private readonly Timer playerShootTimer = new Timer();
-    //    private readonly Timer playerMoveTimer = new Timer();
-
-    //    public PlayerBehaviourController(GameController gameController)
-    //    {
-    //        this.gameController = gameController;
-
-    //        playerShootTimer.Interval = 400;
-    //        playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
-
-    //        playerMoveTimer.Interval = 1;
-    //        playerMoveTimer.Tick += (s, e) => gameController.TryPlayerShipMove(1, 1);
-    //    }
-
-    //    public void Start()
-    //    {
-    //        playerMoveTimer.Start();
-    //        playerShootTimer.Start();
-    //    }
-    //}
 }

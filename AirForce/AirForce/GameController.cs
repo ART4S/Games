@@ -24,7 +24,6 @@ namespace AirForce
         private readonly Random random = new Random();
 
         private readonly List<AirObject> airObjects = new List<AirObject>();
-        private readonly List<EnemyBullet> enemyBulletsToAdd = new List<EnemyBullet>();
 
         /// -------------------------------------------------------
 
@@ -52,26 +51,52 @@ namespace AirForce
             // objectMovingTimer setting
             objectMovingTimer.Interval = 1;
             objectMovingTimer.Tick += (s, e) => Update();
-            objectMovingTimer.Start();
+            objectMovingTimer.Start();         
+        }
+
+        public void TryPlayerMove(Point2D movespeedModifer)
+        {
+            if (gameState == GameState.Wait)
+                return;
+
+            playerShip.Move(movespeedModifer, gameFieldSize, groundLine);
+        }
+
+        public void TryCreatePlayerBullet()
+        {
+            if (gameState == GameState.Wait)
+            {
+                Restart();
+                return;
+            }
+
+            Point2D bulletStartPosition = new Point2D
+            {
+                X = playerShip.Position.X + playerShip.Radius,
+                Y = playerShip.Position.Y
+            };
+
+            airObjects.Add(new PlayerBullet(bulletStartPosition, 10, 3)); // 10 10
         }
 
         private void Update()
         {
-            airObjects.AddRange(enemyBulletsToAdd);
-            enemyBulletsToAdd.Clear();
+            // adding new enemy bullets
+            List<EnemyBullet> newEnemyBullets = airObjects
+                .OfType<ChaserShip>()
+                .Where(x => x.IsShoting)
+                .Select(x => new EnemyBullet(new Point2D(x.Position.X - x.Radius, x.Position.Y), 10, 10))
+                .ToList();
+
+            airObjects.AddRange(newEnemyBullets);
             airObjects.ForEach(o => o.Move(gameFieldSize, groundLine, airObjects));
             FindAllAirObjectsCollisions();
         }
 
-        public void Restart()
+        private void Restart()
         {
-            foreach (ChaserShip chaserShip in airObjects.OfType<ChaserShip>())
-                chaserShip.Shooted -= AddEnemyBulletInEnemyBulletsToAdd;
-
             airObjects.Clear();
-
-            playerShip.Restore(playerShipStartPosition, 5);
-
+            playerShip.Refresh(playerShipStartPosition, 5);
             gameState = GameState.Play;
         }
 
@@ -86,38 +111,27 @@ namespace AirForce
                         airObjects[j].CollisionWithOtherAirObject(airObjects[i]);
                     }
 
-                if (IsAirObjectsHaveCollision(airObjects[i], playerShip))
+                if (IsAirObjectsHaveCollision(playerShip, airObjects[i]))
                 {
-                    airObjects[i].CollisionWithOtherAirObject(playerShip);
                     playerShip.CollisionWithOtherAirObject(airObjects[i]);
+                    airObjects[i].CollisionWithOtherAirObject(playerShip);
                 }
             }
-
-            foreach (ChaserShip deathChaserShip in airObjects.OfType<ChaserShip>().Where(x => x.Durability <= 0))
-                deathChaserShip.Shooted -= AddEnemyBulletInEnemyBulletsToAdd;
 
             airObjects.RemoveAll(o => o.Durability <= 0);
 
             if (playerShip.Durability <= 0)
             {
                 gameState = GameState.Wait;
-                playerShip.Restore(new Point2D(-200, -200), -1);
+                playerShip.Refresh(new Point2D(-200, -200), -1);
             }
         }
 
         private bool IsAirObjectsHaveCollision(AirObject airObject1, AirObject airObject2)
         {
-            return Math.Pow(airObject1.Radius + airObject2.Radius, 2) >=
+            return Math.Pow(airObject1.Radius + airObject2.Radius, 2) >
                    Math.Pow(airObject1.Position.X - airObject2.Position.X, 2)
                    + Math.Pow(airObject1.Position.Y - airObject2.Position.Y, 2);
-        }
-
-        public void TryPlayerShipMove(int playerMovespeedModiferX, int playerMovespeedModiferY)
-        {
-            if (gameState == GameState.Wait)
-                return;
-
-            playerShip.Move(playerMovespeedModiferX, playerMovespeedModiferY, gameFieldSize, groundLine);
         }
 
         private void AddNewRandomEnemy()
@@ -127,6 +141,13 @@ namespace AirForce
             int movespeedShift;
 
             int randomNumber = random.Next(0, 4);
+
+            //
+            if (!airObjects.OfType<ChaserShip>().Any())
+                airObjects.Add(new ChaserShip(new Point2D(gameFieldSize.Width - 30, gameFieldSize.Height / 2), 30, 3, playerShip));
+
+            randomNumber = 4;
+            //
 
             switch (randomNumber)
             {
@@ -144,17 +165,14 @@ namespace AirForce
 
                 case 1:
                     radius = 30;
-                    movespeedShift = 1; //
+                    movespeedShift = 1; // 3
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
                         Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
                     };
 
-                    ChaserShip cs = new ChaserShip(startPosition, radius, movespeedShift, playerShip);
-                    cs.Shooted += AddEnemyBulletInEnemyBulletsToAdd;
-
-                    airObjects.Add(cs);
+                    airObjects.Add(new ChaserShip(startPosition, radius, movespeedShift, playerShip));
                     break;
 
                 case 2:
@@ -183,29 +201,6 @@ namespace AirForce
             }
         }
 
-        public void TryCreatePlayerBullet()
-        {
-            if (gameState == GameState.Wait)
-            {
-                gameState = GameState.Play;
-                Restart();
-                return;
-            }
-
-            Point2D bulletStartPosition = new Point2D
-            {
-                X = playerShip.Position.X + playerShip.Radius,
-                Y = playerShip.Position.Y
-            };
-
-            airObjects.Add(new PlayerBullet(bulletStartPosition, 10, 10));
-        }
-
-        private void AddEnemyBulletInEnemyBulletsToAdd(Point2D enemyBulletStartPoint)
-        {
-            enemyBulletsToAdd.Add(new EnemyBullet(enemyBulletStartPoint, 10, 10));
-        }
-
         #region drawingMethods
 
         public void DrawAllElements(Graphics graphics)
@@ -215,6 +210,7 @@ namespace AirForce
             playerShip.Draw(graphics);
 
             DrawGround(graphics);
+
             DrawPlayerDurabulity(graphics);
 
             if (gameState == GameState.Wait)

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirObjects\AirObject.cs" />
+    <Compile Include="Enums\Direction.cs" />
     <Compile Include="AirObjects\EnemyBullet.cs" />
     <Compile Include="AirObjects\PlayerBullet.cs" />
     <Compile Include="AirObjects\BigShip.cs" />
@@ -110,13 +111,13 @@
     <None Include="Resources\bird.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\asteroid.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\explosion.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\heart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\asteroid.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

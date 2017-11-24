@@ -8,8 +8,8 @@ namespace AirForce.AirObjects
     {
         private readonly Random random = new Random();
 
-        public Bird(Point2D position, int radius, int movespeedShift)
-            : base(position, radius, movespeedShift, Properties.Resources.bird)
+        public Bird(Point2D position, int radius, int movespeed)
+            : base(position, radius, movespeed, Properties.Resources.bird)
         {
         }
 
@@ -20,10 +20,10 @@ namespace AirForce.AirObjects
             do
                 nextPosition = new Point2D
                 {
-                    X = Position.X - MovespeedShift,
-                    Y = Position.Y + MovespeedShift * random.Next(-1, 2) // random values: -1 0 1
+                    X = Position.X - Movespeed,
+                    Y = Position.Y + Movespeed * random.Next(-1, 2) // random values: -1 0 1
                 };
-            while (!IsPositionAboveGroundLine(nextPosition, groundLine));
+            while (IsPositionOutOfGroundLine(nextPosition, groundLine));
 
             Position = nextPosition;
 
