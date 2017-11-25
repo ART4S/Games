@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace AirForce.AirObjects
@@ -29,18 +28,6 @@ namespace AirForce.AirObjects
                     Durability = 0;
                     break;
             }
-        }
-
-        public bool IsInFrontAirObject(AirObject airObject)
-        {
-            int playerBulletTopBorderY = Position.Y - Radius;
-            int playerBulletBottomBorderY = Position.Y + Radius;
-
-            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
-            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
-
-            return Position.X < airObject.Position.X
-                   && Math.Max(airObjectTopBorderY, playerBulletTopBorderY) < Math.Min(airObjectBottomBorderY, playerBulletBottomBorderY);
         }
     }
 }

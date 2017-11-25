@@ -17,7 +17,7 @@ namespace AirForce.AirObjects
 
         public override void Move(Size gameFieldSize, Line groundLine, List<AirObject> airObjects)
         {
-            Position += new Point2D(-2 * Movespeed, Movespeed);
+            Position -= new Point2D(2 * Movespeed, -Movespeed);
 
             if (IsPositionOutOfGameFieldLeftBorder(Position) || IsPositionOutOfGroundLine(Position, groundLine))
                 Durability = 0;

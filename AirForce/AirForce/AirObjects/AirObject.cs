@@ -8,8 +8,8 @@ namespace AirForce.AirObjects
     {
         public Point2D Position { get; protected set; }
         public int Durability { get; protected set; } = 1;
-        public int Radius { get; }
         public int Movespeed { get; protected set; }
+        public int Radius { get; }
 
         protected Image Image;
 

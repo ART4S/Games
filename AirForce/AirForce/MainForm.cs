@@ -29,7 +29,7 @@ namespace AirForce
 
             // playerMoveTimer setting
             playerMoveTimer.Interval = 1;
-            playerMoveTimer.Tick += (s, e) => gameController.TryPlayerMove(playerMovespeedModifer);
+            playerMoveTimer.Tick += (s, e) => gameController.TryMovePlayer(playerMovespeedModifer);
             playerMoveTimer.Start();
         }
 

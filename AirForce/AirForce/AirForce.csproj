@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirObjects\AirObject.cs" />
-    <Compile Include="Enums\Direction.cs" />
     <Compile Include="AirObjects\EnemyBullet.cs" />
     <Compile Include="AirObjects\PlayerBullet.cs" />
     <Compile Include="AirObjects\BigShip.cs" />

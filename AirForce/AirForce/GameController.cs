@@ -54,7 +54,7 @@ namespace AirForce
             objectMovingTimer.Start();         
         }
 
-        public void TryPlayerMove(Point2D movespeedModifer)
+        public void TryMovePlayer(Point2D movespeedModifer)
         {
             if (gameState == GameState.Wait)
                 return;
@@ -76,7 +76,7 @@ namespace AirForce
                 Y = playerShip.Position.Y
             };
 
-            airObjects.Add(new PlayerBullet(bulletStartPosition, 10, 3)); // 10 10
+            airObjects.Add(new PlayerBullet(bulletStartPosition, 8, 8));
         }
 
         private void Update()
@@ -85,22 +85,22 @@ namespace AirForce
             List<EnemyBullet> newEnemyBullets = airObjects
                 .OfType<ChaserShip>()
                 .Where(x => x.IsShoting)
-                .Select(x => new EnemyBullet(new Point2D(x.Position.X - x.Radius, x.Position.Y), 10, 10))
+                .Select(x => new EnemyBullet(new Point2D(x.Position.X - x.Radius, x.Position.Y), 8, 8))
                 .ToList();
 
             airObjects.AddRange(newEnemyBullets);
-            airObjects.ForEach(o => o.Move(gameFieldSize, groundLine, airObjects));
-            FindAllAirObjectsCollisions();
+            airObjects.ForEach(a => a.Move(gameFieldSize, groundLine, airObjects));
+            FindAirObjectsAllCollisions();
         }
 
         private void Restart()
         {
             airObjects.Clear();
-            playerShip.Refresh(playerShipStartPosition, 5);
+            playerShip.Refresh(playerShipStartPosition, 100);
             gameState = GameState.Play;
         }
 
-        private void FindAllAirObjectsCollisions()
+        private void FindAirObjectsAllCollisions()
         {
             for (int i = 0; i < airObjects.Count; i++)
             {
@@ -118,12 +118,12 @@ namespace AirForce
                 }
             }
 
-            airObjects.RemoveAll(o => o.Durability <= 0);
+            airObjects.RemoveAll(a => a.Durability <= 0);
 
             if (playerShip.Durability <= 0)
             {
                 gameState = GameState.Wait;
-                playerShip.Refresh(new Point2D(-200, -200), -1);
+                playerShip.Refresh(new Point2D(-200, -200), 0);
             }
         }
 
@@ -141,19 +141,12 @@ namespace AirForce
             int movespeedShift;
 
             int randomNumber = random.Next(0, 4);
-
-            //
-            //if (!airObjects.OfType<ChaserShip>().Any())
-            //    airObjects.Add(new ChaserShip(new Point2D(gameFieldSize.Width - 30, gameFieldSize.Height / 2), 30, 3, playerShip));
-
-            //randomNumber = 4;
-            //
-
+            
             switch (randomNumber)
             {
                 case 0:
                     radius = 50;
-                    movespeedShift = 5;
+                    movespeedShift = 8;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
@@ -165,7 +158,7 @@ namespace AirForce
 
                 case 1:
                     radius = 30;
-                    movespeedShift = 3; // 3
+                    movespeedShift = 3;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
@@ -189,7 +182,7 @@ namespace AirForce
 
                 case 3:
                     radius = 70;
-                    movespeedShift = 3;
+                    movespeedShift = 2;
                     startPosition = new Point2D
                     {
                         X = random.Next(0, gameFieldSize.Width),
@@ -227,10 +220,10 @@ namespace AirForce
 
         private void DrawWaitingStateString(Graphics graphics)
         {
-            string contentText = "Press SPACE to start game";
+            string message = "Press SPACE to start game";
 
             Font font = new Font("Segoe UI", 12, FontStyle.Bold);
-            Brush brush = Brushes.DeepPink;
+            Brush brush = Brushes.White;
             Rectangle gameFieldRectangle = new Rectangle(new Point(), gameFieldSize);
 
             StringFormat stringFormat = new StringFormat
@@ -239,15 +232,25 @@ namespace AirForce
                 LineAlignment = StringAlignment.Center
             };
 
-            graphics.DrawString(contentText, font, brush, gameFieldRectangle, stringFormat);
+            graphics.DrawString(message, font, brush, gameFieldRectangle, stringFormat);
         }
 
         private void DrawPlayerDurabulity(Graphics graphics)
         {
             Image image = Properties.Resources.heart;
+            Rectangle imageRectangle = new Rectangle
+            {
+                Location = new Point2D(0, 0),
+                Size = new Size(20, 20)
+            };
 
-            for (int i = 0; i < playerShip.Durability; i++)
-                graphics.DrawImage(image, new Rectangle(location: new Point2D(i * 20, 0), size: new Size(20, 20)));
+            graphics.DrawImage(image, imageRectangle);
+
+            Font font = new Font("Segoe UI", 15, FontStyle.Bold);
+            Brush brush = Brushes.White;
+            string message = " x " + playerShip.Durability;
+
+            graphics.DrawString(message, font, brush, new PointF(18, -5));
         }
 
         #endregion drawingMethods

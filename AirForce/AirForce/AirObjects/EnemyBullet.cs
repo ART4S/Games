@@ -20,8 +20,13 @@ namespace AirForce.AirObjects
 
         public override void CollisionWithOtherAirObject(AirObject otherAirObject)
         {
-            if (otherAirObject is PlayerShip || otherAirObject is Meteor)
-                Durability = 0;
+            switch (otherAirObject)
+            {
+                case PlayerShip _:
+                case Meteor _:
+                    Durability = 0;
+                    break;
+            }
         }
     }
 }
