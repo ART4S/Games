@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using AirForce.Enums;
 
 namespace AirForce.AirObjects
 {
@@ -22,7 +21,7 @@ namespace AirForce.AirObjects
             this.playerShip = playerShip;
 
             shootTimer.Interval = 1;
-            //shootTimer.Tick += (s, e) => ChangeShootingCooldown();
+            shootTimer.Tick += (s, e) => ChangeShootingCooldown();
             shootTimer.Start();
         }
 
@@ -71,87 +70,74 @@ namespace AirForce.AirObjects
 
         private void TryDodgePlayerBullets(List<PlayerBullet> playerBullets, Line groundLine)
         {         
-            List<Direction> pathToFreeTrajectory = FindPathToFreeTrajectory(playerBullets, groundLine, new List<Direction>(), Position, 0);
+            List<Point2D> minPath = FindPathToFreeTrajectory(playerBullets, groundLine);
 
-            if (!pathToFreeTrajectory.Any())
+            if (!minPath.Any())
                 return;
 
-            switch (pathToFreeTrajectory.First())
-            {
-                case Direction.Up:
-                    Position -= new Point2D(0, Movespeed);
-                    break;
-                case Direction.Down:
-                    Position += new Point2D(0, Movespeed);
-                    break;
-            }
+            if (minPath.First().Y < Position.Y)
+                Position -= new Point2D(0, Movespeed);
+            if (minPath.First().Y > Position.Y)
+                Position += new Point2D(0, Movespeed);
         }
 
-        private List<Direction> FindPathToFreeTrajectory(
-            List<PlayerBullet> playerBullets,
-            Line groundLine,
-            List<Direction> path,
-            Point2D position,
-            int bulletsShiftX)
+        private List<Point2D> FindPathToFreeTrajectory(List<PlayerBullet> playerBullets, Line groundLine)
         {
-            Point2D bulletsShift = new Point2D(bulletsShiftX, 0);
+            Point2D bulletsShift = new Point2D(0, 0);
 
-            List<PlayerBullet> dangerBullets = playerBullets
-                .Where(x => x.Position.X - x.Radius + bulletsShiftX < position.X + Radius)
-                .ToList();
+            Queue<Point2D> queue = new Queue<Point2D>();
+            Dictionary<Point2D, Point2D> savePaths = new Dictionary<Point2D, Point2D>();
 
-            List<PlayerBullet> bulletsInFront = dangerBullets
-                .Where(x => IsPlayerBulletInFront(position, x.Position + bulletsShift, x.Radius))
-                .OrderByDescending(x => x.Position.X + bulletsShiftX)
-                .ToList();
+            queue.Enqueue(Position);
+            savePaths.Add(Position, Position);
 
-            if (!bulletsInFront.Any() || IsPositionOutOfGameFieldLeftBorder(position))
-                return new List<Direction>(path);
+            while (queue.Any())
+            {
+                Point2D currentPosition = queue.Dequeue();
 
-            if (dangerBullets.Any(x => IsHaveCollisionWithBullet(position, x.Position + bulletsShift, x.Radius)) ||
-                IsPositionOutOfGroundLine(position, groundLine) ||
-                IsPositionOutOfGameFieldTopBorder(position)
+                List<PlayerBullet> bulletsInFront = playerBullets
+                    .Where(x => IsPlayerBulletInFront(currentPosition, x.Position + bulletsShift, x.Radius))
+                    .OrderByDescending(x => x.Position.X + bulletsShift.X)
+                    .ToList();
+
+                if (!bulletsInFront.Any() || IsPositionOutOfGameFieldLeftBorder(currentPosition))
+                    return RecoveryPath(savePaths, currentPosition);
+
+                if (playerBullets.Any(x => IsHaveCollisionWithBullet(currentPosition, x.Position + bulletsShift, x.Radius)) ||
+                    IsPositionOutOfGroundLine(currentPosition, groundLine) ||
+                    IsPositionOutOfGameFieldTopBorder(currentPosition)
                 )
-                return new List<Direction>();
+                    break;
 
-            PlayerBullet nearestBullet = bulletsInFront.First();
-            Point2D nearestBulletPosition = nearestBullet.Position + bulletsShift;
+                PlayerBullet nearestBullet = bulletsInFront.First();
+                Point2D nearestBulletPosition = nearestBullet.Position + bulletsShift;
 
-            double distToTopBorder = Math.Sqrt(2 * Math.Pow(position.Y + Radius - (nearestBulletPosition.Y - nearestBullet.Radius), 2));
-            double distToInterceptionTopBorder = position.X - Radius - (position.Y + Radius - (nearestBulletPosition.Y - nearestBullet.Radius)) - (nearestBulletPosition.X + nearestBullet.Radius);
+                double distToTopBorder = Math.Sqrt(2 * Math.Pow(currentPosition.Y + Radius - (nearestBulletPosition.Y - nearestBullet.Radius), 2));
+                double distToInterceptionTopBorder = currentPosition.X - Radius - (currentPosition.Y + Radius - (nearestBulletPosition.Y - nearestBullet.Radius)) - (nearestBulletPosition.X + nearestBullet.Radius);
 
-            double distToBottomBorder = Math.Sqrt(2 * Math.Pow(nearestBulletPosition.Y + nearestBullet.Radius - (position.Y - Radius), 2));
-            double distToInterceptionBottomBorder = position.X - Radius - (nearestBulletPosition.Y + nearestBullet.Radius - (position.Y - Radius)) - (nearestBulletPosition.X + nearestBullet.Radius);
+                double distToBottomBorder = Math.Sqrt(2 * Math.Pow(nearestBulletPosition.Y + nearestBullet.Radius - (currentPosition.Y - Radius), 2));
+                double distToInterceptionBottomBorder = currentPosition.X - Radius - (nearestBulletPosition.Y + nearestBullet.Radius - (currentPosition.Y - Radius)) - (nearestBulletPosition.X + nearestBullet.Radius);
 
-            if (distToInterceptionBottomBorder / nearestBullet.Movespeed > distToBottomBorder / Movespeed)
-            {
-                List<Direction> resultPath = FindPathToFreeTrajectory(
-                    dangerBullets,
-                    groundLine,
-                    new List<Direction>(path) { Direction.Down },
-                    position + new Point2D(-Movespeed, Movespeed),
-                    bulletsShiftX + nearestBullet.Movespeed
-                );
+                if (distToInterceptionTopBorder / nearestBullet.Movespeed > distToTopBorder / Movespeed)
+                {
+                    Point2D newPosition = currentPosition - new Point2D(Movespeed, Movespeed);
 
-                if (resultPath.Any())
-                    return resultPath;
+                    savePaths[newPosition] = currentPosition;
+                    queue.Enqueue(newPosition);
+                }
+
+                if (distToInterceptionBottomBorder / nearestBullet.Movespeed > distToBottomBorder / Movespeed)
+                {
+                    Point2D newPosition = currentPosition + new Point2D(-Movespeed, Movespeed);
+
+                    savePaths[newPosition] = currentPosition;
+                    queue.Enqueue(newPosition);
+                }
+
+                bulletsShift = new Point2D(bulletsShift.X + nearestBullet.Movespeed, 0);
             }
 
-            if (distToInterceptionTopBorder / nearestBullet.Movespeed > distToTopBorder / Movespeed)
-            {
-                List<Direction> resultPath = FindPathToFreeTrajectory(
-                    dangerBullets,
-                    groundLine,
-                    new List<Direction>(path) { Direction.Up },
-                    position - new Point2D(Movespeed, Movespeed),
-                    bulletsShiftX + nearestBullet.Movespeed
-                );
-
-                if (resultPath.Any())
-                    return resultPath;
-            }
-
-            return new List<Direction>();
+            return new List<Point2D>();
         }
 
         private bool IsHaveCollisionWithBullet(Point2D chaserShipPosition, Point2D bulletPosition, int bulletRadius)
@@ -171,6 +157,28 @@ namespace AirForce.AirObjects
 
             return bulletPosition.X + bulletRadius < chaserShipPosition.X - Radius
                    && Math.Max(bulletTopBorderY, chaserShipTopBorderY) <= Math.Min(bulletBottomBorderY, chaserShipBottomBorderY);
+        }
+
+        List<Point2D> RecoveryPath(Dictionary<Point2D, Point2D> savePaths, Point2D endPoint)
+        {
+            List<Point2D> path = new List<Point2D>();
+            Point2D currentPoint = endPoint;
+
+            if (savePaths.ContainsKey(currentPoint))
+            {
+                while (savePaths[currentPoint] != currentPoint)
+                {
+                    path.Add(currentPoint);
+                    currentPoint = savePaths[currentPoint];
+                }
+
+                path.Add(currentPoint);
+            }
+
+            path.Remove(path.Last());
+            path.Reverse();
+
+            return path;
         }
     }
 }

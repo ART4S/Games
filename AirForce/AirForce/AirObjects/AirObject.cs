@@ -11,7 +11,7 @@ namespace AirForce.AirObjects
         public int Radius { get; }
         public int Movespeed { get; protected set; }
 
-        protected readonly Image Image;
+        protected Image Image;
 
         protected AirObject(Point2D position, int radius, int movespeed, Image image)
         {

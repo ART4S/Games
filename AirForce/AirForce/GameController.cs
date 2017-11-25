@@ -143,10 +143,10 @@ namespace AirForce
             int randomNumber = random.Next(0, 4);
 
             //
-            if (!airObjects.OfType<ChaserShip>().Any())
-                airObjects.Add(new ChaserShip(new Point2D(gameFieldSize.Width - 30, gameFieldSize.Height / 2), 30, 3, playerShip));
+            //if (!airObjects.OfType<ChaserShip>().Any())
+            //    airObjects.Add(new ChaserShip(new Point2D(gameFieldSize.Width - 30, gameFieldSize.Height / 2), 30, 3, playerShip));
 
-            randomNumber = 4;
+            //randomNumber = 4;
             //
 
             switch (randomNumber)
@@ -165,7 +165,7 @@ namespace AirForce
 
                 case 1:
                     radius = 30;
-                    movespeedShift = 1; // 3
+                    movespeedShift = 3; // 3
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
