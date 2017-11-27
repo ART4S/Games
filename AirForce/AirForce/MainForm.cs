@@ -24,7 +24,7 @@ namespace AirForce
             drawingTimer.Start();
 
             // playerShootTimer setting
-            playerShootTimer.Interval = 400;
+            playerShootTimer.Interval = 300;
             playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
 
             // playerMoveTimer setting
@@ -44,22 +44,18 @@ namespace AirForce
 
             switch (pressedKey)
             {
-                case Keys.W:
                 case Keys.Up:
                     playerMovespeedModifer = new Point2D(0, -1);
                     break;
 
-                case Keys.S:
                 case Keys.Down:
                     playerMovespeedModifer = new Point2D(0, 1);
                     break;
 
-                case Keys.A:
                 case Keys.Left:
                     playerMovespeedModifer = new Point2D(-1, 0);
                     break;
 
-                case Keys.D:
                 case Keys.Right:
                     playerMovespeedModifer = new Point2D(1, 0);
                     break;

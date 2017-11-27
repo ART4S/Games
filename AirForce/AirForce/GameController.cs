@@ -105,13 +105,13 @@ namespace AirForce
             for (int i = 0; i < airObjects.Count; i++)
             {
                 for (int j = i + 1; j < airObjects.Count; j++)
-                    if (IsAirObjectsHaveCollision(airObjects[i], airObjects[j]))
+                    if (IsAirObjectsHaveCollision(airObjects[i].Position, airObjects[i].Radius, airObjects[j].Position, airObjects[j].Radius))
                     {
                         airObjects[i].CollisionWithOtherAirObject(airObjects[j]);
                         airObjects[j].CollisionWithOtherAirObject(airObjects[i]);
                     }
 
-                if (IsAirObjectsHaveCollision(playerShip, airObjects[i]))
+                if (IsAirObjectsHaveCollision(playerShip.Position, playerShip.Radius, airObjects[i].Position, airObjects[i].Radius))
                 {
                     playerShip.CollisionWithOtherAirObject(airObjects[i]);
                     airObjects[i].CollisionWithOtherAirObject(playerShip);
@@ -127,13 +127,6 @@ namespace AirForce
             }
         }
 
-        private bool IsAirObjectsHaveCollision(AirObject airObject1, AirObject airObject2)
-        {
-            return Math.Pow(airObject1.Radius + airObject2.Radius, 2) >
-                   Math.Pow(airObject1.Position.X - airObject2.Position.X, 2)
-                   + Math.Pow(airObject1.Position.Y - airObject2.Position.Y, 2);
-        }
-
         private void AddNewRandomEnemy()
         {
             Point2D startPosition;
@@ -141,7 +134,7 @@ namespace AirForce
             int movespeedShift;
 
             int randomNumber = random.Next(0, 4);
-            
+
             switch (randomNumber)
             {
                 case 0:
@@ -192,6 +185,13 @@ namespace AirForce
                     airObjects.Add(new Meteor(startPosition, radius, movespeedShift));
                     break;
             }
+        }
+
+        public static bool IsAirObjectsHaveCollision(Point2D obj1Position, int obj1Radius, Point2D obj2Position, int obj2Radius)
+        {
+            return Math.Pow(obj1Radius + obj2Radius, 2) >=
+                   Math.Pow(obj1Position.X - obj2Position.X, 2)
+                   + Math.Pow(obj1Position.Y - obj2Position.Y, 2);
         }
 
         #region drawingMethods

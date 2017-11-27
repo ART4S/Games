@@ -80,16 +80,17 @@ namespace AirForce.AirObjects
                 Point2D currentPosition = pair.Key;
                 Point2D currentBulletsShift = pair.Value;
 
-                bool isBulletsInFront = playerBullets.Any(x => IsBulletInFront(currentPosition, x.Position + currentBulletsShift, x.Radius));
-                bool isHaveCollisionWithBullets = playerBullets.Any(x => IsHaveCollisionToBullet(currentPosition, x.Position + currentBulletsShift, x.Radius));
+                bool isBulletsInFront = playerBullets.Any(x => IsAirObjectInFront(currentPosition, x.Position + currentBulletsShift, x.Radius));
+                bool isHaveCollisionWithBullets = playerBullets.Any(x => GameController.IsAirObjectsHaveCollision(currentPosition, Radius, x.Position + currentBulletsShift, x.Radius));
 
-                if (!isBulletsInFront || IsPositionOutOfGameFieldLeftBorder(currentPosition))
+                if (!isBulletsInFront ||
+                    IsPositionOutOfGameFieldLeftBorder(currentPosition))
                     return RestorePath(savePaths, currentPosition);
 
                 if (isHaveCollisionWithBullets ||
                     IsPositionOutOfGroundLine(currentPosition, groundLine) ||
                     IsPositionOutOfGameFieldTopBorder(currentPosition))
-                    break;
+                    continue;
 
                 Point2D moveUpPosition = currentPosition - new Point2D(Movespeed, Movespeed);
                 Point2D moveDownPosition = currentPosition - new Point2D(Movespeed, -Movespeed);
@@ -131,30 +132,23 @@ namespace AirForce.AirObjects
             return path;
         }
 
-        private bool IsBulletInFront(Point2D chaserShipPosition, Point2D bulletPosition, int bulletRadius)
+        private bool IsAirObjectInFront(Point2D chaserShipPosition, Point2D objPosition, int objRadius)
         {
             int chaserShipTopBorderY = chaserShipPosition.Y - Radius;
             int chaserShipBottomBorderY = chaserShipPosition.Y + Radius;
 
-            int bulletTopBorderY = bulletPosition.Y - bulletRadius;
-            int bulletBottomBorderY = bulletPosition.Y + bulletRadius;
+            int objectTopBorderY = objPosition.Y - objRadius;
+            int objectBottomBorderY = objPosition.Y + objRadius;
 
-            bool isHaveMutualX = bulletPosition.X - bulletRadius <= chaserShipPosition.X - Radius;
-            bool isHaveMutualY = Math.Max(bulletTopBorderY, chaserShipTopBorderY) <= Math.Min(bulletBottomBorderY, chaserShipBottomBorderY);
+            bool isHaveMutualX = objPosition.X - objRadius <= chaserShipPosition.X + Radius;
+            bool isHaveMutualY = Math.Max(objectTopBorderY, chaserShipTopBorderY) <= Math.Min(objectBottomBorderY, chaserShipBottomBorderY);
 
             return isHaveMutualX && isHaveMutualY;
         }
 
-        private bool IsHaveCollisionToBullet(Point2D chaserShipPosition, Point2D bulletPosition, int bulletRadius)
-        {
-            return Math.Pow(Radius + bulletRadius, 2) >=
-                   Math.Pow(chaserShipPosition.X - bulletPosition.X, 2)
-                   + Math.Pow(chaserShipPosition.Y - bulletPosition.Y, 2);
-        }
-
         private void ChangeShootingCooldown()
         {
-            if (!playerShip.IsInFrontAirObject(this))
+            if (!IsAirObjectInFront(Position, playerShip.Position, playerShip.Radius))
             {
                 shootingCooldown = 0;
                 IsShoting = false;

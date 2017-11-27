@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace AirForce.AirObjects
@@ -53,20 +52,6 @@ namespace AirForce.AirObjects
 
             if (IsPositionOutOfGroundLine(nextPosition, groundLine))
                 Durability = 0;
-        }
-
-        public bool IsInFrontAirObject(AirObject airObject)
-        {
-            int playerTopBorderY = Position.Y - Radius;
-            int playerBottomBorderY = Position.Y + Radius;
-
-            int airObjectTopBorderY = airObject.Position.Y - airObject.Radius;
-            int airObjectBottomBorderY = airObject.Position.Y + airObject.Radius;
-
-            bool isHaveMutualX = Position.X + Radius < airObject.Position.X - airObject.Radius;
-            bool isHaveMutualY = Math.Max(airObjectTopBorderY, playerTopBorderY) < Math.Min(airObjectBottomBorderY, playerBottomBorderY);
-
-            return isHaveMutualX && isHaveMutualY;
         }
 
         public void Refresh(Point2D position, int durability)
