@@ -59,5 +59,10 @@ namespace AirForce.AirObjects
             return position.Y + Radius >= groundlLine.FirstPoint.Y ||
                    position.Y + Radius >= groundlLine.SecondPoint.Y;
         }
+
+        protected bool IsBodyOutOfGameFieldLeftBorder(Point2D position)
+        {
+            return position.X + Radius < 0;
+        }
     }
 }

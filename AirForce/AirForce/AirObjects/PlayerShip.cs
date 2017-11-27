@@ -31,7 +31,7 @@ namespace AirForce.AirObjects
                     Durability--;
                     break;
 
-                case Bird _:
+                case FlyingSaucer _:
                     Durability -= 5;
                     break;
             }

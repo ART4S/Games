@@ -34,7 +34,7 @@ namespace AirForce.AirObjects
             if (!TryDodgePlayerBullets(playerBullets, groundLine))
                 Position -= new Point2D(Movespeed, 0);
 
-            if (IsPositionOutOfGameFieldLeftBorder(Position))
+            if (IsBodyOutOfGameFieldLeftBorder(Position))
                 Durability = 0;
         }
 
@@ -81,7 +81,7 @@ namespace AirForce.AirObjects
                 bool isHaveCollisionWithBullets = playerBullets.Any(x => GameController.IsAirObjectsHaveCollision(currentPosition, Radius, x.Position + currentBulletsShift, x.Radius));
 
                 if (!isBulletsInFront ||
-                    IsPositionOutOfGameFieldLeftBorder(currentPosition))
+                    IsBodyOutOfGameFieldLeftBorder(currentPosition))
                     return RestorePath(savePaths, currentPosition);
 
                 if (isHaveCollisionWithBullets ||

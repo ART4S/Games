@@ -15,15 +15,15 @@ namespace AirForce
         private readonly Size gameFieldSize;
         private readonly Line groundLine;
 
-        private readonly PlayerShip playerShip;
-        private readonly Point2D playerShipStartPosition;
-
-        private readonly Timer enemyCreatorTimer = new Timer();
-        private readonly Timer objectMovingTimer = new Timer();
-
-        private readonly Random random = new Random();
+        private readonly PlayerShip player;
+        private readonly Point2D playerStartPosition;
 
         private readonly List<AirObject> airObjects = new List<AirObject>();
+
+        private readonly Timer enemiesCreatorTimer = new Timer();
+        private readonly Timer airObjectsMovingTimer = new Timer();
+
+        private readonly Random random = new Random();
 
         /// -------------------------------------------------------
 
@@ -36,23 +36,23 @@ namespace AirForce
                 new Point2D(gameFieldSize.Width, gameFieldSize.Height - 30)
             );
 
-            playerShipStartPosition = new Point2D
+            playerStartPosition = new Point2D
             {
                 X = 150,
                 Y = groundLine.FirstPoint.Y / 2
             };
 
-            playerShip = new PlayerShip(playerShipStartPosition, 30, 6);
+            player = new PlayerShip(playerStartPosition, 30, 6);
 
-            // enemyCreatorTimer setting
-            enemyCreatorTimer.Interval = 1000; // 1500
-            enemyCreatorTimer.Tick += (s, e) => AddNewRandomEnemy();
-            enemyCreatorTimer.Start();
+            // enemiesCreatorTimer setting
+            enemiesCreatorTimer.Interval = 1000; // 1500
+            enemiesCreatorTimer.Tick += (s, e) => AddNewRandomEnemy();
+            enemiesCreatorTimer.Start();
 
-            // objectMovingTimer setting
-            objectMovingTimer.Interval = 1;
-            objectMovingTimer.Tick += (s, e) => Update();
-            objectMovingTimer.Start();         
+            // airObjectsMovingTimer setting
+            airObjectsMovingTimer.Interval = 1;
+            airObjectsMovingTimer.Tick += (s, e) => Update();
+            airObjectsMovingTimer.Start();         
         }
 
         public void TryMovePlayer(Point2D movespeedModifer)
@@ -60,7 +60,7 @@ namespace AirForce
             if (gameState == GameState.Wait)
                 return;
 
-            playerShip.Move(movespeedModifer, gameFieldSize, groundLine);
+            player.Move(movespeedModifer, gameFieldSize, groundLine);
         }
 
         public void TryCreatePlayerBullet()
@@ -73,8 +73,8 @@ namespace AirForce
 
             Point2D bulletStartPosition = new Point2D
             {
-                X = playerShip.Position.X + playerShip.Radius,
-                Y = playerShip.Position.Y
+                X = player.Position.X + player.Radius,
+                Y = player.Position.Y
             };
 
             airObjects.Add(new PlayerBullet(bulletStartPosition, 8, 8));
@@ -97,7 +97,7 @@ namespace AirForce
         private void Restart()
         {
             airObjects.Clear();
-            playerShip.Refresh(playerShipStartPosition, 100);
+            player.Refresh(playerStartPosition, 100);
             gameState = GameState.Play;
         }
 
@@ -112,19 +112,19 @@ namespace AirForce
                         airObjects[j].CollisionWithOtherAirObject(airObjects[i]);
                     }
 
-                if (IsAirObjectsHaveCollision(playerShip.Position, playerShip.Radius, airObjects[i].Position, airObjects[i].Radius))
+                if (IsAirObjectsHaveCollision(player.Position, player.Radius, airObjects[i].Position, airObjects[i].Radius))
                 {
-                    playerShip.CollisionWithOtherAirObject(airObjects[i]);
-                    airObjects[i].CollisionWithOtherAirObject(playerShip);
+                    player.CollisionWithOtherAirObject(airObjects[i]);
+                    airObjects[i].CollisionWithOtherAirObject(player);
                 }
             }
 
             airObjects.RemoveAll(a => a.Durability <= 0);
 
-            if (playerShip.Durability <= 0)
+            if (player.Durability <= 0)
             {
                 gameState = GameState.Wait;
-                playerShip.Refresh(new Point2D(-200, -200), 0);
+                player.Refresh(new Point2D(-200, -200), 0);
             }
         }
 
@@ -159,19 +159,19 @@ namespace AirForce
                         Y = random.Next(radius, groundLine.FirstPoint.Y - radius)
                     };
 
-                    airObjects.Add(new ChaserShip(startPosition, radius, movespeedShift, playerShip));
+                    airObjects.Add(new ChaserShip(startPosition, radius, movespeedShift, player));
                     break;
 
                 case 2:
-                    radius = 15;
+                    radius = 25;
                     movespeedShift = 2;
                     startPosition = new Point2D
                     {
                         X = gameFieldSize.Width + radius,
-                        Y = random.Next(groundLine.FirstPoint.Y - 10 * radius, groundLine.FirstPoint.Y - radius)
+                        Y = random.Next(groundLine.FirstPoint.Y - 5 * radius, groundLine.FirstPoint.Y - radius)
                     };
 
-                    airObjects.Add(new Bird(startPosition, radius, movespeedShift));
+                    airObjects.Add(new FlyingSaucer(startPosition, radius, movespeedShift));
                     break;
 
                 case 3:
@@ -201,7 +201,7 @@ namespace AirForce
         {
             airObjects.ForEach(o => o.Draw(graphics));
 
-            playerShip.Draw(graphics);
+            player.Draw(graphics);
 
             DrawGround(graphics);
 
@@ -249,7 +249,7 @@ namespace AirForce
 
             Font font = new Font("Segoe UI", 15, FontStyle.Bold);
             Brush brush = Brushes.White;
-            string message = " x " + playerShip.Durability;
+            string message = " x " + player.Durability;
 
             graphics.DrawString(message, font, brush, new PointF(18, -5));
         }

@@ -15,7 +15,7 @@ namespace AirForce.AirObjects
         {
             Position -= new Point2D(Movespeed, 0);
 
-            if (IsPositionOutOfGameFieldLeftBorder(Position))
+            if (IsBodyOutOfGameFieldLeftBorder(Position))
                 Durability = 0;
         }
 

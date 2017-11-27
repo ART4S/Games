@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace AirForce.AirObjects
 {
-    public sealed class Bird : AirObject
+    public sealed class FlyingSaucer : AirObject
     {
         private readonly Random random = new Random();
 
-        public Bird(Point2D position, int radius, int movespeed)
-            : base(position, radius, movespeed, Properties.Resources.bird)
+        public FlyingSaucer(Point2D position, int radius, int movespeed)
+            : base(position, radius, movespeed, Properties.Resources.flying_saucer)
         {
         }
 
@@ -27,7 +27,7 @@ namespace AirForce.AirObjects
 
             Position = nextPosition;
 
-            if (IsPositionOutOfGameFieldLeftBorder(Position))
+            if (IsBodyOutOfGameFieldLeftBorder(Position))
                 Durability = 0;
         }
 
