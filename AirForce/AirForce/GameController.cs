@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using AirForce.AirObjects;
+using System.Drawing;
 using AirForce.Enums;
+using AirForce.AirObjects;
+using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace AirForce
 {
@@ -33,7 +33,8 @@ namespace AirForce
 
             groundLine = new Line(
                 new Point2D(0, gameFieldSize.Height - 30),
-                new Point2D(gameFieldSize.Width, gameFieldSize.Height - 30));
+                new Point2D(gameFieldSize.Width, gameFieldSize.Height - 30)
+            );
 
             playerShipStartPosition = new Point2D
             {
