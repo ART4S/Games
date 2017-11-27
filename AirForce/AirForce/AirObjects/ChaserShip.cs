@@ -31,9 +31,8 @@ namespace AirForce.AirObjects
                 .OfType<PlayerBullet>()
                 .ToList();
 
-            TryDodgePlayerBullets(playerBullets, groundLine);
-
-            Position -= new Point2D(Movespeed, 0);
+            if (!TryDodgePlayerBullets(playerBullets, groundLine))
+                Position -= new Point2D(Movespeed, 0);
 
             if (IsPositionOutOfGameFieldLeftBorder(Position))
                 Durability = 0;
@@ -51,18 +50,16 @@ namespace AirForce.AirObjects
             }
         }
 
-        private void TryDodgePlayerBullets(List<PlayerBullet> playerBullets, Line groundLine)
+        private bool TryDodgePlayerBullets(List<PlayerBullet> playerBullets, Line groundLine)
         {         
             List<Point2D> minPathToFreeTrajectory = FindMinPathToFreeTrajectory(playerBullets, groundLine);
 
             if (!minPathToFreeTrajectory.Any())
-                return;
+                return false;
 
-            if (minPathToFreeTrajectory.First().Y < Position.Y)
-                Position -= new Point2D(0, Movespeed);
+            Position = minPathToFreeTrajectory.First();
 
-            if (minPathToFreeTrajectory.First().Y > Position.Y)
-                Position += new Point2D(0, Movespeed);
+            return true;
         }
 
         private List<Point2D> FindMinPathToFreeTrajectory(List<PlayerBullet> playerBullets, Line groundLine)
