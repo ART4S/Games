@@ -15,7 +15,7 @@ namespace AirForce.AirObjects
         public bool IsShoting { get; private set; }
 
         public ChaserShip(Point2D position, int radius, int movespeed, PlayerShip playerShip)
-            : base(position, radius, movespeed, Properties.Resources.enemy_ship)
+            : base(position, radius, movespeed, Properties.Resources.chaser_ship)
         {
             this.playerShip = playerShip;
 

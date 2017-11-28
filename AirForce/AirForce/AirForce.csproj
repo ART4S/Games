@@ -101,15 +101,6 @@
     <None Include="Resources\enemy_shot.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\chaser_ship.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bomber_ship.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bird.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\explosion.png" />
   </ItemGroup>
   <ItemGroup>
@@ -119,10 +110,16 @@
     <None Include="Resources\Meteor.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\flying_saucer.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\asteroid.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\flying_saucer.png" />
+    <None Include="Resources\chaser_ship.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\big_enemy_ship.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

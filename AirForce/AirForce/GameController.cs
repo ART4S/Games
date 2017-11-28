@@ -175,7 +175,7 @@ namespace AirForce
                     break;
 
                 case 3:
-                    radius = 70;
+                    radius = 100;
                     movespeedShift = 2;
                     startPosition = new Point2D
                     {
