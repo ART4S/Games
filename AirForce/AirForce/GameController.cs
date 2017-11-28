@@ -42,7 +42,7 @@ namespace AirForce
                 Y = groundLine.FirstPoint.Y / 2
             };
 
-            player = new PlayerShip(playerStartPosition, 30, 6);
+            player = new PlayerShip(playerStartPosition, 30, 4);
 
             // enemiesCreatorTimer setting
             enemiesCreatorTimer.Interval = 1000; // 1500
@@ -205,7 +205,7 @@ namespace AirForce
 
             DrawGround(graphics);
 
-            DrawPlayerDurabulity(graphics);
+            DrawPlayerHealthBar(graphics);
 
             if (gameState == GameState.Wait)
                 DrawWaitingStateString(graphics);
@@ -223,7 +223,7 @@ namespace AirForce
         {
             string message = "Press SPACE to start game";
 
-            Font font = new Font("Segoe UI", 12, FontStyle.Bold);
+            Font font = new Font("Segoe UI", 20, FontStyle.Bold);
             Brush brush = Brushes.White;
             Rectangle gameFieldRectangle = new Rectangle(new Point(), gameFieldSize);
 
@@ -236,22 +236,16 @@ namespace AirForce
             graphics.DrawString(message, font, brush, gameFieldRectangle, stringFormat);
         }
 
-        private void DrawPlayerDurabulity(Graphics graphics)
+        private void DrawPlayerHealthBar(Graphics graphics)
         {
-            Image image = Properties.Resources.heart;
-            Rectangle imageRectangle = new Rectangle
+            Brush brush = Brushes.Red;
+            Rectangle healthBarRectangle = new Rectangle
             {
-                Location = new Point2D(0, 0),
-                Size = new Size(20, 20)
+                Location = new Point2D(2, 2),
+                Size = new Size(player.Durability * 3, 30)
             };
 
-            graphics.DrawImage(image, imageRectangle);
-
-            Font font = new Font("Segoe UI", 15, FontStyle.Bold);
-            Brush brush = Brushes.White;
-            string message = " x " + player.Durability;
-
-            graphics.DrawString(message, font, brush, new PointF(18, -5));
+            graphics.FillRectangle(brush, healthBarRectangle);
         }
 
         #endregion drawingMethods

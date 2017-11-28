@@ -25,7 +25,7 @@ namespace AirForce.AirObjects
                 case BigShip _:
                 case ChaserShip _:
                 case Meteor _:
-                    Durability = 0;
+                    Durability--;
                     break;
             }
         }

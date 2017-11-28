@@ -45,7 +45,7 @@ namespace AirForce.AirObjects
                 case PlayerShip _:
                 case PlayerBullet _:
                 case Meteor _:
-                    Durability = 0;
+                    Durability--;
                     break;
             }
         }

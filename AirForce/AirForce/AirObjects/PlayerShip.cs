@@ -22,9 +22,6 @@ namespace AirForce.AirObjects
             switch (otherAirObject)
             {
                 case BigShip _:
-                    Durability -= 2;
-                    break;
-
                 case Meteor _:
                 case ChaserShip _:
                 case EnemyBullet _:
@@ -32,7 +29,7 @@ namespace AirForce.AirObjects
                     break;
 
                 case FlyingSaucer _:
-                    Durability -= 5;
+                    Durability -= 10;
                     break;
             }
         }

@@ -101,12 +101,6 @@
     <None Include="Resources\enemy_shot.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\explosion.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\heart.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Meteor.png" />
   </ItemGroup>
   <ItemGroup>

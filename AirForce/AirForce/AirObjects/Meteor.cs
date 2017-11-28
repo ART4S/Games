@@ -9,9 +9,9 @@ namespace AirForce.AirObjects
         public Meteor(Point2D position, int radius, int movespeed)
             : base(position, radius, movespeed, Properties.Resources.meteor)
         {
-            Durability = new Random().Next(5, 8 + 1);
+            Durability = new Random().Next(8, 15 + 1);
 
-            if (Durability == 8)
+            if (Durability == 15)
                 Image = Properties.Resources.asteroid;
         }
 

@@ -24,7 +24,7 @@ namespace AirForce.AirObjects
             {
                 case PlayerShip _:
                 case Meteor _:
-                    Durability = 0;
+                    Durability--;
                     break;
             }
         }
