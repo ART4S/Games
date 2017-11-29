@@ -45,7 +45,7 @@ namespace AirForce
             player = new PlayerShip(playerStartPosition, 30, 4);
 
             // enemiesCreatorTimer setting
-            enemiesCreatorTimer.Interval = 1000; // 1500
+            enemiesCreatorTimer.Interval = 1000;
             enemiesCreatorTimer.Tick += (s, e) => AddNewRandomEnemy();
             enemiesCreatorTimer.Start();
 
@@ -199,14 +199,14 @@ namespace AirForce
 
         public void DrawAllElements(Graphics graphics)
         {
-            airObjects.ForEach(o => o.Draw(graphics));
-
-            player.Draw(graphics);
+            DrawPlayerHealthBar(graphics);
 
             DrawGround(graphics);
 
-            DrawPlayerHealthBar(graphics);
+            airObjects.ForEach(o => o.Draw(graphics));
 
+            player.Draw(graphics);
+            
             if (gameState == GameState.Wait)
                 DrawWaitingStateString(graphics);
         }
@@ -238,14 +238,37 @@ namespace AirForce
 
         private void DrawPlayerHealthBar(Graphics graphics)
         {
-            Brush brush = Brushes.Red;
-            Rectangle healthBarRectangle = new Rectangle
+            // frame
+            Pen framePen = new Pen(Color.White, 3);
+            Rectangle frameRectangle = new Rectangle
             {
-                Location = new Point2D(2, 2),
-                Size = new Size(player.Durability * 3, 30)
+                Location = new Point2D(4, 4),
+                Size = new Size(303, 33)
             };
 
-            graphics.FillRectangle(brush, healthBarRectangle);
+            graphics.DrawRectangle(framePen, frameRectangle);
+
+            // healthBar
+            Brush healthBarBrush = Brushes.Red;
+            Rectangle healthBarRectangle = new Rectangle
+            {
+                Location = new Point2D(6, 6),
+                Size = new Size(3 * player.Durability, 30)
+            };
+
+            graphics.FillRectangle(healthBarBrush, healthBarRectangle);
+
+            // text
+            string text = player.Durability.ToString();
+            Font textPen = new Font("Segoe UI", 13, FontStyle.Bold);
+            Brush textBrush = Brushes.White;
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            graphics.DrawString(text, textPen, textBrush, frameRectangle, stringFormat);
         }
 
         #endregion drawingMethods

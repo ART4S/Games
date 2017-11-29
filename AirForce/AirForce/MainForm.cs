@@ -60,12 +60,12 @@ namespace AirForce
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-            Keys pressedKey = e.KeyCode;
+            Keys depressedKey = e.KeyCode;
 
-            if (!pressedKeys.ContainsKey(pressedKey))
+            if (!pressedKeys.ContainsKey(depressedKey))
                 return;
 
-            pressedKeys[pressedKey] = false;
+            pressedKeys[depressedKey] = false;
         }
 
         private void MovePlayer()
