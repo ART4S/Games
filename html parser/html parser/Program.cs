@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace html_parser
 {
-    internal class Program
+    class Program
     {
         static void Main()
         {
@@ -22,28 +21,23 @@ namespace html_parser
 
             int acceptedTasksCount = int.Parse(Regex.Match(htmlPage, acceptedTasksPattern).Value);
 
-            List<Match> tasksId = Regex.Matches(htmlPage, taskIdPattern)
+            string[] acceptedTasks = Regex.Matches(htmlPage, taskIdPattern)
                 .OfType<Match>()
                 .Take(acceptedTasksCount)
-                .ToList();
+                .Select(x =>
+                {
+                    string taskLeaderboard = webClient.DownloadString("http://acmp.ru/index.asp?main=bstatus&id_t=" + x.Value + "&lang=" + language);
 
-            var acceptedTasks = new Dictionary<int, int>();
+                    return new { number = int.Parse(x.Value), place = x.Success ? int.Parse(Regex.Match(taskLeaderboard, placePattern).Value) : 99 };
+                })
+                .OrderByDescending(x => x.place)
+                .ThenBy(x => x.number)
+                .Select(x => x.number + " " + x.place)
+                .ToArray();
 
-            foreach (var task in tasksId)
-            {
-                string taskLeaderboard = webClient.DownloadString("http://acmp.ru/index.asp?main=bstatus&id_t=" + task.Value + "&lang=" + language);
+            string results = string.Join("\n", acceptedTasks);
 
-                acceptedTasks.Add(int.Parse(task.Value),
-                    task.Success
-                    ? int.Parse(Regex.Match(taskLeaderboard, placePattern).Value)
-                    : 99);
-            }
-
-            acceptedTasks
-                .OrderByDescending(x => x.Value)
-                .ThenBy(x => x.Key)
-                .ToList()
-                .ForEach(x => Console.WriteLine(x.Key + " " + x.Value));
+            Console.WriteLine(results);
         }
     }
 }
