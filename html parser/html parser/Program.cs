@@ -6,23 +6,26 @@ using System.Text.RegularExpressions;
 
 namespace html_parser
 {
-    class Program
+    internal class Program
     {
         static void Main()
         {
             const string personId = "168207";
             const string language = "cs";
 
+            const string taskIdPattern = "(?<=id_task=)\\d+";
+            const string acceptedTasksPattern = "((?<=\\()\\d+(?=\\):</b>))";
+            const string placePattern = "(?<=<td>)\\d+(?=</td>(([^>]*>){3})[^<]*<[^0-9]*" + personId + ")";
+
             WebClient webClient = new WebClient();
             string htmlPage = webClient.DownloadString("http://acmp.ru/index.asp?main=user&id=" + personId + "&lang=" + language);
-            int acceptedTasksCount = int.Parse(Regex.Match(htmlPage, "((?<=\\()\\d+(?=\\):</b>))").Value);
 
-            List<Match> tasksId = Regex.Matches(htmlPage, "(?<=id_task=)\\d+")
+            int acceptedTasksCount = int.Parse(Regex.Match(htmlPage, acceptedTasksPattern).Value);
+
+            List<Match> tasksId = Regex.Matches(htmlPage, taskIdPattern)
                 .OfType<Match>()
                 .Take(acceptedTasksCount)
                 .ToList();
-
-            string searchPlacePattern = "(?<=<td>)\\d+(?=</td>(([^>]*>){3})[^<]*<[^0-9]*" + personId + ")";
 
             var acceptedTasks = new Dictionary<int, int>();
 
@@ -32,7 +35,7 @@ namespace html_parser
 
                 acceptedTasks.Add(int.Parse(task.Value),
                     task.Success
-                    ? int.Parse(Regex.Match(taskLeaderboard, searchPlacePattern).Value)
+                    ? int.Parse(Regex.Match(taskLeaderboard, placePattern).Value)
                     : 99);
             }
 
