@@ -24,11 +24,16 @@ namespace html_parser
             string[] acceptedTasks = Regex.Matches(htmlPage, taskIdPattern)
                 .OfType<Match>()
                 .Take(acceptedTasksCount)
-                .Select(x =>
+                .Select(match =>
                 {
-                    string taskLeaderboard = webClient.DownloadString("http://acmp.ru/index.asp?main=bstatus&id_t=" + x.Value + "&lang=" + language);
+                    string taskLeaderboard = webClient.DownloadString("http://acmp.ru/index.asp?main=bstatus&id_t=" + match.Value + "&lang=" + language);
 
-                    return new { number = int.Parse(x.Value), place = x.Success ? int.Parse(Regex.Match(taskLeaderboard, placePattern).Value) : 99 };
+                    int number = int.Parse(match.Value);
+                    int place = match.Success
+                        ? int.Parse(Regex.Match(taskLeaderboard, placePattern).Value)
+                        : 99;
+
+                    return (number, place);
                 })
                 .OrderByDescending(x => x.place)
                 .ThenBy(x => x.number)
