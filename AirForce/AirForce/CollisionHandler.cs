@@ -7,65 +7,96 @@ namespace AirForce
 {
     public class CollisionHandler
     {
-        private readonly Dictionary<FlyingObjectType, FlyingObjectType[]> collisionTable;
+        #region Fields
 
-        public CollisionHandler(Dictionary<FlyingObjectType, FlyingObjectType[]> collisionTable)
+        private readonly GameController game;
+
+        private Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable
         {
-            this.collisionTable = collisionTable;
+            get => game.CollisionTable;
+        }
+
+        private Ground Ground
+        {
+            get => game.Ground;
+        }
+
+        private Field GameField
+        {
+            get => game.GameField;
+        }
+
+        private List<FlyingObject> Objects
+        {
+            get => game.FlyingObjects;
+        }
+
+        private FlyingObjectsFactory Factory
+        {
+            get => game.FlyingObjectsFactory;
+        }
+
+        private FlyingObject Player
+        {
+            get => game.Player;
+        }
+
+        #endregion
+
+        public CollisionHandler(GameController game)
+        {
+            this.game = game;
         }
 
         #region Methods
 
-        public List<FlyingObject> GetNewEnemyBullets(List<FlyingObject> flyingObjects, Field gameField, Ground ground, FlyingObjectsFactory factory)
+        public List<FlyingObject> GetNewEnemyBullets()
         {
-            List<FlyingObject> chaserShips = flyingObjects
-                .Where(o => o.Type == FlyingObjectType.ChaserShip)
+            if (Player.Strength == 0)
+                return new List<FlyingObject>();
+
+            List<ShootingFlyingObject> shootingObjects = Objects
+                .OfType<ShootingFlyingObject>()
                 .ToList();
 
-            FlyingObject player = flyingObjects
-                .Find(o => o.Type == FlyingObjectType.PlayerShip);
-
-            List<FlyingObject> newEnemyBullets = chaserShips
-                .Where(chaser => IsInFront(player, chaser))
-                .Select(chaser => factory.GetEnemyBullet(gameField, ground, chaser))
+            List<FlyingObject> newEnemyBullets = shootingObjects
+                .Where(s => s.IsShooting && IsInFront(Player, s))
+                .Select(s => Factory.GetEnemyBullet(GameField, Ground, s))
                 .ToList();
 
             return newEnemyBullets;
         }
 
-        public void HandleCollisions(List<FlyingObject> flyingObjects, Field gameField, Ground ground)
+        public void FindCollisionsAndChangeStrengths()
         {
-            for (int i = 0; i < flyingObjects.Count - 1; i++)
-                for (int j = i + 1; j < flyingObjects.Count; j++)
+            for (int i = 0; i < Objects.Count - 1; i++)
+                for (int j = i + 1; j < Objects.Count; j++)
                 {
-                    FlyingObject objA = flyingObjects[i];
-                    FlyingObject objB = flyingObjects[j];
+                    FlyingObject objA = Objects[i];
+                    FlyingObject objB = Objects[j];
 
                     if (CanCollide(objA, objB) && IsIntersects(objA, objB))
                         ChangeStrength(objA, objB);
                 }
 
-            foreach (FlyingObject obj in flyingObjects)
+            foreach (FlyingObject obj in Objects)
             {
-                if (IsOutOfFieldLeftBorder(obj, gameField) ||
-                    IsIntersectGround(obj, ground))
+                if (IsOutOfFieldLeftBorder(obj, GameField) ||
+                    IsIntersectGround(obj, Ground))
                     obj.Strength = 0;
 
                 if (obj.Type == FlyingObjectType.PlayerBullet &&
-                    IsOutOfFieldRightBorder(obj, gameField))
+                    IsOutOfFieldRightBorder(obj, GameField))
                     obj.Strength = 0;
-            }
-
-            flyingObjects.RemoveAll(f => f.Strength <= 0 && f.Type != FlyingObjectType.PlayerShip);
-                
+            }             
         }
 
         private bool CanCollide(FlyingObject objA, FlyingObject objB)
         {
-            if (!collisionTable.ContainsKey(objA.Type))
+            if (!CollisionTable.ContainsKey(objA.Type))
                 throw new KeyNotFoundException();
 
-            return collisionTable[objA.Type].Contains(objB.Type);
+            return CollisionTable[objA.Type].Contains(objB.Type);
         }
 
         private void ChangeStrength(FlyingObject objA, FlyingObject objB)

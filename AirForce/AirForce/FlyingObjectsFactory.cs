@@ -47,7 +47,7 @@ namespace AirForce
         {
             int radius = 30;
 
-            var chaserShip = new FlyingObject(
+            var chaserShip = new ShootingFlyingObject(
                 FlyingObjectType.ChaserShip,
                 new Point2D(
                     x: gameField.Size.Width + radius,
@@ -137,6 +137,19 @@ namespace AirForce
             meteor.Mover = new MeteorMover(meteor);
 
             return meteor;
+        }
+
+        public FlyingObject GetDeadPlayer(Field gameField, Ground ground)
+        {
+            var playerShip = new FlyingObject(
+                FlyingObjectType.PlayerShip,
+                new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                30,
+                4,
+                0,
+                Properties.Resources.player_ship);
+
+            return playerShip;
         }
     }
 }

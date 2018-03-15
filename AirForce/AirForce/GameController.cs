@@ -11,20 +11,21 @@ namespace AirForce
         #region Fields
 
         public Ground Ground { get; }
+
         public Field GameField { get; }
+
         public List<FlyingObject> FlyingObjects { get; } = new List<FlyingObject>();
+
         public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
+
         public FlyingObject Player
         {
             get
             {
-                if (!FlyingObjects.Any())
-                    return null;
+                if (FlyingObjects.Count == 0 || FlyingObjects.First().Type != FlyingObjectType.PlayerShip)
+                    FlyingObjects.Insert(0, FlyingObjectsFactory.GetDeadPlayer(GameField, Ground));
 
-                if (FlyingObjects[0].Type != FlyingObjectType.PlayerShip)
-                    return null;
-
-                return FlyingObjects[0];
+                return FlyingObjects.First();
             }
             set
             {
@@ -35,10 +36,14 @@ namespace AirForce
             }
         }
 
-        public IGameState GameState { get; set; }
+        public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
         private readonly GamePainter painter;
-        private readonly CollisionHandler collisionHandler;
+
+        public CollisionHandler CollisionHandler { get; }
+
+        public IGameState GameState { get; set; }
+
         private readonly Timer enemiesCreatingTimer = new Timer();
         private readonly Timer objectsMovingTimer = new Timer();
         private readonly Random random = new Random();
@@ -47,7 +52,7 @@ namespace AirForce
 
         public GameController(Size gameFieldSize)
         {
-            var collisionTable = new Dictionary<FlyingObjectType, FlyingObjectType[]>
+            CollisionTable = new Dictionary<FlyingObjectType, FlyingObjectType[]>
             {
                 { FlyingObjectType.PlayerShip, new []{ FlyingObjectType.Meteor, FlyingObjectType.BigShip, FlyingObjectType.ChaserShip, FlyingObjectType.EnemyBullet, FlyingObjectType.FlyingSaucer } },
                 { FlyingObjectType.BigShip, new[]{ FlyingObjectType.Meteor, FlyingObjectType.PlayerShip, FlyingObjectType.PlayerBullet } },
@@ -58,11 +63,11 @@ namespace AirForce
                 { FlyingObjectType.EnemyBullet, new []{ FlyingObjectType.Meteor, FlyingObjectType.Meteor } }
             };
 
-            collisionHandler = new CollisionHandler(collisionTable);
+            CollisionHandler = new CollisionHandler(this);
             painter = new GamePainter(this);
+            GameState = new PlayingGameState(this);
             GameField = new Field(new Point2D(), gameFieldSize);
             Ground = new Ground(new Point2D(0, gameFieldSize.Height - 30), gameFieldSize);
-            GameState = new PlayingGameState(this);
             Player = FlyingObjectsFactory.GetPlayerShip(GameField, Ground);
 
             enemiesCreatingTimer.Interval = 1000;
@@ -88,15 +93,14 @@ namespace AirForce
 
         private void Update()
         {
-            //FlyingObjects.AddRange(collisionHandler.GetNewEnemyBullets(FlyingObjects, GameField, Ground, FlyingObjectsFactory));
+            FlyingObjects.AddRange(CollisionHandler.GetNewEnemyBullets());
 
             foreach (FlyingObject obj in FlyingObjects)
                 obj.Move(GameField, Ground, FlyingObjects);
 
-            collisionHandler.HandleCollisions(FlyingObjects, GameField, Ground);
-
-            if (Player.Strength <= 0)
-                GameState = new WaitingGameState(this);
+            CollisionHandler.FindCollisionsAndChangeStrengths();
+            FlyingObjects.RemoveAll(f => f.Strength <= 0);
+            GameState.Update();
         }
 
         public void Restart()

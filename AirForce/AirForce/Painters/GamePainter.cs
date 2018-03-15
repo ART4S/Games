@@ -21,7 +21,7 @@ namespace AirForce
 
             game.Ground.Paint(graphics);
 
-            foreach (FlyingObject obj in game.FlyingObjects.Where(f => f.Strength > 0))
+            foreach (FlyingObject obj in game.FlyingObjects)
                 obj.Paint(graphics);
 
             if (game.GameState is WaitingGameState)
