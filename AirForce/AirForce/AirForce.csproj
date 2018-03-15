@@ -45,26 +45,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AirObjects\AirObject.cs" />
-    <Compile Include="AirObjects\EnemyBullet.cs" />
-    <Compile Include="AirObjects\PlayerBullet.cs" />
-    <Compile Include="AirObjects\BigShip.cs" />
-    <Compile Include="AirObjects\FlyingSaucer.cs" />
-    <Compile Include="AirObjects\ChaserShip.cs" />
-    <Compile Include="AirObjects\Meteor.cs" />
+    <Compile Include="Interfaces\IGameState.cs" />
+    <Compile Include="Movers\BigShipMover.cs" />
+    <Compile Include="Movers\ChaserShipMover.cs" />
+    <Compile Include="Interfaces\IManualMover.cs" />
+    <Compile Include="Interfaces\IMover.cs" />
+    <Compile Include="Interfaces\IPainer.cs" />
+    <Compile Include="Movers\EnemyBulletMover.cs" />
+    <Compile Include="FlyingObject.cs" />
+    <Compile Include="CollisionHandler.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Painters\FlyingObjectPainter.cs" />
+    <Compile Include="FlyingObjectsFactory.cs" />
+    <Compile Include="Enums\FlyingObjectType.cs" />
+    <Compile Include="Movers\FlyingSaucerMover.cs" />
     <Compile Include="GameController.cs" />
-    <Compile Include="Enums\GameState.cs" />
-    <Compile Include="Line.cs" />
+    <Compile Include="Painters\GamePainter.cs" />
+    <Compile Include="Ground.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AirObjects\PlayerShip.cs" />
-    <Compile Include="Point2D.cs" />
+    <Compile Include="Movers\MeteorMover.cs" />
+    <Compile Include="Movers\PlayerShipManualMover.cs" />
+    <Compile Include="Movers\PlayerBulletMover.cs" />
+    <Compile Include="Helpers\Point2D.cs" />
+    <Compile Include="GameState\PlayingGameState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GameState\WaitingGameState.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -115,5 +126,6 @@
   <ItemGroup>
     <None Include="Resources\big_enemy_ship.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

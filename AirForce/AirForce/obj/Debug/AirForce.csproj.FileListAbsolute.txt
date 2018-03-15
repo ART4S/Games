@@ -1,0 +1,10 @@
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.csprojResolveAssemblyReference.cache
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.MainForm.resources
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.Properties.Resources.resources
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.csproj.GenerateResource.Cache
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.csproj.CoreCompileInputs.cache
+D:\GitHub Projects\trunk\AirForce\AirForce\bin\Debug\AirForce.exe.config
+D:\GitHub Projects\trunk\AirForce\AirForce\bin\Debug\AirForce.exe
+D:\GitHub Projects\trunk\AirForce\AirForce\bin\Debug\AirForce.pdb
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.exe
+D:\GitHub Projects\trunk\AirForce\AirForce\obj\Debug\AirForce.pdb

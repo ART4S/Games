@@ -28,16 +28,13 @@ namespace AirForce
                 {Keys.Space, false}
             };
 
-            // drawingTimer setting
             drawingTimer.Interval = 1;
             drawingTimer.Tick += (s, e) => GameFieldPictureBox.Refresh();
             drawingTimer.Start();
 
-            // playerShootTimer setting
             playerShootTimer.Interval = 300;
-            playerShootTimer.Tick += (s, e) => gameController.TryCreatePlayerBullet();
+            playerShootTimer.Tick += (s, e) => gameController.PlayerFire();
 
-            // playerMoveTimer setting
             playerMoveTimer.Interval = 1;
             playerMoveTimer.Tick += (s, e) => MovePlayer();
             playerMoveTimer.Start();
@@ -45,12 +42,15 @@ namespace AirForce
 
         private void GameFieldPictureBox_Paint(object sender, PaintEventArgs e)
         {
-            gameController.DrawAllElements(e.Graphics);
+            gameController.Paint(e.Graphics);
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             Keys pressedKey = e.KeyCode;
+
+            if (pressedKey == Keys.Enter)
+                gameController.Restart();
 
             if (!pressedKeys.ContainsKey(pressedKey))
                 return;
@@ -100,14 +100,14 @@ namespace AirForce
             {
                 if (playerShootTimer.Enabled == false)
                 {
-                    gameController.TryCreatePlayerBullet();
+                    gameController.PlayerFire();
                     playerShootTimer.Start();
                 }
             }
             else
                 playerShootTimer.Stop();
 
-            gameController.TryMovePlayer(playerMovespeedModifer);
+            gameController.MovePlayer(playerMovespeedModifer);
         }
     }
 }
