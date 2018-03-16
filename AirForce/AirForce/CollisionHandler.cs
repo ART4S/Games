@@ -55,16 +55,10 @@ namespace AirForce
             if (Player.Strength == 0)
                 return new List<FlyingObject>();
 
-            List<ShootingFlyingObject> shootingObjects = Objects
+            return Objects
                 .OfType<ShootingFlyingObject>()
+                .SelectMany(s => s.TryGetBullets(Player, Factory))
                 .ToList();
-
-            List<FlyingObject> newEnemyBullets = shootingObjects
-                .Where(s => s.IsShooting && IsInFront(Player, s))
-                .Select(s => Factory.GetEnemyBullet(GameField, Ground, s))
-                .ToList();
-
-            return newEnemyBullets;
         }
 
         public void FindCollisionsAndChangeStrengths()

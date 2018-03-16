@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AirForce
@@ -11,5 +12,10 @@ namespace AirForce
             : base(type, position, radius, movespeed, strength, image)
         {
         }
+
+        public List<FlyingObject> TryGetBullets(FlyingObject target, FlyingObjectsFactory factory)
+        {
+            return new List<FlyingObject>();
+        }        
     }
 }
