@@ -1,21 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Drawing;
 
 namespace AirForce
 {
     public class ShootingFlyingObject : FlyingObject
     {
-        public bool IsShooting { get; private set; }
+        private const int ShootingCooldownMaxValue = 80;
+        private int shootingCooldown = ShootingCooldownMaxValue + 1;
 
         public ShootingFlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, Image image)
             : base(type, position, radius, movespeed, strength, image)
         {
         }
 
-        public List<FlyingObject> TryGetBullets(FlyingObject target, FlyingObjectsFactory factory)
+        public bool CanMakeShoot(FlyingObject target)
         {
-            return new List<FlyingObject>();
+            if (CollisionHandler.IsInFront(target, this))
+            {
+                shootingCooldown++;
+
+                if (shootingCooldown > ShootingCooldownMaxValue)
+                {
+                    shootingCooldown = 0;
+                    return true;
+                }
+            }
+
+            return false;
         }        
     }
 }

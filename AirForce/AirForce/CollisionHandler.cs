@@ -57,7 +57,8 @@ namespace AirForce
 
             return Objects
                 .OfType<ShootingFlyingObject>()
-                .SelectMany(s => s.TryGetBullets(Player, Factory))
+                .Where(o => o.CanMakeShoot(Player))
+                .Select(o => Factory.GetEnemyBullet(GameField, Ground, o))
                 .ToList();
         }
 
@@ -66,21 +67,16 @@ namespace AirForce
             for (int i = 0; i < Objects.Count - 1; i++)
                 for (int j = i + 1; j < Objects.Count; j++)
                 {
-                    FlyingObject objA = Objects[i];
-                    FlyingObject objB = Objects[j];
-
-                    if (CanCollide(objA, objB) && IsIntersects(objA, objB))
-                        ChangeStrength(objA, objB);
+                    if (CanCollide(Objects[i], Objects[j]) && IsIntersects(Objects[i], Objects[j]))
+                        ChangeStrength(Objects[i], Objects[j]);
                 }
 
             foreach (FlyingObject obj in Objects)
             {
-                if (IsOutOfFieldLeftBorder(obj, GameField) ||
-                    IsIntersectGround(obj, Ground))
+                if (IsOutOfFieldLeftBorder(obj, GameField) || IsIntersectGround(obj, Ground))
                     obj.Strength = 0;
 
-                if (obj.Type == FlyingObjectType.PlayerBullet &&
-                    IsOutOfFieldRightBorder(obj, GameField))
+                if (obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, GameField))
                     obj.Strength = 0;
             }             
         }

@@ -151,5 +151,18 @@ namespace AirForce
 
             return playerShip;
         }
+
+        public FlyingObject GetRandomEnemy(Field gameField, Ground ground)
+        {
+            switch (random.Next(0, 4))
+            {
+                case 0: return GetBigShip(gameField, ground);
+                case 1: return GetChaserShip(gameField, ground);
+                case 2: return GetFlyingSaucer(gameField, ground);
+                case 3: return GetMeteor(gameField, ground);
+
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

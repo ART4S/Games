@@ -38,12 +38,11 @@ namespace AirForce
 
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
-        private readonly GamePainter painter;
-
-        public CollisionHandler CollisionHandler { get; }
+        private CollisionHandler CollisionHandler { get; }
 
         public IGameState GameState { get; set; }
 
+        private readonly GamePainter painter;
         private readonly Timer enemiesCreatingTimer = new Timer();
         private readonly Timer objectsMovingTimer = new Timer();
         private readonly Random random = new Random();
@@ -110,23 +109,7 @@ namespace AirForce
 
         private void AddNewRandomEnemy()
         {
-            switch (random.Next(0, 4))
-            {
-                case 0:
-                    FlyingObjects.Add(FlyingObjectsFactory.GetBigShip(GameField, Ground));
-                    break;
-                case 1:
-                    FlyingObjects.Add(FlyingObjectsFactory.GetChaserShip(GameField, Ground));
-                    break;
-                case 2:
-                    FlyingObjects.Add(FlyingObjectsFactory.GetFlyingSaucer(GameField, Ground));
-                    break;
-                case 3:
-                    FlyingObjects.Add(FlyingObjectsFactory.GetMeteor(GameField, Ground));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            FlyingObjects.Add(FlyingObjectsFactory.GetRandomEnemy(GameField, Ground));
         }
 
         public void Paint(Graphics graphics)
