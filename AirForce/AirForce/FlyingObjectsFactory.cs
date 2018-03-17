@@ -9,13 +9,14 @@ namespace AirForce
 
         public FlyingObject GetPlayerShip(Field gameField, Ground ground)
         {
-            var playerShip = new FlyingObject(
-                FlyingObjectType.PlayerShip,
-                new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
-                30,
-                4,
-                100,
-                Properties.Resources.player_ship);
+            FlyingObjectType type = FlyingObjectType.PlayerShip;
+            Point2D position = new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2);
+            int radius = 30;
+            int movespeed = 4;
+            int strength = 100;
+            Image image = Properties.Resources.player_ship;
+
+            var playerShip = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             playerShip.Painter = new FlyingObjectPainter(playerShip);
             playerShip.ManualMover = new PlayerShipManualMover(playerShip);
@@ -25,17 +26,16 @@ namespace AirForce
 
         public FlyingObject GetBigShip(Field gameField, Ground ground)
         {
+            FlyingObjectType type = FlyingObjectType.BigShip;
             int radius = 50;
+            Point2D position = new Point2D(
+                x: gameField.Size.Width + radius,
+                y: random.Next(radius, ground.Position.Y - radius));
+            int movespeed = 8;
+            int strength = 3;
+            Image image = Properties.Resources.big_enemy_ship;
 
-            var bigShip = new FlyingObject(
-                FlyingObjectType.BigShip,
-                new Point2D(
-                    x: gameField.Size.Width + radius,
-                    y: random.Next(radius, ground.Position.Y - radius)),
-                radius,
-                8,
-                3,
-                Properties.Resources.big_enemy_ship);
+            var bigShip = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             bigShip.Painter = new FlyingObjectPainter(bigShip);
             bigShip.Mover = new BigShipMover(bigShip);
@@ -45,17 +45,16 @@ namespace AirForce
 
         public FlyingObject GetChaserShip(Field gameField, Ground ground)
         {
+            FlyingObjectType type = FlyingObjectType.ChaserShip;
             int radius = 30;
+            Point2D position = new Point2D(
+                x: gameField.Size.Width + radius,
+                y: random.Next(radius, ground.Position.Y - radius));
+            int movespeed = 3;
+            int strength = 1;
+            Image image = Properties.Resources.chaser_ship;
 
-            var chaserShip = new ShootingFlyingObject(
-                FlyingObjectType.ChaserShip,
-                new Point2D(
-                    x: gameField.Size.Width + radius,
-                    y: random.Next(radius, ground.Position.Y - radius)),
-                radius,
-                3,
-                1,
-                Properties.Resources.chaser_ship);
+            var chaserShip = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             chaserShip.Painter = new FlyingObjectPainter(chaserShip);
             chaserShip.Mover = new ChaserShipMover(chaserShip);
@@ -65,17 +64,16 @@ namespace AirForce
 
         public FlyingObject GetFlyingSaucer(Field gameField, Ground ground)
         {
+            FlyingObjectType type = FlyingObjectType.FlyingSaucer;
             int radius = 25;
+            Point2D position = new Point2D(
+                x: gameField.Size.Width + radius,
+                y: random.Next(ground.Position.Y - 5 * radius, ground.Position.Y - radius));
+            int movespeed = 2;
+            int strength = 1;
+            Image image = Properties.Resources.flying_saucer;
 
-            var flyingSaucer = new FlyingObject(
-                FlyingObjectType.FlyingSaucer,
-                new Point2D(
-                    x: gameField.Size.Width + radius,
-                    y: random.Next(ground.Position.Y - 5 * radius, ground.Position.Y - radius)),
-                radius,
-                2,
-                1,
-                Properties.Resources.flying_saucer);
+            var flyingSaucer = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             flyingSaucer.Painter = new FlyingObjectPainter(flyingSaucer);
             flyingSaucer.Mover = new FlyingSaucerMover(flyingSaucer);
@@ -85,13 +83,14 @@ namespace AirForce
 
         public FlyingObject GetEnemyBullet(Field gameField, Ground ground, FlyingObject enemy)
         {
-            var enemyBullet = new FlyingObject(
-                FlyingObjectType.EnemyBullet,
-                new Point2D(enemy.Position.X - enemy.Radius, enemy.Position.Y),
-                8,
-                8,
-                1,
-                Properties.Resources.enemy_bullet);
+            FlyingObjectType type = FlyingObjectType.EnemyBullet;
+            Point2D position = new Point2D(enemy.Position.X - enemy.Radius, enemy.Position.Y);
+            int radius = 8;
+            int movespeed = 8;
+            int strength = 1;
+            Image image = Properties.Resources.enemy_bullet;
+
+            var enemyBullet = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             enemyBullet.Painter = new FlyingObjectPainter(enemyBullet);
             enemyBullet.Mover = new EnemyBulletMover(enemyBullet);
@@ -101,15 +100,16 @@ namespace AirForce
 
         public FlyingObject GetPlayerBullet(Field gameField, Ground ground, FlyingObject player)
         {
-            var playerBullet = new FlyingObject(
-                FlyingObjectType.PlayerBullet,
-                new Point2D(
-                    x: player.Position.X + player.Radius,
-                    y: player.Position.Y),
-                8,
-                8,
-                1,
-                Properties.Resources.player_bullet);
+            FlyingObjectType type = FlyingObjectType.PlayerBullet;
+            Point2D position = new Point2D(
+                x: player.Position.X + player.Radius,
+                y: player.Position.Y);
+            int radius = 8;
+            int movespeed = 8;
+            int strength = 1;
+            Image image = Properties.Resources.player_bullet;
+
+            var playerBullet = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             playerBullet.Painter = new FlyingObjectPainter(playerBullet);
             playerBullet.Mover = new PlayerBulletMover(playerBullet);
@@ -119,19 +119,16 @@ namespace AirForce
 
         public FlyingObject GetMeteor(Field gameField, Ground ground)
         {
+            FlyingObjectType type = FlyingObjectType.Meteor;
+            Point2D position = new Point2D(random.Next(0, gameField.Size.Width), 0);
+            int radius = 100;
+            int movespeed = 2;
             int strength = random.Next(8, 15 + 1);
-
             Image image = strength == 15 ?
                 Properties.Resources.asteroid :
                 Properties.Resources.meteor;
 
-            var meteor = new FlyingObject(
-                FlyingObjectType.Meteor,
-                new Point2D(random.Next(0, gameField.Size.Width), 0),
-                100,
-                2,
-                strength,
-                image);
+            var meteor = new FlyingObject(type, position, radius, movespeed, strength, image);
 
             meteor.Painter = new FlyingObjectPainter(meteor);
             meteor.Mover = new MeteorMover(meteor);
@@ -141,15 +138,14 @@ namespace AirForce
 
         public FlyingObject GetDeadPlayer(Field gameField, Ground ground)
         {
-            var playerShip = new FlyingObject(
-                FlyingObjectType.PlayerShip,
-                new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
-                30,
-                4,
-                0,
-                Properties.Resources.player_ship);
+            FlyingObjectType type = FlyingObjectType.PlayerShip;
+            Point2D position = new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2);
+            int radius = 30;
+            int movespeed = 4;
+            int strength = 0;
+            Image image = Properties.Resources.player_ship;
 
-            return playerShip;
+            return new FlyingObject(type, position, radius, movespeed, strength, image);
         }
 
         public FlyingObject GetRandomEnemy(Field gameField, Ground ground)

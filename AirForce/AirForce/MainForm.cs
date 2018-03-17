@@ -6,12 +6,11 @@ namespace AirForce
     public sealed partial class MainForm : Form
     {
         private readonly GameController gameController;
-
         private readonly Dictionary<Keys, bool> pressedKeys;
 
         private readonly Timer drawingTimer = new Timer();
-        private readonly Timer playerShootTimer = new Timer();
-        private readonly Timer playerMoveTimer = new Timer();
+        private readonly Timer playerShootingTimer = new Timer();
+        private readonly Timer playerMovingTimer = new Timer();
 
         public MainForm()
         {
@@ -32,12 +31,12 @@ namespace AirForce
             drawingTimer.Tick += (s, e) => GameFieldPictureBox.Refresh();
             drawingTimer.Start();
 
-            playerShootTimer.Interval = 300;
-            playerShootTimer.Tick += (s, e) => gameController.PlayerFire();
+            playerShootingTimer.Interval = 300;
+            playerShootingTimer.Tick += (s, e) => gameController.PlayerFire();
 
-            playerMoveTimer.Interval = 1;
-            playerMoveTimer.Tick += (s, e) => MovePlayer();
-            playerMoveTimer.Start();
+            playerMovingTimer.Interval = 1;
+            playerMovingTimer.Tick += (s, e) => MovePlayer();
+            playerMovingTimer.Start();
         }
 
         private void GameFieldPictureBox_Paint(object sender, PaintEventArgs e)
@@ -52,6 +51,9 @@ namespace AirForce
             if (pressedKey == Keys.Enter)
                 gameController.Restart();
 
+            if (pressedKey == Keys.R)
+                gameController.StartRewind();
+
             if (!pressedKeys.ContainsKey(pressedKey))
                 return;
 
@@ -60,12 +62,15 @@ namespace AirForce
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-            Keys depressedKey = e.KeyCode;
+            Keys unpressedKey = e.KeyCode;
 
-            if (!pressedKeys.ContainsKey(depressedKey))
+            if (unpressedKey == Keys.R)
+                gameController.EndRewind();
+
+            if (!pressedKeys.ContainsKey(unpressedKey))
                 return;
 
-            pressedKeys[depressedKey] = false;
+            pressedKeys[unpressedKey] = false;
         }
 
         private void MovePlayer()
@@ -98,14 +103,14 @@ namespace AirForce
 
             if (pressedKeys[Keys.Space])
             {
-                if (playerShootTimer.Enabled == false)
+                if (playerShootingTimer.Enabled == false)
                 {
                     gameController.PlayerFire();
-                    playerShootTimer.Start();
+                    playerShootingTimer.Start();
                 }
             }
             else
-                playerShootTimer.Stop();
+                playerShootingTimer.Stop();
 
             gameController.MovePlayer(playerMovespeedModifer);
         }

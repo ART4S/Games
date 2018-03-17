@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 
 namespace AirForce
 {
@@ -39,12 +38,25 @@ namespace AirForce
             set => game.GameState = value;
         }
 
+        private CollisionHandler CollisionHandler
+        {
+            get => game.CollisionHandler;
+        }
+
+        private Stack<List<FlyingObject>> OldObjects
+        {
+            get => game.OldFlyingObjects;
+        }
+
         #endregion
 
         public PlayingGameState(GameController game)
         {
             this.game = game;
         }
+
+        public void EndRewind() { }
+        public void Restart() { }
 
         public void MovePlayer(Point2D movespeedModifer)
         {
@@ -53,6 +65,17 @@ namespace AirForce
 
         public void Update()
         {
+            Objects.AddRange(CollisionHandler.GetNewEnemyBullets());
+
+            foreach (FlyingObject obj in Objects)
+                obj.Move(GameField, Ground, Objects);
+
+            CollisionHandler.FindCollisionsAndChangeStrengths();
+
+            Objects.RemoveAll(f => f.Strength <= 0);
+
+            OldObjects.Push(new List<FlyingObject>(Objects));
+
             if (Player.Strength <= 0)
                 GameState = new WaitingGameState(game);
         }
@@ -62,6 +85,14 @@ namespace AirForce
             Objects.Add(Factory.GetPlayerBullet(GameField, Ground, Player));
         }
 
-        public void Restart() { }
+        public void AddNewRandomEnemy()
+        {
+            Objects.Add(Factory.GetRandomEnemy(GameField, Ground));
+        }
+
+        public void BeginRewind()
+        {
+            GameState = new RewindGameState(game);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace AirForce
 
         public Field GameField { get; }
 
-        public List<FlyingObject> FlyingObjects { get; } = new List<FlyingObject>();
+        public List<FlyingObject> FlyingObjects { get; set; } = new List<FlyingObject>();
 
         public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
 
@@ -38,14 +38,15 @@ namespace AirForce
 
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
-        private CollisionHandler CollisionHandler { get; }
-
         public IGameState GameState { get; set; }
+
+        public Stack<List<FlyingObject>> OldFlyingObjects { get; } = new Stack<List<FlyingObject>>();
+
+        public CollisionHandler CollisionHandler { get; }
 
         private readonly GamePainter painter;
         private readonly Timer enemiesCreatingTimer = new Timer();
         private readonly Timer objectsMovingTimer = new Timer();
-        private readonly Random random = new Random();
 
         #endregion
 
@@ -80,6 +81,16 @@ namespace AirForce
 
         #region Methods
 
+        private void Update()
+        {
+            GameState.Update();
+        }
+
+        public void Restart()
+        {
+            GameState.Restart();
+        }
+
         public void MovePlayer(Point2D movespeedModifer)
         {
             GameState.MovePlayer(movespeedModifer);
@@ -90,31 +101,24 @@ namespace AirForce
             GameState.PlayerFire();
         }
 
-        private void Update()
-        {
-            FlyingObjects.AddRange(CollisionHandler.GetNewEnemyBullets());
-
-            foreach (FlyingObject obj in FlyingObjects)
-                obj.Move(GameField, Ground, FlyingObjects);
-
-            CollisionHandler.FindCollisionsAndChangeStrengths();
-            FlyingObjects.RemoveAll(f => f.Strength <= 0);
-            GameState.Update();
-        }
-
-        public void Restart()
-        {
-            GameState.Restart();
-        }
-
         private void AddNewRandomEnemy()
         {
-            FlyingObjects.Add(FlyingObjectsFactory.GetRandomEnemy(GameField, Ground));
+            GameState.AddNewRandomEnemy();
         }
 
         public void Paint(Graphics graphics)
         {
             painter.Paint(graphics);
+        }
+
+        public void StartRewind()
+        {
+            GameState.BeginRewind();
+        }
+
+        public void EndRewind()
+        {
+            GameState.EndRewind();
         }
 
         #endregion

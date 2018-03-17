@@ -25,6 +25,11 @@ namespace AirForce
                 chaser.Position - new Point2D(chaser.Movespeed, 0);
         }
 
+        public void UndoMove()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private List<Point2D> GetMinPathToFreeTrajectory(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
         {
             var queue = new Queue<Point2D>();

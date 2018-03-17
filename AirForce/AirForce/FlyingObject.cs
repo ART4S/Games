@@ -40,5 +40,10 @@ namespace AirForce
         {
             Painter?.Paint(graphics);
         }
+
+        public void UndoMove()
+        {
+            Mover?.UndoMove();
+        }
     }
 }

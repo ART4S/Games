@@ -26,5 +26,10 @@ namespace AirForce
 
             flyingSaucer.Position = newPosition;
         }
+
+        public void UndoMove()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

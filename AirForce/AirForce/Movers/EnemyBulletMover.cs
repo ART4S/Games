@@ -15,5 +15,10 @@ namespace AirForce
         {
             enemyBullet.Position -= new Point2D(enemyBullet.Movespeed, 0);
         }
+
+        public void UndoMove()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

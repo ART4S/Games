@@ -15,5 +15,10 @@ namespace AirForce
         {
             meteor.Position += new Point2D(-2 * meteor.Movespeed, meteor.Movespeed);
         }
+
+        public void UndoMove()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

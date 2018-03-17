@@ -33,9 +33,19 @@ namespace AirForce
             get => game.FlyingObjectsFactory;
         }
 
+        private CollisionHandler CollisionHandler
+        {
+            get => game.CollisionHandler;
+        }
+
         private IGameState GameState
         {
             set => game.GameState = value;
+        }
+
+        private Stack<List<FlyingObject>> OldObjects
+        {
+            get => game.OldFlyingObjects;
         }
 
         #endregion
@@ -45,17 +55,33 @@ namespace AirForce
             this.game = game;
         }
 
+        public void MovePlayer(Point2D movespeedModifer) { }
+        public void PlayerFire() { }
+        public void BeginRewind() { }
+        public void EndRewind() { }
+
         public void Restart()
         {
+            OldObjects.Clear();
             Objects.Clear();
             Player = Factory.GetPlayerShip(GameField, Ground);
             GameState = new PlayingGameState(game);
         }
 
-        public void Update() { }
+        public void Update()
+        {
+            Objects.AddRange(CollisionHandler.GetNewEnemyBullets());
 
-        public void MovePlayer(Point2D movespeedModifer) { }
+            foreach (FlyingObject obj in Objects)
+                obj.Move(GameField, Ground, Objects);
 
-        public void PlayerFire() { }
+            CollisionHandler.FindCollisionsAndChangeStrengths();
+            Objects.RemoveAll(f => f.Strength <= 0);
+        }
+
+        public void AddNewRandomEnemy()
+        {
+            Objects.Add(Factory.GetRandomEnemy(GameField, Ground));
+        }
     }
 }

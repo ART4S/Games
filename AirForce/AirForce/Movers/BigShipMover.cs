@@ -15,5 +15,10 @@ namespace AirForce
         {
             bigShip.Position -= new Point2D(bigShip.Movespeed, 0);
         }
+
+        public void UndoMove()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
