@@ -10,15 +10,21 @@ namespace AirForce
         private readonly Coooldown enemiesCreatingCooldown = new Coooldown(currentValue: 80, maxValue: 80);
         private readonly Timer updatingTimer = new Timer();
 
+        private const int MaxSpeed = 9;
+        private const int MinSpeed = 1;
+        private int speed = MinSpeed;
+
         private readonly Dictionary<Keys, bool> pressedKeys = new Dictionary<Keys, bool>
         {
             {Keys.W, false},
             {Keys.S, false},
             {Keys.A, false},
             {Keys.D, false},
+            {Keys.Q, false},
+            {Keys.E, false},
             {Keys.Space, false},
             {Keys.Enter, false},
-            {Keys.ShiftKey, false}
+            {Keys.ShiftKey, false},
         };
 
         public GameController(Control display)
@@ -30,8 +36,11 @@ namespace AirForce
             updatingTimer.Interval = 1;
             updatingTimer.Tick += (s, e) =>
             {
-                Update();
-                display.Refresh();
+                for (int i = 0; i < speed; i++)
+                {
+                    Update();
+                    display.Refresh();
+                }
             };
             updatingTimer.Start();
         }
@@ -40,6 +49,12 @@ namespace AirForce
         {
             if (pressedKeys.ContainsKey(pressedKey))
                 pressedKeys[pressedKey] = true;
+
+            if (pressedKeys[Keys.Q] && speed < MaxSpeed)
+                speed++;
+
+            if (pressedKeys[Keys.E] && speed > MinSpeed)
+                speed--;
         }
 
         public void KeyUp(Keys unpressedKey)
@@ -64,6 +79,9 @@ namespace AirForce
             AddNewRandomEnemy();
 
             game.Update();
+
+            if (game.GameState is WaitingGameState)
+                speed = MinSpeed;
         }
 
         private void MovePlayer()
