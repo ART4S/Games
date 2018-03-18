@@ -5,26 +5,12 @@ namespace AirForce
 {
     public class RewindGameState : IGameState
     {
-        #region Fields
+        private readonly Game game;
 
-        private readonly GameController game;
-
-        private List<FlyingObject> Objects
+        public RewindGameState(Game game)
         {
-            set => game.FlyingObjects = value;
+            this.game = game;
         }
-
-        private Stack<List<FlyingObject>> OldObjects
-        {
-            get => game.OldFlyingObjects;
-        }
-
-        private IGameState GameState
-        {
-            set => game.GameState = value;
-        }
-
-        #endregion
 
         public void Restart() { }
         public void AddNewRandomEnemy() { }
@@ -32,19 +18,40 @@ namespace AirForce
         public void PlayerFire() { }
         public void BeginRewind() { }
 
-        public RewindGameState(GameController game)
-        {
-            this.game = game;
-        }
-
         public void Update()
         {
-                
+            if (game.DeadObjects.Any())
+                game.FlyingObjects.AddRange(game.DeadObjects.Pop());
+
+            foreach (FlyingObject obj in game.FlyingObjects)
+                obj.RestorePreviousState();
+
+            List<FlyingObject> objectsOnStartPositions = game.FlyingObjects
+                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && !o.CanRestorePreviousState());
+
+            if (objectsOnStartPositions.Any())
+            {
+                List<FlyingObject> bulletsOnStartPositions = objectsOnStartPositions
+                    .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
+
+                List<FlyingObject> newObjectsForReleaseOnField = objectsOnStartPositions
+                        .Except(bulletsOnStartPositions)
+                        .ToList();
+
+                if (newObjectsForReleaseOnField.Any())
+                    game.ObjectsForReleaseOnField.Push(newObjectsForReleaseOnField);
+
+                foreach (FlyingObject obj in objectsOnStartPositions)
+                    game.FlyingObjects.Remove(obj);
+            }
+
+            if (game.FlyingObjects.All(o => !o.CanRestorePreviousState()))
+                game.GameState = new WaitingGameState(game);
         }
 
         public void EndRewind()
         {
-            GameState = new PlayingGameState(game);
+            game.GameState = new PlayingGameState(game);
         }
     }
 }

@@ -3,61 +3,55 @@ using System.Linq;
 
 namespace AirForce
 {
-    public class ChaserShipMover : IMover
+    public class DodgingMover : IMover
     {
-        private readonly FlyingObject chaser;
+        private readonly FlyingObject flyingObject;
 
-        public ChaserShipMover(FlyingObject chaser)
+        public DodgingMover(FlyingObject flyingObject)
         {
-            this.chaser = chaser;
+            this.flyingObject = flyingObject;
         }
 
         public void Move(Field gameField, Ground ground, List<FlyingObject> flyingObjects)
         {
-            var playerBullets = flyingObjects
-                .Where(f => f.Type == FlyingObjectType.PlayerBullet)
-                .ToList();
+            List<FlyingObject> playerBullets = flyingObjects
+                .FindAll(f => f.Type == FlyingObjectType.PlayerBullet);
 
             List<Point2D> minPathToFreeTrajectory = GetMinPathToFreeTrajectory(playerBullets, gameField, ground);
 
-            chaser.Position = minPathToFreeTrajectory.Any() ?
+            flyingObject.Position = minPathToFreeTrajectory.Any() ?
                 minPathToFreeTrajectory.First() :
-                chaser.Position - new Point2D(chaser.Movespeed, 0);
-        }
-
-        public void UndoMove()
-        {
-            throw new System.NotImplementedException();
+                flyingObject.Position - new Point2D(flyingObject.Movespeed, 0);
         }
 
         private List<Point2D> GetMinPathToFreeTrajectory(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
         {
             var queue = new Queue<Point2D>();
-            var savePaths = new Dictionary<Point2D, Point2D>{{ chaser.Position, chaser.Position }};
+            var savePaths = new Dictionary<Point2D, Point2D>{{ flyingObject.Position, flyingObject.Position }};
 
-            queue.Enqueue(chaser.Position);
+            queue.Enqueue(flyingObject.Position);
 
             while (queue.Any())
             {
                 Point2D currentPosition = queue.Dequeue();
 
                 bool isDangerousObjectsInFront = dangerousObjects
-                    .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, chaser.Radius));
+                    .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, flyingObject.Radius));
 
                 bool isHaveCollision = dangerousObjects
-                    .Any(o => CollisionHandler.IsIntersects(currentPosition, chaser.Radius, o.Position, o.Radius));
+                    .Any(o => CollisionHandler.IsIntersects(currentPosition, flyingObject.Radius, o.Position, o.Radius));
 
                 if (!isDangerousObjectsInFront ||
-                    CollisionHandler.IsOutOfField(currentPosition, chaser.Radius, gameField))
+                    CollisionHandler.IsOutOfField(currentPosition, flyingObject.Radius, gameField))
                     return RestorePath(savePaths, currentPosition);
 
                 if (isHaveCollision ||
-                    CollisionHandler.IsIntersectGround(currentPosition, chaser.Radius, ground) ||
-                    CollisionHandler.IsIntersectFieldTopBorder(currentPosition, chaser.Radius, gameField))
+                    CollisionHandler.IsIntersectGround(currentPosition, flyingObject.Radius, ground) ||
+                    CollisionHandler.IsIntersectFieldTopBorder(currentPosition, flyingObject.Radius, gameField))
                     continue;
 
-                Point2D moveUpPosition = currentPosition - new Point2D(chaser.Movespeed, chaser.Movespeed); // отнять от x, отнять от y
-                Point2D moveDownPosition = currentPosition - new Point2D(chaser.Movespeed, -chaser.Movespeed); // отнять от x, прибавить к y
+                Point2D moveUpPosition = currentPosition - new Point2D(flyingObject.Movespeed, flyingObject.Movespeed); // отнять от x, отнять от y
+                Point2D moveDownPosition = currentPosition - new Point2D(flyingObject.Movespeed, -flyingObject.Movespeed); // отнять от x, прибавить к y
 
                 if (!savePaths.ContainsKey(moveUpPosition))
                 {

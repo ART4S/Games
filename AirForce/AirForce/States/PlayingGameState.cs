@@ -1,56 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace AirForce
 {
     public class PlayingGameState : IGameState
     {
-        #region Fields
+        private readonly Game game;
 
-        private readonly GameController game;
-
-        private FlyingObject Player
-        {
-            get => game.Player;
-        }
-
-        private Ground Ground
-        {
-            get => game.Ground;
-        }
-
-        private Field GameField
-        {
-            get => game.GameField;
-        }
-
-        private List<FlyingObject> Objects
-        {
-            get => game.FlyingObjects;
-        }
-
-        private FlyingObjectsFactory Factory
-        {
-            get => game.FlyingObjectsFactory;
-        }
-
-        private IGameState GameState
-        {
-            set => game.GameState = value;
-        }
-
-        private CollisionHandler CollisionHandler
-        {
-            get => game.CollisionHandler;
-        }
-
-        private Stack<List<FlyingObject>> OldObjects
-        {
-            get => game.OldFlyingObjects;
-        }
-
-        #endregion
-
-        public PlayingGameState(GameController game)
+        public PlayingGameState(Game game)
         {
             this.game = game;
         }
@@ -58,41 +14,47 @@ namespace AirForce
         public void EndRewind() { }
         public void Restart() { }
 
-        public void MovePlayer(Point2D movespeedModifer)
-        {
-            Player.MoveManyally(movespeedModifer, GameField, Ground);
-        }
-
         public void Update()
         {
-            Objects.AddRange(CollisionHandler.GetNewEnemyBullets());
+            foreach (FlyingObject obj in game.FlyingObjects)
+                obj.SaveState();
 
-            foreach (FlyingObject obj in Objects)
-                obj.Move(GameField, Ground, Objects);
+            game.FlyingObjects.AddRange(game.CollisionHandler.GetNewEnemyBullets());
 
-            CollisionHandler.FindCollisionsAndChangeStrengths();
+            foreach (FlyingObject obj in game.FlyingObjects)
+                obj.Move(game.GameField, game.Ground, game.FlyingObjects);
 
-            Objects.RemoveAll(f => f.Strength <= 0);
+            game.CollisionHandler.FindCollisionsAndChangeStrengths();
 
-            OldObjects.Push(new List<FlyingObject>(Objects));
+            game.DeadObjects.Push(game.FlyingObjects.FindAll(o => o.Strength <= 0));
 
-            if (Player.Strength <= 0)
-                GameState = new WaitingGameState(game);
+            if (game.Player.Strength <= 0)
+                game.GameState = new WaitingGameState(game);
+
+            game.FlyingObjects.RemoveAll(o => o.Strength <= 0);
+        }
+
+        public void MovePlayer(Point2D movespeedModifer)
+        {
+            game.Player.MoveManyally(movespeedModifer, game.GameField, game.Ground);
         }
 
         public void PlayerFire()
         {
-            Objects.Add(Factory.GetPlayerBullet(GameField, Ground, Player));
+            game.FlyingObjects.Add(game.FlyingObjectsFactory.CreatePlayerBullet(game.GameField, game.Ground, game.Player));
         }
 
         public void AddNewRandomEnemy()
         {
-            Objects.Add(Factory.GetRandomEnemy(GameField, Ground));
+            if (game.ObjectsForReleaseOnField.Any())
+                game.FlyingObjects.AddRange(game.ObjectsForReleaseOnField.Pop());
+            else
+                game.FlyingObjects.Add(game.FlyingObjectsFactory.CreateRandomEnemy(game.GameField, game.Ground));
         }
 
         public void BeginRewind()
         {
-            GameState = new RewindGameState(game);
+            game.GameState = new RewindGameState(game);
         }
     }
 }

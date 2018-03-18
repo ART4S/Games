@@ -1,12 +1,11 @@
 ﻿
-
 namespace AirForce
 {
-    public class PlayerShipManualMover : IManualMover
+    public class ManualMover : IManualMover
     {
         private readonly FlyingObject playerShip;
 
-        public PlayerShipManualMover(FlyingObject playerShip)
+        public ManualMover(FlyingObject playerShip)
         {
             this.playerShip = playerShip;
         }

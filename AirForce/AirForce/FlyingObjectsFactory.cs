@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace AirForce
 {
@@ -7,155 +6,130 @@ namespace AirForce
     {
         private readonly Random random = new Random();
 
-        public FlyingObject GetPlayerShip(Field gameField, Ground ground)
+        public FlyingObject CreatePlayerShip(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.PlayerShip;
-            Point2D position = new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2);
-            int radius = 30;
-            int movespeed = 4;
-            int strength = 100;
-            Image image = Properties.Resources.player_ship;
+            var playerShip = new FlyingObject(
+                type: FlyingObjectType.PlayerShip,
+                position: new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                radius: 30,
+                movespeed: 4,
+                strength: 100,
+                image: Properties.Resources.player_ship);
 
-            var playerShip = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            playerShip.Painter = new FlyingObjectPainter(playerShip);
-            playerShip.ManualMover = new PlayerShipManualMover(playerShip);
+            playerShip.ManualMover = new ManualMover(playerShip);
 
             return playerShip;
         }
 
-        public FlyingObject GetBigShip(Field gameField, Ground ground)
+        public FlyingObject CreateBigShip(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.BigShip;
-            int radius = 50;
-            Point2D position = new Point2D(
-                x: gameField.Size.Width + radius,
-                y: random.Next(radius, ground.Position.Y - radius));
-            int movespeed = 8;
-            int strength = 3;
-            Image image = Properties.Resources.big_enemy_ship;
+            var bigShip = new FlyingObject(
+                type: FlyingObjectType.BigShip,
+                position: new Point2D(x: gameField.Size.Width + 50, y: random.Next(50, ground.Position.Y - 50)),
+                radius: 50,
+                movespeed: 8,
+                strength: 3,
+                image: Properties.Resources.big_enemy_ship);
 
-            var bigShip = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            bigShip.Painter = new FlyingObjectPainter(bigShip);
-            bigShip.Mover = new BigShipMover(bigShip);
+            bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shift: new Point2D(-1, 0));
 
             return bigShip;
         }
 
-        public FlyingObject GetChaserShip(Field gameField, Ground ground)
+        public FlyingObject CreateChaserShip(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.ChaserShip;
-            int radius = 30;
-            Point2D position = new Point2D(
-                x: gameField.Size.Width + radius,
-                y: random.Next(radius, ground.Position.Y - radius));
-            int movespeed = 3;
-            int strength = 1;
-            Image image = Properties.Resources.chaser_ship;
+            var chaserShip = new ShootingFlyingObject(
+                type: FlyingObjectType.ChaserShip,
+                position: new Point2D(x: gameField.Size.Width + 30, y: random.Next(30, ground.Position.Y - 30)),
+                radius: 30,
+                movespeed: 3,
+                strength: 1,
+                image: Properties.Resources.chaser_ship);
 
-            var chaserShip = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            chaserShip.Painter = new FlyingObjectPainter(chaserShip);
-            chaserShip.Mover = new ChaserShipMover(chaserShip);
+            chaserShip.Mover = new DodgingMover(chaserShip);
 
             return chaserShip;
         }
 
-        public FlyingObject GetFlyingSaucer(Field gameField, Ground ground)
+        public FlyingObject CreateFlyingSaucer(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.FlyingSaucer;
-            int radius = 25;
-            Point2D position = new Point2D(
-                x: gameField.Size.Width + radius,
-                y: random.Next(ground.Position.Y - 5 * radius, ground.Position.Y - radius));
-            int movespeed = 2;
-            int strength = 1;
-            Image image = Properties.Resources.flying_saucer;
+            var flyingSaucer = new FlyingObject(
+                type: FlyingObjectType.FlyingSaucer,
+                position: new Point2D(x: gameField.Size.Width + 25, y: random.Next(ground.Position.Y - 5 * 25, ground.Position.Y - 25)),
+                radius: 25,
+                movespeed: 2,
+                strength: 1,
+                image: Properties.Resources.flying_saucer);
 
-            var flyingSaucer = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            flyingSaucer.Painter = new FlyingObjectPainter(flyingSaucer);
-            flyingSaucer.Mover = new FlyingSaucerMover(flyingSaucer);
+            flyingSaucer.Mover = new ChaoticMovingMover(flyingSaucer);
 
             return flyingSaucer;
         }
 
-        public FlyingObject GetEnemyBullet(Field gameField, Ground ground, FlyingObject enemy)
+        public FlyingObject CreateEnemyBullet(Field gameField, Ground ground, FlyingObject enemy)
         {
-            FlyingObjectType type = FlyingObjectType.EnemyBullet;
-            Point2D position = new Point2D(enemy.Position.X - enemy.Radius, enemy.Position.Y);
-            int radius = 8;
-            int movespeed = 8;
-            int strength = 1;
-            Image image = Properties.Resources.enemy_bullet;
+            var enemyBullet = new FlyingObject(
+                type: FlyingObjectType.EnemyBullet,
+                position: new Point2D(enemy.Position.X - enemy.Radius, enemy.Position.Y),
+                radius: 8,
+                movespeed: 8,
+                strength: 1,
+                image: Properties.Resources.enemy_bullet);
 
-            var enemyBullet = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            enemyBullet.Painter = new FlyingObjectPainter(enemyBullet);
-            enemyBullet.Mover = new EnemyBulletMover(enemyBullet);
+            enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shift: new Point2D(-1, 0));
 
             return enemyBullet;
         }
 
-        public FlyingObject GetPlayerBullet(Field gameField, Ground ground, FlyingObject player)
+        public FlyingObject CreatePlayerBullet(Field gameField, Ground ground, FlyingObject player)
         {
-            FlyingObjectType type = FlyingObjectType.PlayerBullet;
-            Point2D position = new Point2D(
-                x: player.Position.X + player.Radius,
-                y: player.Position.Y);
-            int radius = 8;
-            int movespeed = 8;
-            int strength = 1;
-            Image image = Properties.Resources.player_bullet;
+            var playerBullet = new FlyingObject(
+                type: FlyingObjectType.PlayerBullet,
+                position: new Point2D(x: player.Position.X + player.Radius, y: player.Position.Y),
+                radius: 8,
+                movespeed: 8,
+                strength: 1,
+                image: Properties.Resources.player_bullet);
 
-            var playerBullet = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            playerBullet.Painter = new FlyingObjectPainter(playerBullet);
-            playerBullet.Mover = new PlayerBulletMover(playerBullet);
+            playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shift: new Point2D(1, 0));
 
             return playerBullet;
         }
 
-        public FlyingObject GetMeteor(Field gameField, Ground ground)
+        public FlyingObject CreateMeteor(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.Meteor;
-            Point2D position = new Point2D(random.Next(0, gameField.Size.Width), 0);
-            int radius = 100;
-            int movespeed = 2;
-            int strength = random.Next(8, 15 + 1);
-            Image image = strength == 15 ?
-                Properties.Resources.asteroid :
-                Properties.Resources.meteor;
+            var meteor = new FlyingObject(
+                type: FlyingObjectType.Meteor,
+                position: new Point2D(random.Next(0, gameField.Size.Width), -100),
+                radius: 100,
+                movespeed: 2,
+                strength: random.Next(8, 16),
+                image: Properties.Resources.meteor);
 
-            var meteor = new FlyingObject(type, position, radius, movespeed, strength, image);
-
-            meteor.Painter = new FlyingObjectPainter(meteor);
-            meteor.Mover = new MeteorMover(meteor);
+            meteor.Mover = new ShiftOnDirrectionMover(meteor, shift: new Point2D(-2, 1));
 
             return meteor;
         }
 
-        public FlyingObject GetDeadPlayer(Field gameField, Ground ground)
+        public FlyingObject CreateDeadPlayer(Field gameField, Ground ground)
         {
-            FlyingObjectType type = FlyingObjectType.PlayerShip;
-            Point2D position = new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2);
-            int radius = 30;
-            int movespeed = 4;
-            int strength = 0;
-            Image image = Properties.Resources.player_ship;
-
-            return new FlyingObject(type, position, radius, movespeed, strength, image);
+            return new FlyingObject(
+                type: FlyingObjectType.PlayerShip,
+                position: new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                radius: 30,
+                movespeed: 4,
+                strength: 0, 
+                image: Properties.Resources.player_ship);
         }
 
-        public FlyingObject GetRandomEnemy(Field gameField, Ground ground)
+        public FlyingObject CreateRandomEnemy(Field gameField, Ground ground)
         {
             switch (random.Next(0, 4))
             {
-                case 0: return GetBigShip(gameField, ground);
-                case 1: return GetChaserShip(gameField, ground);
-                case 2: return GetFlyingSaucer(gameField, ground);
-                case 3: return GetMeteor(gameField, ground);
+                case 0: return CreateBigShip(gameField, ground);
+                case 1: return CreateChaserShip(gameField, ground);
+                case 2: return CreateFlyingSaucer(gameField, ground);
+                case 3: return CreateMeteor(gameField, ground);
 
                 default: throw new ArgumentOutOfRangeException();
             }

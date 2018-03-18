@@ -5,6 +5,5 @@ namespace AirForce
     public interface IMover
     {
         void Move(Field gameField, Ground ground, List<FlyingObject> flyingObjects);
-        void UndoMove();
     }
 }

@@ -45,22 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollisionHandler.Static.cs" />
+    <Compile Include="Helpers\Coooldown.cs" />
+    <Compile Include="Game.Paint.cs" />
+    <Compile Include="GameController.cs" />
+    <Compile Include="Movers\ChaoticMovingMover.cs" />
+    <Compile Include="Movers\ShiftOnDirrectionMover.cs" />
+    <Compile Include="Rewinder.cs" />
     <Compile Include="Interfaces\IGameState.cs" />
-    <Compile Include="Movers\BigShipMover.cs" />
-    <Compile Include="Movers\ChaserShipMover.cs" />
+    <Compile Include="Movers\DodgingMover.cs" />
     <Compile Include="Interfaces\IManualMover.cs" />
     <Compile Include="Interfaces\IMover.cs" />
-    <Compile Include="Interfaces\IPainer.cs" />
-    <Compile Include="Movers\EnemyBulletMover.cs" />
     <Compile Include="FlyingObject.cs" />
     <Compile Include="CollisionHandler.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="Painters\FlyingObjectPainter.cs" />
     <Compile Include="FlyingObjectsFactory.cs" />
     <Compile Include="Enums\FlyingObjectType.cs" />
-    <Compile Include="Movers\FlyingSaucerMover.cs" />
-    <Compile Include="GameController.cs" />
-    <Compile Include="Painters\GamePainter.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Ground.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -68,9 +69,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Movers\MeteorMover.cs" />
-    <Compile Include="Movers\PlayerShipManualMover.cs" />
-    <Compile Include="Movers\PlayerBulletMover.cs" />
+    <Compile Include="Movers\ManualMover.cs" />
     <Compile Include="Helpers\Point2D.cs" />
     <Compile Include="States\RewindGameState.cs" />
     <Compile Include="ShootingFlyingObject.cs" />
@@ -118,9 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\flying_saucer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\asteroid.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\chaser_ship.png" />

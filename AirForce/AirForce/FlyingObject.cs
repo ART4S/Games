@@ -10,11 +10,11 @@ namespace AirForce
         public int Movespeed { get; }
         public int Radius { get; }
         public FlyingObjectType Type { get; }
-        public Image Image { get; }
+        private readonly Image image;
 
         public IMover Mover { get; set; }
-        public IPainer Painter { get; set; }
         public IManualMover ManualMover { get; set; }
+        private readonly Rewinder rewinder;
 
         public FlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, Image image)
         {
@@ -23,7 +23,9 @@ namespace AirForce
             Strength = strength;
             Radius = radius;
             Movespeed = movespeed;
-            Image = image;
+            this.image = image;
+
+            rewinder = new Rewinder(this);
         }
 
         public void Move(Field gameField, Ground ground, List<FlyingObject> flyingObjects)
@@ -36,14 +38,29 @@ namespace AirForce
             ManualMover?.MoveManually(movespeedModifer, gameField, ground);
         }
 
-        public void Paint(Graphics graphics)
+        public void SaveState()
         {
-            Painter?.Paint(graphics);
+            rewinder.SaveState();
         }
 
-        public void UndoMove()
+        public bool CanRestorePreviousState()
         {
-            Mover?.UndoMove();
+            return rewinder.CanRestorePreviousState();
+        }
+
+        public void RestorePreviousState()
+        {
+            rewinder.RestorePreviousState();
+        }
+
+        public void Paint(Graphics graphics)
+        {
+            Rectangle imageRectangle = new Rectangle(
+                location: Position - new Point2D(Radius, Radius),
+                size: new Size(2 * Radius, 2 * Radius)
+                );
+
+            graphics.DrawImage(image, imageRectangle);
         }
     }
 }

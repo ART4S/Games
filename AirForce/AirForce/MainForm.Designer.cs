@@ -41,7 +41,6 @@
             this.GameFieldPictureBox.Size = new System.Drawing.Size(1362, 700);
             this.GameFieldPictureBox.TabIndex = 0;
             this.GameFieldPictureBox.TabStop = false;
-            this.GameFieldPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.GameFieldPictureBox_Paint);
             // 
             // MainForm
             // 

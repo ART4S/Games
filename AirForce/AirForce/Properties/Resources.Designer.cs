@@ -63,16 +63,6 @@ namespace AirForce.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap asteroid {
-            get {
-                object obj = ResourceManager.GetObject("asteroid", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap big_enemy_ship {
             get {
                 object obj = ResourceManager.GetObject("big_enemy_ship", resourceCulture);
