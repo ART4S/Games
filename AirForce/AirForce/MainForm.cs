@@ -23,7 +23,5 @@ namespace AirForce
         {
             gameController.KeyUp(e.KeyCode);
         }
-
-
     }
 }

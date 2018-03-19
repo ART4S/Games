@@ -55,7 +55,6 @@ namespace AirForce
             };
 
             CollisionHandler = new CollisionHandler(this);
-
             GameState = new PlayingGameState(this);
             GameField = new Field(new Point2D(), gameFieldSize);
             Ground = new Ground(new Point2D(0, gameFieldSize.Height - 30), gameFieldSize);

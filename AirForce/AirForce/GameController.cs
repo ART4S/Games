@@ -12,7 +12,7 @@ namespace AirForce
 
         private const int MaxSpeed = 9;
         private const int MinSpeed = 1;
-        private int speed = MinSpeed;
+        private int gameSpeed = MinSpeed;
 
         private readonly Dictionary<Keys, bool> pressedKeys = new Dictionary<Keys, bool>
         {
@@ -36,7 +36,7 @@ namespace AirForce
             updatingTimer.Interval = 1;
             updatingTimer.Tick += (s, e) =>
             {
-                for (int i = 0; i < speed; i++)
+                for (int i = 0; i < gameSpeed; i++)
                 {
                     Update();
                     display.Refresh();
@@ -50,11 +50,11 @@ namespace AirForce
             if (pressedKeys.ContainsKey(pressedKey))
                 pressedKeys[pressedKey] = true;
 
-            if (pressedKeys[Keys.Q] && speed < MaxSpeed)
-                speed++;
+            if (pressedKeys[Keys.Q] && gameSpeed < MaxSpeed)
+                gameSpeed++;
 
-            if (pressedKeys[Keys.E] && speed > MinSpeed)
-                speed--;
+            if (pressedKeys[Keys.E] && gameSpeed > MinSpeed)
+                gameSpeed--;
         }
 
         public void KeyUp(Keys unpressedKey)
@@ -81,7 +81,7 @@ namespace AirForce
             game.Update();
 
             if (game.GameState is WaitingGameState)
-                speed = MinSpeed;
+                gameSpeed = MinSpeed;
         }
 
         private void MovePlayer()
