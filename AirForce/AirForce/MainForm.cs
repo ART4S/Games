@@ -11,8 +11,9 @@ namespace AirForce
             InitializeComponent();
 
             gameController = new GameController(display: GameFieldPictureBox);
-        }
 
+            gameController.StartGame();
+        }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {

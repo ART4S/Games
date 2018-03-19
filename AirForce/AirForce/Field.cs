@@ -23,10 +23,5 @@ namespace AirForce
         {
             return new Rectangle(field.TopLeftPoint, field.Size);
         }
-
-        public static implicit operator RectangleF(Field field)
-        {
-            return new RectangleF(field.TopLeftPoint, field.Size);
-        }
     }
 }

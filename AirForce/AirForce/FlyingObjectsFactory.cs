@@ -124,15 +124,16 @@ namespace AirForce
 
         public FlyingObject CreateRandomEnemy(Field gameField, Ground ground)
         {
-            switch (random.Next(0, 4))
-            {
-                case 0: return CreateBigShip(gameField, ground);
-                case 1: return CreateChaserShip(gameField, ground);
-                case 2: return CreateFlyingSaucer(gameField, ground);
-                case 3: return CreateMeteor(gameField, ground);
+            return CreateChaserShip(gameField, ground);
+            //switch (random.Next(0, 4))
+            //{
+            //    case 0: return CreateBigShip(gameField, ground);
+            //    case 1: return CreateChaserShip(gameField, ground);
+            //    case 2: return CreateFlyingSaucer(gameField, ground);
+            //    case 3: return CreateMeteor(gameField, ground);
 
-                default: throw new ArgumentOutOfRangeException();
-            }
+            //    default: throw new ArgumentOutOfRangeException();
+            //}
         }
     }
 }

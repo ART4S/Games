@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AirForce
@@ -26,19 +27,25 @@ namespace AirForce
 
         private List<Point2D> GetMinPathToFreeTrajectory(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
         {
-            var queue = new Queue<Point2D>();
-            var savePaths = new Dictionary<Point2D, Point2D>{{ flyingObject.Position, flyingObject.Position }};
+            int radiusOfSight = 10 * flyingObject.Radius;
 
+            List<FlyingObject> objectsInRadiusOfSight = dangerousObjects
+                .FindAll(o => Math.Sqrt(Math.Pow(o.Position.X - flyingObject.Position.X, 2) + Math.Pow(o.Position.Y - flyingObject.Position.Y, 2)) < radiusOfSight); // поле зрения - окружность
+
+            var queue = new Queue<Point2D>();
+            var savePaths = new Dictionary<Point2D, Point2D>();
+
+            savePaths[flyingObject.Position] = flyingObject.Position;
             queue.Enqueue(flyingObject.Position);
 
             while (queue.Any())
             {
                 Point2D currentPosition = queue.Dequeue();
 
-                bool isDangerousObjectsInFront = dangerousObjects
+                bool isDangerousObjectsInFront = objectsInRadiusOfSight
                     .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, flyingObject.Radius));
 
-                bool isHaveCollision = dangerousObjects
+                bool isHaveCollision = objectsInRadiusOfSight
                     .Any(o => CollisionHandler.IsIntersects(currentPosition, flyingObject.Radius, o.Position, o.Radius));
 
                 if (!isDangerousObjectsInFront ||
@@ -50,9 +57,9 @@ namespace AirForce
                     CollisionHandler.IsIntersectFieldTopBorder(currentPosition, flyingObject.Radius, gameField))
                     continue;
 
-                Point2D moveUpPosition = currentPosition - new Point2D(flyingObject.Movespeed, flyingObject.Movespeed); // отнять от x, отнять от y
-                Point2D moveDownPosition = currentPosition - new Point2D(flyingObject.Movespeed, -flyingObject.Movespeed); // отнять от x, прибавить к y
-
+                Point2D moveUpPosition = currentPosition - new Point2D(flyingObject.Movespeed, flyingObject.Movespeed); // по диагонали вверх
+                Point2D moveDownPosition = currentPosition - new Point2D(flyingObject.Movespeed, -flyingObject.Movespeed); // по дагонали вниз
+                 
                 if (!savePaths.ContainsKey(moveUpPosition))
                 {
                     savePaths[moveUpPosition] = currentPosition;

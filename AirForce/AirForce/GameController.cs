@@ -6,7 +6,7 @@ namespace AirForce
     public class GameController
     {
         private readonly Game game;
-        private readonly Coooldown playerShootingCoooldown = new Coooldown(currentValue: 30, maxValue: 30);
+        private readonly Coooldown playerShootingCoooldown = new Coooldown(currentValue: 10, maxValue: 10);
         private readonly Coooldown enemiesCreatingCooldown = new Coooldown(currentValue: 80, maxValue: 80);
         private readonly Timer updatingTimer = new Timer();
 
@@ -33,7 +33,7 @@ namespace AirForce
 
             display.Paint += (s, e) => game.Paint(e.Graphics);
 
-            updatingTimer.Interval = 1;
+            updatingTimer.Interval = 15;
             updatingTimer.Tick += (s, e) =>
             {
                 for (int i = 0; i < gameSpeed; i++)
@@ -42,7 +42,16 @@ namespace AirForce
                     display.Refresh();
                 }
             };
+        }
+
+        public void StartGame()
+        {
             updatingTimer.Start();
+        }
+
+        public void StopGame()
+        {
+            updatingTimer.Stop();
         }
 
         public void KeyDown(Keys pressedKey)
@@ -55,25 +64,25 @@ namespace AirForce
 
             if (pressedKeys[Keys.E] && gameSpeed > MinSpeed)
                 gameSpeed--;
+
+            if (pressedKeys[Keys.Enter])
+                game.Restart();
+
+            if (pressedKeys[Keys.ShiftKey])
+                game.BeginRewind();
         }
 
         public void KeyUp(Keys unpressedKey)
         {
             if (pressedKeys.ContainsKey(unpressedKey))
                 pressedKeys[unpressedKey] = false;
+
+            if (!pressedKeys[Keys.ShiftKey])
+                game.EndRewind();
         }
 
         private void Update()
         {
-            if (pressedKeys[Keys.Enter])
-                game.Restart();
-
-            if (pressedKeys[Keys.ShiftKey])
-                game.BeginRewind();
-
-            if (!pressedKeys[Keys.ShiftKey])
-                game.EndRewind();
-
             MovePlayer();
             PlayerFire();
             AddNewRandomEnemy();
