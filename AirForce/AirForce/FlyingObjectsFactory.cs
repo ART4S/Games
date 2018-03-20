@@ -14,6 +14,7 @@ namespace AirForce
                 radius: 30,
                 movespeed: 4,
                 strength: 100,
+                radiusOfSight: 10 * 30,
                 image: Properties.Resources.player_ship);
 
             playerShip.ManualMover = new ManualMover(playerShip);
@@ -29,6 +30,7 @@ namespace AirForce
                 radius: 50,
                 movespeed: 8,
                 strength: 3,
+                radiusOfSight: 10 * 50,
                 image: Properties.Resources.big_enemy_ship);
 
             bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shift: new Point2D(-1, 0));
@@ -44,6 +46,7 @@ namespace AirForce
                 radius: 30,
                 movespeed: 3,
                 strength: 1,
+                radiusOfSight: 10 * 30,
                 image: Properties.Resources.chaser_ship);
 
             chaserShip.Mover = new DodgingMover(chaserShip);
@@ -59,6 +62,7 @@ namespace AirForce
                 radius: 25,
                 movespeed: 2,
                 strength: 1,
+                radiusOfSight: 10 * 25,
                 image: Properties.Resources.flying_saucer);
 
             flyingSaucer.Mover = new ChaoticMovingMover(flyingSaucer);
@@ -74,6 +78,7 @@ namespace AirForce
                 radius: 8,
                 movespeed: 8,
                 strength: 1,
+                radiusOfSight: 10 * 8,
                 image: Properties.Resources.enemy_bullet);
 
             enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shift: new Point2D(-1, 0));
@@ -89,6 +94,7 @@ namespace AirForce
                 radius: 8,
                 movespeed: 8,
                 strength: 1,
+                radiusOfSight: 10 * 8,
                 image: Properties.Resources.player_bullet);
 
             playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shift: new Point2D(1, 0));
@@ -104,6 +110,7 @@ namespace AirForce
                 radius: 100,
                 movespeed: 2,
                 strength: random.Next(8, 16),
+                radiusOfSight: 10 * 100,
                 image: Properties.Resources.meteor);
 
             meteor.Mover = new ShiftOnDirrectionMover(meteor, shift: new Point2D(-2, 1));
@@ -118,7 +125,8 @@ namespace AirForce
                 position: new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
                 radius: 30,
                 movespeed: 4,
-                strength: 0, 
+                strength: 0,
+                radiusOfSight: 10 * 30,
                 image: Properties.Resources.player_ship);
         }
 

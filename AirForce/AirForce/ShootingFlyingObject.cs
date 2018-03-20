@@ -6,8 +6,8 @@ namespace AirForce
     {
         private readonly Coooldown shootingCooldown = new Coooldown(currentValue: 80, maxValue: 80);
 
-        public ShootingFlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, Image image)
-            : base(type, position, radius, movespeed, strength, image)
+        public ShootingFlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, int radiusOfSight, Image image)
+            : base(type, position, radius, movespeed, strength, radiusOfSight, image)
         {
         }
 

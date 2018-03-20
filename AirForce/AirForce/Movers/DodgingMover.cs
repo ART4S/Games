@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace AirForce
@@ -18,19 +17,17 @@ namespace AirForce
             List<FlyingObject> playerBullets = flyingObjects
                 .FindAll(f => f.Type == FlyingObjectType.PlayerBullet);
 
-            List<Point2D> minPathToFreeTrajectory = GetMinPathToFreeTrajectory(playerBullets, gameField, ground);
+            List<Point2D> minPathToFreeWay = GetMinPathToFreeWay(playerBullets, gameField, ground);
 
-            flyingObject.Position = minPathToFreeTrajectory.Any() ?
-                minPathToFreeTrajectory.First() :
+            flyingObject.Position = minPathToFreeWay.Any() ?
+                minPathToFreeWay.First() :
                 flyingObject.Position - new Point2D(flyingObject.Movespeed, 0);
         }
 
-        private List<Point2D> GetMinPathToFreeTrajectory(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
+        private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
         {
-            int radiusOfSight = 10 * flyingObject.Radius;
-
             List<FlyingObject> objectsInRadiusOfSight = dangerousObjects
-                .FindAll(o => Math.Sqrt(Math.Pow(o.Position.X - flyingObject.Position.X, 2) + Math.Pow(o.Position.Y - flyingObject.Position.Y, 2)) < radiusOfSight); // поле зрения - окружность
+                .FindAll(o => CollisionHandler.IsIntersects(flyingObject.Position, flyingObject.RadiusOfSight, o.Position, o.Radius)); // поле зрения - окружность
 
             var queue = new Queue<Point2D>();
             var savePaths = new Dictionary<Point2D, Point2D>();
@@ -42,15 +39,15 @@ namespace AirForce
             {
                 Point2D currentPosition = queue.Dequeue();
 
-                bool isDangerousObjectsInFront = objectsInRadiusOfSight
+                bool isObjectsInFront = objectsInRadiusOfSight
                     .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, flyingObject.Radius));
 
                 bool isHaveCollision = objectsInRadiusOfSight
                     .Any(o => CollisionHandler.IsIntersects(currentPosition, flyingObject.Radius, o.Position, o.Radius));
 
-                if (!isDangerousObjectsInFront ||
-                    CollisionHandler.IsOutOfField(currentPosition, flyingObject.Radius, gameField))
-                    return RestorePath(savePaths, currentPosition);
+                if (!isObjectsInFront ||
+                    CollisionHandler.IsOutOfFieldLeftBorder(currentPosition, flyingObject.Radius, gameField))
+                    return GetRestoredPath(savePaths, currentPosition);
 
                 if (isHaveCollision ||
                     CollisionHandler.IsIntersectGround(currentPosition, flyingObject.Radius, ground) ||
@@ -76,7 +73,7 @@ namespace AirForce
             return new List<Point2D>();
         }
 
-        private List<Point2D> RestorePath(Dictionary<Point2D, Point2D> savePaths, Point2D endPoint)
+        private List<Point2D> GetRestoredPath(Dictionary<Point2D, Point2D> savePaths, Point2D endPoint)
         {
             List<Point2D> path = new List<Point2D>();
             Point2D currentPoint = endPoint;

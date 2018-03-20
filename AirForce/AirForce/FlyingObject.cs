@@ -9,6 +9,7 @@ namespace AirForce
         public int Strength { get; set; }
         public int Movespeed { get; }
         public int Radius { get; }
+        public int RadiusOfSight { get; }
         public FlyingObjectType Type { get; }
         private readonly Image image;
 
@@ -16,13 +17,14 @@ namespace AirForce
         public IManualMover ManualMover { get; set; }
         private readonly Rewinder rewinder;
 
-        public FlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, Image image)
+        public FlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, int radiusOfSight, Image image)
         {
             Type = type;
             Position = position;
             Strength = strength;
             Radius = radius;
             Movespeed = movespeed;
+            RadiusOfSight = radiusOfSight;
             this.image = image;
 
             rewinder = new Rewinder(this);
