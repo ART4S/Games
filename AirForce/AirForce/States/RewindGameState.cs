@@ -13,39 +13,46 @@ namespace AirForce
         }
 
         public void Restart() { }
-        public void AddNewRandomEnemy() { }
         public void MovePlayer(Point2D movespeedModifer) { }
         public void PlayerFire() { }
         public void BeginRewind() { }
 
         public void Update()
         {
-            if (game.DeadObjects.Any())
-                game.FlyingObjects.AddRange(game.DeadObjects.Pop());
+            if (game.UndoActionsMacroCommands.Count == 0)
+                return;
 
-            foreach (FlyingObject obj in game.FlyingObjects)
-                obj.RestorePreviousState();
+            UndoActionsMacroCommand undoActionsMacroCommand = game.UndoActionsMacroCommands.Last();
+            game.UndoActionsMacroCommands.Remove(undoActionsMacroCommand);
 
-            List<FlyingObject> objectsOnStartPositions = game.FlyingObjects
-                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && !o.CanRestorePreviousState());
+            undoActionsMacroCommand.UndoActions();
 
-            if (objectsOnStartPositions.Any())
-            {
-                List<FlyingObject> bulletsOnStartPositions = objectsOnStartPositions
-                    .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
+            List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
 
-                List<FlyingObject> newObjectsForReleaseOnField = objectsOnStartPositions
-                        .Except(bulletsOnStartPositions)
-                        .ToList();
+            game.ObjectsOnField.AddRange(risenObjects);
 
-                if (newObjectsForReleaseOnField.Any())
-                    game.ObjectsForReleaseOnField.Push(newObjectsForReleaseOnField);
+            foreach (FlyingObject obj in risenObjects)
+                game.DeadObjects.Remove(obj);
 
-                foreach (FlyingObject obj in objectsOnStartPositions)
-                    game.FlyingObjects.Remove(obj);
-            }
+            List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField.FindAll(o => o.Position == o.StartPosition);
 
-            if (game.FlyingObjects.All(o => !o.CanRestorePreviousState()))
+            if (objectsOnStartPositions.Count == 0)
+                return;
+
+            List<FlyingObject> bulletsOnStartPositions = objectsOnStartPositions
+                .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
+
+            List<FlyingObject> newObjectsForReleaseOnField = objectsOnStartPositions
+                .Except(bulletsOnStartPositions)
+                .ToList();
+
+            foreach (FlyingObject obj in objectsOnStartPositions)
+                game.ObjectsOnField.Remove(obj);
+
+            if (newObjectsForReleaseOnField.Any())
+                game.ObjectsForReleaseOnField.Add(newObjectsForReleaseOnField);
+
+            if (game.ObjectsOnField.All(o => o.Position == o.StartPosition))
                 game.GameState = new WaitingGameState(game);
         }
 

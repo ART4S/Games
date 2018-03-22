@@ -5,17 +5,24 @@ namespace AirForce
     public class ShiftOnDirrectionMover : IMover
     {
         private readonly FlyingObject flyingObject;
-        private readonly Point2D shift;
+        private readonly Point2D shiftOnDirrection;
 
-        public ShiftOnDirrectionMover(FlyingObject flyingObject, Point2D shift)
+        public ShiftOnDirrectionMover(FlyingObject flyingObject, Point2D shiftOnDirrection)
         {
             this.flyingObject = flyingObject;
-            this.shift = shift;
+            this.shiftOnDirrection = shiftOnDirrection;
         }
 
-        public void Move(Field gameField, Ground ground, List<FlyingObject> flyingObjects)
+        public ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField)
         {
-            flyingObject.Position += new Point2D(flyingObject.Movespeed * shift.X, flyingObject.Movespeed * shift.Y);
+            var changePositionCommand = new ChangePositionCommand(flyingObject);
+            Point2D shift = new Point2D(
+                x: flyingObject.Movespeed * shiftOnDirrection.X,
+                y: flyingObject.Movespeed * shiftOnDirrection.Y);
+
+            changePositionCommand.ShiftPostion(shift);
+
+            return changePositionCommand;
         }
     }
 }

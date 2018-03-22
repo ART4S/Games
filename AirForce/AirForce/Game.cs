@@ -13,27 +13,31 @@ namespace AirForce
         public CollisionHandler CollisionHandler { get; }
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
-        public List<FlyingObject> FlyingObjects { get; } = new List<FlyingObject>();
+        public List<FlyingObject> ObjectsOnField { get; } = new List<FlyingObject>();
         public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
 
-        public Stack<List<FlyingObject>> DeadObjects { get; } = new Stack<List<FlyingObject>>();
-        public Stack<List<FlyingObject>> ObjectsForReleaseOnField { get; } = new Stack<List<FlyingObject>>();
+        public List<FlyingObject> DeadObjects { get; } = new List<FlyingObject>();
+        public List<List<FlyingObject>> ObjectsForReleaseOnField { get; } = new List<List<FlyingObject>>();
+
+        public List<UndoActionsMacroCommand> UndoActionsMacroCommands { get; } = new List<UndoActionsMacroCommand>();
+
+        public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(currentValue: 80, maxValue: 80);
 
         public FlyingObject Player
         {
             get
             {
-                if (FlyingObjects.Count == 0 || FlyingObjects.First().Type != FlyingObjectType.PlayerShip)
-                    FlyingObjects.Insert(0, FlyingObjectsFactory.CreateDeadPlayer(GameField, Ground));
+                if (ObjectsOnField.Count == 0 || ObjectsOnField.First().Type != FlyingObjectType.PlayerShip)
+                    ObjectsOnField.Insert(0, FlyingObjectsFactory.CreateDeadPlayer(GameField, Ground));
 
-                return FlyingObjects.First();
+                return ObjectsOnField.First();
             }
             set
             {
-                if (FlyingObjects.Any())
-                    FlyingObjects[0] = value;
+                if (ObjectsOnField.Any())
+                    ObjectsOnField[0] = value;
                 else
-                    FlyingObjects.Add(value);
+                    ObjectsOnField.Add(value);
             }
         }
 
@@ -56,14 +60,16 @@ namespace AirForce
 
             CollisionHandler = new CollisionHandler(this);
             GameState = new PlayingGameState(this);
-            GameField = new Field(new Point2D(), gameFieldSize);
-            Ground = new Ground(new Point2D(0, gameFieldSize.Height - 30), gameFieldSize);
-            Player = FlyingObjectsFactory.CreatePlayerShip(GameField, Ground);
-        }
 
-        public void AddNewRandomEnemy()
-        {
-            GameState.AddNewRandomEnemy();
+            GameField = new Field(
+                position: new Point2D(),
+                size: gameFieldSize);
+
+            Ground = new Ground(
+                position: new Point2D(0, gameFieldSize.Height - 30),
+                size: gameFieldSize);
+
+            Player = FlyingObjectsFactory.CreatePlayerShip(GameField, Ground);
         }
 
         public void Update()

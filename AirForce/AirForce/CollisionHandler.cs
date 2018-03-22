@@ -18,33 +18,43 @@ namespace AirForce
             if (game.Player.Strength == 0)
                 return new List<FlyingObject>();
 
-            return game.FlyingObjects
+            return game.ObjectsOnField
                 .OfType<ShootingFlyingObject>()
                 .Where(o => o.CanShootToTarget(game.Player))
-                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.GameField, game.Ground, o))
+                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.GameField, game.Ground, enemy: o))
                 .ToList();
         }
 
-        public void FindCollisionsAndChangeStrengths()
+        public List<ChangeStrengthCommand> FindCollisionsAndGetChangeStrengthCommands()
         {
-            for (int i = 0; i < game.FlyingObjects.Count - 1; i++)
-                for (int j = i + 1; j < game.FlyingObjects.Count; j++)
-                {
-                    var objA = game.FlyingObjects[i];
-                    var objB = game.FlyingObjects[j];
+            var changeStrengthCommands = new List<ChangeStrengthCommand>();
 
-                    if (CanCollide(objA, objB) && IsIntersects(objA, objB))
-                        ChangeStrength(objA, objB);
+            for (int i = 0; i < game.ObjectsOnField.Count - 1; i++)
+                for (int j = i + 1; j < game.ObjectsOnField.Count; j++)
+                {
+                    var objA = game.ObjectsOnField[i];
+                    var objB = game.ObjectsOnField[j];
+
+                    if (objA.Strength > 0 &&
+                        objB.Strength > 0 &&
+                        CanCollide(objA, objB) &&
+                        IsIntersects(objA, objB))
+                        changeStrengthCommands.AddRange(ChangeStrengths(objA, objB));
                 }
 
-            foreach (FlyingObject obj in game.FlyingObjects)
+            foreach (FlyingObject obj in game.ObjectsOnField.Where(o => o.Strength > 0))
             {
-                if (IsOutOfFieldLeftBorder(obj, game.GameField) || IsIntersectGround(obj, game.Ground))
-                    obj.Strength = 0;
+                if (IsOutOfFieldLeftBorder(obj, game.GameField) ||
+                    IsIntersectGround(obj, game.Ground) ||
+                    obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, game.GameField))
+                {
+                    var command = new ChangeStrengthCommand(obj);
+                    command.SetStrength(0);
+                    changeStrengthCommands.Add(command);
+                }
+            }
 
-                if (obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, game.GameField))
-                    obj.Strength = 0;
-            }             
+            return changeStrengthCommands;
         }
 
         private bool CanCollide(FlyingObject objA, FlyingObject objB)
@@ -55,11 +65,20 @@ namespace AirForce
             return game.CollisionTable[objA.Type].Contains(objB.Type);
         }
 
-        private void ChangeStrength(FlyingObject objA, FlyingObject objB)
+        private List<ChangeStrengthCommand> ChangeStrengths(FlyingObject objA, FlyingObject objB)
         {
+            var changeStrengthCommands = new List<ChangeStrengthCommand>
+            {
+                new ChangeStrengthCommand(objA),
+                new ChangeStrengthCommand(objB)
+            };
+
             int minStrength = Math.Min(objA.Strength, objB.Strength);
-            objA.Strength -= minStrength;
-            objB.Strength -= minStrength;
+
+            foreach (var command in changeStrengthCommands)
+                command.AddStrength(-minStrength);
+
+            return changeStrengthCommands;
         }
     }
 }

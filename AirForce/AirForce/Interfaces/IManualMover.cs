@@ -2,6 +2,6 @@
 {
     public interface IManualMover
     {
-        void MoveManually(Point2D movespeedModifer, Field gameField, Ground ground);
+        ChangePositionCommand MoveManually(Point2D movespeedModifer, Field gameField, Ground ground);
     }
 }

@@ -33,7 +33,7 @@ namespace AirForce
                 radiusOfSight: 10 * 50,
                 image: Properties.Resources.big_enemy_ship);
 
-            bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shift: new Point2D(-1, 0));
+            bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shiftOnDirrection: new Point2D(-1, 0));
 
             return bigShip;
         }
@@ -81,7 +81,7 @@ namespace AirForce
                 radiusOfSight: 10 * 8,
                 image: Properties.Resources.enemy_bullet);
 
-            enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shift: new Point2D(-1, 0));
+            enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shiftOnDirrection: new Point2D(-1, 0));
 
             return enemyBullet;
         }
@@ -97,7 +97,7 @@ namespace AirForce
                 radiusOfSight: 10 * 8,
                 image: Properties.Resources.player_bullet);
 
-            playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shift: new Point2D(1, 0));
+            playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shiftOnDirrection: new Point2D(1, 0));
 
             return playerBullet;
         }
@@ -113,7 +113,7 @@ namespace AirForce
                 radiusOfSight: 10 * 100,
                 image: Properties.Resources.meteor);
 
-            meteor.Mover = new ShiftOnDirrectionMover(meteor, shift: new Point2D(-2, 1));
+            meteor.Mover = new ShiftOnDirrectionMover(meteor, shiftOnDirrection: new Point2D(-2, 1));
 
             return meteor;
         }

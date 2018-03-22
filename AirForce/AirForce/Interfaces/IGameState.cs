@@ -6,7 +6,6 @@
         void Restart();
         void Update();
         void PlayerFire();
-        void AddNewRandomEnemy();
         void BeginRewind();
         void EndRewind();
     }

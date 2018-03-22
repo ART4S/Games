@@ -13,18 +13,22 @@ namespace AirForce
             this.flyingObject = flyingObject;
         }
 
-        public void Move(Field gameField, Ground ground, List<FlyingObject> flyingObjects)
+        public ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField)
         {
-            Point2D newPosition;
+            var changePositionCommand = new ChangePositionCommand(flyingObject);
+            Point2D shift;
+
             do
             {
-                newPosition = flyingObject.Position + new Point2D(
-                                  x: -flyingObject.Movespeed,
-                                  y: +flyingObject.Movespeed * random.Next(-1, 2)); // random values: -1 0 1
+                shift = new Point2D(
+                    x: -flyingObject.Movespeed,
+                    y: +flyingObject.Movespeed * random.Next(-1, 2)); // random values: -1 0 1
             }
-            while (CollisionHandler.IsIntersectGround(newPosition, flyingObject.Radius, ground));
+            while (CollisionHandler.IsIntersectGround(flyingObject.Position + shift, flyingObject.Radius, ground));
 
-            flyingObject.Position = newPosition;
+            changePositionCommand.ShiftPostion(shift);
+
+            return changePositionCommand;
         }
     }
 }

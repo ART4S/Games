@@ -3,21 +3,24 @@ namespace AirForce
 {
     public class ManualMover : IManualMover
     {
-        private readonly FlyingObject playerShip;
+        private readonly FlyingObject flyingObject;
 
-        public ManualMover(FlyingObject playerShip)
+        public ManualMover(FlyingObject flyingObject)
         {
-            this.playerShip = playerShip;
+            this.flyingObject = flyingObject;
         }
 
-        public void MoveManually(Point2D movespeedModifer, Field gameField, Ground ground)
+        public ChangePositionCommand MoveManually(Point2D movespeedModifer, Field gameField, Ground ground)
         {
-            Point2D nextPosition = playerShip.Position + new Point2D(
-                                       x: playerShip.Movespeed * movespeedModifer.X,
-                                       y: playerShip.Movespeed * movespeedModifer.Y);
+            var changePositionCommand = new ChangePositionCommand(flyingObject);
+            Point2D shift = new Point2D(
+                x: flyingObject.Movespeed * movespeedModifer.X,
+                y: flyingObject.Movespeed * movespeedModifer.Y);
 
-            if (CollisionHandler.IsEntirelyOnField(nextPosition, playerShip.Radius, gameField))
-                playerShip.Position = nextPosition;
+            if (CollisionHandler.IsEntirelyOnField(flyingObject.Position + shift, flyingObject.Radius, gameField))
+                changePositionCommand.ShiftPostion(shift);
+
+            return changePositionCommand;
         }
     }
 }

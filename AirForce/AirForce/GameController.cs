@@ -7,7 +7,6 @@ namespace AirForce
     {
         private readonly Game game;
         private readonly Coooldown playerShootingCoooldown = new Coooldown(currentValue: 10, maxValue: 10);
-        private readonly Coooldown enemiesCreatingCooldown = new Coooldown(currentValue: 80, maxValue: 80);
         private readonly Timer updatingTimer = new Timer();
 
         private const int MaxSpeed = 9;
@@ -85,7 +84,6 @@ namespace AirForce
         {
             MovePlayer();
             PlayerFire();
-            AddNewRandomEnemy();
 
             game.Update();
 
@@ -122,12 +120,6 @@ namespace AirForce
 
             if (playerShootingCoooldown.Tick())
                 game.PlayerFire();
-        }
-
-        private void AddNewRandomEnemy()
-        {
-            if (enemiesCreatingCooldown.Tick())
-                game.AddNewRandomEnemy();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace AirForce
 
             Ground.Paint(graphics);
 
-            foreach (FlyingObject obj in FlyingObjects.FindAll(o => o.Strength > 0))
+            foreach (FlyingObject obj in ObjectsOnField.FindAll(o => o.Strength > 0))
                 obj.Paint(graphics);
 
             if (GameState is WaitingGameState)

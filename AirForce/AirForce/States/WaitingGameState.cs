@@ -9,7 +9,6 @@
             this.game = game;
         }
 
-        public void AddNewRandomEnemy() { }
         public void Update() { }
         public void MovePlayer(Point2D movespeedModifer) { }
         public void PlayerFire() { }
@@ -20,7 +19,8 @@
         {
             game.DeadObjects.Clear();
             game.ObjectsForReleaseOnField.Clear();
-            game.FlyingObjects.Clear();
+            game.ObjectsOnField.Clear();
+            game.UndoActionsMacroCommands.Clear();
 
             game.Player = game.FlyingObjectsFactory.CreatePlayerShip(game.GameField, game.Ground);
             game.GameState = new PlayingGameState(game);
