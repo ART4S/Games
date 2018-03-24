@@ -45,8 +45,11 @@ namespace AirForce
 
         private void TransferFromDeadListToField(List<FlyingObject> objects)
         {
-            game.ObjectsOnField.AddRange(objects);
-            game.DeadObjects.RemoveAll(objects.Contains);
+            foreach (FlyingObject obj in objects)
+            {
+                game.DeadObjects.Remove(obj);
+                game.ObjectsOnField.Add(obj);
+            }
         }
 
         private void TransferFromFieldToPendingRleaseList(List<FlyingObject> objects)

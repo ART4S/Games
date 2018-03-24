@@ -22,13 +22,18 @@ namespace AirForce
             game.ObjectsOnField.AddRange(game.CollisionHandler.GetNewEnemyBullets(rewindMacroCommand));
             MoveObjects(playerMovespeedModifer, rewindMacroCommand);
             game.CollisionHandler.FindCollisionsAndChangeStrengths(rewindMacroCommand);
-            RemoveDeadObjectsFromField();
+
+            List<FlyingObject> deadObjects = game
+                .ObjectsOnField
+                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
+
+            TransferFromFieldToDeadList(deadObjects);
             AddEnemyOnField(rewindMacroCommand);
+
+            game.RewindMacroCommands.Add(rewindMacroCommand);
 
             if (IsGameOver())
                 game.State = new WaitingGameState(game);
-
-            game.RewindMacroCommands.Add(rewindMacroCommand);
         }
 
         private void MoveObjects(Point2D playerMovespeedModifer, RewindMacroCommand rewindMacroCommand)
@@ -37,6 +42,15 @@ namespace AirForce
                 obj.Move(game.Field, game.Ground, game.ObjectsOnField, rewindMacroCommand);
 
             game.Player.MoveManyally(playerMovespeedModifer, game.Field, game.Ground, rewindMacroCommand);
+        }
+
+        private void TransferFromFieldToDeadList(List<FlyingObject> objects)
+        {
+            foreach (FlyingObject obj in objects)
+            {
+                game.ObjectsOnField.Remove(obj);
+                game.DeadObjects.Add(obj);
+            }
         }
 
         private void AddEnemyOnField(RewindMacroCommand rewindMacroCommand)
@@ -53,19 +67,6 @@ namespace AirForce
             }
             else
                 game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreateRandomEnemy(game.Field, game.Ground));
-        }
-
-        private void RemoveDeadObjectsFromField()
-        {
-            List<FlyingObject> deadObjects = game
-                .ObjectsOnField
-                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
-
-            foreach (FlyingObject obj in deadObjects)
-            {
-                game.DeadObjects.Add(obj);
-                game.ObjectsOnField.Remove(obj);
-            }
         }
 
         private bool IsGameOver()
