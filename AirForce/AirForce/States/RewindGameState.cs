@@ -25,17 +25,15 @@ namespace AirForce
             }
 
             UndoLastMacroCommand();
-            AddRisenObjectsOnFieldAndRemoveFromDead();
+
+            List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
+
+            TransferFromDeadListToField(risenObjects);
 
             List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField
                 .FindAll(o => o.Position == o.StartPosition && o.Type != FlyingObjectType.PlayerShip);
 
-            List<FlyingObject> newObjectsForReleaseOnField = GetNewObjectsForReleaseOnField(objectsOnStartPositions);
-
-            game.ObjectsOnField.RemoveAll(objectsOnStartPositions.Contains);
-
-            if (newObjectsForReleaseOnField.Any())
-                game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
+            TransferFromFieldToPendingRleaseList(objectsOnStartPositions);
         }
 
         private void UndoLastMacroCommand()
@@ -45,24 +43,32 @@ namespace AirForce
             game.RewindMacroCommands.Remove(rewindMacroCommand);
         }
 
-        private void AddRisenObjectsOnFieldAndRemoveFromDead()
+        private void TransferFromDeadListToField(List<FlyingObject> objects)
         {
-            List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
-
-            game.ObjectsOnField.AddRange(risenObjects);
-            game.DeadObjects.RemoveAll(risenObjects.Contains);
+            game.ObjectsOnField.AddRange(objects);
+            game.DeadObjects.RemoveAll(objects.Contains);
         }
 
-        private List<FlyingObject> GetNewObjectsForReleaseOnField(List<FlyingObject> objectsOnStartPositions)
+        private void TransferFromFieldToPendingRleaseList(List<FlyingObject> objects)
         {
-            if (objectsOnStartPositions.Count == 0)
+            List<FlyingObject> newObjectsForReleaseOnField = GetNewObjectsForReleaseOnField(objects);
+
+            if (newObjectsForReleaseOnField.Any())
+                game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
+
+            game.ObjectsOnField.RemoveAll(objects.Contains);
+        }
+
+        private List<FlyingObject> GetNewObjectsForReleaseOnField(List<FlyingObject> objects)
+        {
+            if (objects.Count == 0)
                 return new List<FlyingObject>();
 
-            List<FlyingObject> bulletsOnStartPositions = objectsOnStartPositions
+            List<FlyingObject> bullets = objects
                 .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
 
-            List<FlyingObject> newObjectsForReleaseOnField = objectsOnStartPositions
-                .Except(bulletsOnStartPositions)
+            List<FlyingObject> newObjectsForReleaseOnField = objects
+                .Except(bullets)
                 .ToList();
 
             return newObjectsForReleaseOnField;
