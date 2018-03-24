@@ -24,7 +24,7 @@ namespace AirForce
                 return;
             }
 
-            UndoActions();
+            UndoLastMacroCommand();
             AddRisenObjectsOnFieldAndRemoveFromDead();
 
             List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField
@@ -38,10 +38,10 @@ namespace AirForce
                 game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
         }
 
-        private void UndoActions()
+        private void UndoLastMacroCommand()
         {
             RewindMacroCommand rewindMacroCommand = game.RewindMacroCommands.Last();
-            rewindMacroCommand.UndoActions();
+            rewindMacroCommand.Undo();
             game.RewindMacroCommands.Remove(rewindMacroCommand);
         }
 

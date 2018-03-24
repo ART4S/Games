@@ -11,7 +11,7 @@ namespace AirForce
             commands.Add(command);
         }
 
-        public void UndoActions()
+        public void Undo()
         {
             foreach (IUndoCommand command in commands)
                 command.Undo();
