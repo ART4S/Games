@@ -6,11 +6,11 @@ namespace AirForce
     {
         private readonly Random random = new Random();
 
-        public FlyingObject CreatePlayerShip(Field gameField, Ground ground)
+        public FlyingObject CreatePlayerShip(Field field, Ground ground)
         {
             var playerShip = new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                position: new Point2D(field.TopLeftPoint.X + 150, ground.Position.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 100,
@@ -22,27 +22,27 @@ namespace AirForce
             return playerShip;
         }
 
-        public FlyingObject CreateBigShip(Field gameField, Ground ground)
+        public FlyingObject CreateBigShip(Field field, Ground ground)
         {
             var bigShip = new FlyingObject(
                 type: FlyingObjectType.BigShip,
-                position: new Point2D(x: gameField.Size.Width + 50, y: random.Next(50, ground.Position.Y - 50)),
+                position: new Point2D(x: field.Size.Width + 50, y: random.Next(50, ground.Position.Y - 50)),
                 radius: 50,
                 movespeed: 8,
                 strength: 3,
                 radiusOfSight: 10 * 50,
                 image: Properties.Resources.big_enemy_ship);
 
-            bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shiftOnDirrection: new Point2D(-1, 0));
+            bigShip.Mover = new ShiftOnDirrectionMover(bigShip, shiftVector: new Point2D(-1, 0));
 
             return bigShip;
         }
 
-        public FlyingObject CreateChaserShip(Field gameField, Ground ground)
+        public FlyingObject CreateChaserShip(Field field, Ground ground)
         {
             var chaserShip = new ShootingFlyingObject(
                 type: FlyingObjectType.ChaserShip,
-                position: new Point2D(x: gameField.Size.Width + 30, y: random.Next(30, ground.Position.Y - 30)),
+                position: new Point2D(x: field.Size.Width + 30, y: random.Next(30, ground.Position.Y - 30)),
                 radius: 30,
                 movespeed: 3,
                 strength: 1,
@@ -54,11 +54,11 @@ namespace AirForce
             return chaserShip;
         }
 
-        public FlyingObject CreateFlyingSaucer(Field gameField, Ground ground)
+        public FlyingObject CreateFlyingSaucer(Field field, Ground ground)
         {
             var flyingSaucer = new FlyingObject(
                 type: FlyingObjectType.FlyingSaucer,
-                position: new Point2D(x: gameField.Size.Width + 25, y: random.Next(ground.Position.Y - 5 * 25, ground.Position.Y - 25)),
+                position: new Point2D(x: field.Size.Width + 25, y: random.Next(ground.Position.Y - 5 * 25, ground.Position.Y - 25)),
                 radius: 25,
                 movespeed: 2,
                 strength: 1,
@@ -70,23 +70,23 @@ namespace AirForce
             return flyingSaucer;
         }
 
-        public FlyingObject CreateEnemyBullet(Field gameField, Ground ground, FlyingObject enemy)
+        public FlyingObject CreateEnemyBullet(Field field, Ground ground, FlyingObject source)
         {
             var enemyBullet = new FlyingObject(
                 type: FlyingObjectType.EnemyBullet,
-                position: new Point2D(enemy.Position.X - enemy.Radius, enemy.Position.Y),
+                position: new Point2D(source.Position.X - source.Radius, source.Position.Y),
                 radius: 8,
                 movespeed: 8,
                 strength: 1,
                 radiusOfSight: 10 * 8,
                 image: Properties.Resources.enemy_bullet);
 
-            enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shiftOnDirrection: new Point2D(-1, 0));
+            enemyBullet.Mover = new ShiftOnDirrectionMover(enemyBullet, shiftVector: new Point2D(-1, 0));
 
             return enemyBullet;
         }
 
-        public FlyingObject CreatePlayerBullet(Field gameField, Ground ground, FlyingObject player)
+        public FlyingObject CreatePlayerBullet(Field field, Ground ground, FlyingObject player)
         {
             var playerBullet = new FlyingObject(
                 type: FlyingObjectType.PlayerBullet,
@@ -97,32 +97,32 @@ namespace AirForce
                 radiusOfSight: 10 * 8,
                 image: Properties.Resources.player_bullet);
 
-            playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shiftOnDirrection: new Point2D(1, 0));
+            playerBullet.Mover = new ShiftOnDirrectionMover(playerBullet, shiftVector: new Point2D(1, 0));
 
             return playerBullet;
         }
 
-        public FlyingObject CreateMeteor(Field gameField, Ground ground)
+        public FlyingObject CreateMeteor(Field field, Ground ground)
         {
             var meteor = new FlyingObject(
                 type: FlyingObjectType.Meteor,
-                position: new Point2D(random.Next(0, gameField.Size.Width), -100),
+                position: new Point2D(random.Next(0, field.Size.Width), -100),
                 radius: 100,
                 movespeed: 2,
                 strength: random.Next(8, 16),
                 radiusOfSight: 10 * 100,
                 image: Properties.Resources.meteor);
 
-            meteor.Mover = new ShiftOnDirrectionMover(meteor, shiftOnDirrection: new Point2D(-2, 1));
+            meteor.Mover = new ShiftOnDirrectionMover(meteor, shiftVector: new Point2D(-2, 1));
 
             return meteor;
         }
 
-        public FlyingObject CreateDeadPlayer(Field gameField, Ground ground)
+        public FlyingObject CreateDeadPlayer(Field field, Ground ground)
         {
             return new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(gameField.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                position: new Point2D(field.TopLeftPoint.X + 150, ground.Position.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 0,
@@ -130,18 +130,17 @@ namespace AirForce
                 image: Properties.Resources.player_ship);
         }
 
-        public FlyingObject CreateRandomEnemy(Field gameField, Ground ground)
+        public FlyingObject CreateRandomEnemy(Field field, Ground ground)
         {
-            return CreateChaserShip(gameField, ground);
-            //switch (random.Next(0, 4))
-            //{
-            //    case 0: return CreateBigShip(gameField, ground);
-            //    case 1: return CreateChaserShip(gameField, ground);
-            //    case 2: return CreateFlyingSaucer(gameField, ground);
-            //    case 3: return CreateMeteor(gameField, ground);
+            switch (random.Next(0, 4))
+            {
+                case 0: return CreateBigShip(field, ground);
+                case 1: return CreateChaserShip(field, ground);
+                case 2: return CreateFlyingSaucer(field, ground);
+                case 3: return CreateMeteor(field, ground);
 
-            //    default: throw new ArgumentOutOfRangeException();
-            //}
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

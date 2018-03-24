@@ -29,20 +29,14 @@ namespace AirForce
             this.image = image;
         }
 
-        public ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField)
+        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
-            if (Mover == null)
-                return new ChangePositionCommand(this);
-
-            return Mover.Move(gameField, ground, objectsOnField);
+            Mover?.Move(field, ground, objectsOnField, rewindMacroCommand);
         }
 
-        public ChangePositionCommand MoveManyally(Point2D movespeedModifer, Field gameField, Ground ground)
+        public void MoveManyally(Point2D movespeedModifer, Field field, Ground ground, RewindMacroCommand rewindMacroCommand)
         {
-            if (ManualMover == null)
-                return new ChangePositionCommand(this);
-
-            return ManualMover.MoveManually(movespeedModifer, gameField, ground);
+            ManualMover?.MoveManually(movespeedModifer, field, ground, rewindMacroCommand);
         }
 
         public void Paint(Graphics graphics)

@@ -15,32 +15,22 @@ namespace AirForce
         public void EndRewind() { }
         public void Restart() { }
 
-        public void Update()
+        public void Update(Point2D playerMovespeedModifer)
         {
-            var undoActionsMacroCommand = new UndoActionsMacroCommand();
+            var rewindMacroCommand = new RewindMacroCommand();
 
-            game.ObjectsOnField.AddRange(game.CollisionHandler.GetNewEnemyBullets());
-
-            //
+            game.ObjectsOnField.AddRange(game.CollisionHandler.GetNewEnemyBullets(rewindMacroCommand));
 
             foreach (FlyingObject obj in game.ObjectsOnField)
-            {
-                ChangePositionCommand moveCommand = obj.Move(game.GameField, game.Ground, game.ObjectsOnField);
-                undoActionsMacroCommand.AddCommand(moveCommand);
-            }
+                obj.Move(game.Field, game.Ground, game.ObjectsOnField, rewindMacroCommand);
 
-            List<ChangeStrengthCommand> changeStrengthCommands = game.CollisionHandler
-                .FindCollisionsAndGetChangeStrengthCommands();
+            game.Player.MoveManyally(playerMovespeedModifer, game.Field, game.Ground, rewindMacroCommand);
 
-            foreach (var command in changeStrengthCommands)
-                undoActionsMacroCommand.AddCommand(command);
+            game.CollisionHandler.FindCollisionsAndChangeStrengths(rewindMacroCommand);
 
-            game.UndoActionsMacroCommands.Add(undoActionsMacroCommand);
-
-
-            //
-
-            List<FlyingObject> deadObjects = game.ObjectsOnField.FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
+            List<FlyingObject> deadObjects = game
+                .ObjectsOnField
+                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
 
             foreach (FlyingObject obj in deadObjects)
             {
@@ -48,39 +38,38 @@ namespace AirForce
                 game.ObjectsOnField.Remove(obj);
             }
 
-            if (game.EnemiesCreatingCooldown.Tick())
-            {
-                if (game.ObjectsForReleaseOnField.Any())
-                {
-                    game.ObjectsOnField.AddRange(game.ObjectsForReleaseOnField.Last());
-                    game.ObjectsForReleaseOnField.RemoveAt(game.ObjectsForReleaseOnField.Count - 1);
-                }
-                else
-                    game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreateRandomEnemy(game.GameField, game.Ground));
-            }
+            AddEnemyOnField(rewindMacroCommand);
+
+            game.RewindMacroCommands.Add(rewindMacroCommand);
 
             if (game.Player.Strength <= 0)
-                game.GameState = new WaitingGameState(game);
+                game.State = new WaitingGameState(game);
         }
 
-        public void MovePlayer(Point2D movespeedModifer)
+        private void AddEnemyOnField(RewindMacroCommand rewindMacroCommand)
         {
-            var undoActionsMacroCommand = new UndoActionsMacroCommand();
+            game.EnemiesCreatingCooldown.Tick(rewindMacroCommand);
 
-            undoActionsMacroCommand.AddCommand(command: game.Player.MoveManyally(movespeedModifer, game.GameField, game.Ground));
+            if (!game.EnemiesCreatingCooldown.IsCollapsed)
+                return;
 
-            game.UndoActionsMacroCommands.Add(undoActionsMacroCommand);
-            game.Player.MoveManyally(movespeedModifer, game.GameField, game.Ground);
+            if (game.ObjectsPendingReleaseOnField.Any())
+            {
+                game.ObjectsOnField.AddRange(game.ObjectsPendingReleaseOnField.Last());
+                game.ObjectsPendingReleaseOnField.RemoveAt(game.ObjectsPendingReleaseOnField.Count - 1);
+            }
+            else
+                game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreateRandomEnemy(game.Field, game.Ground));
         }
 
         public void PlayerFire()
         {
-            game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreatePlayerBullet(game.GameField, game.Ground, game.Player));
+            game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreatePlayerBullet(game.Field, game.Ground, game.Player));
         }
 
         public void BeginRewind()
         {
-            game.GameState = new RewindGameState(game);
+            game.State = new RewindGameState(game);
         }
     }
 }

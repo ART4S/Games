@@ -2,23 +2,23 @@
 {
     public class ChangePositionCommand : IUndoCommand
     {
-        private readonly FlyingObject flyingObject;
-        private Point2D positionShift;
+        private readonly FlyingObject source;
+        private Point2D deltaPosition;
 
-        public ChangePositionCommand(FlyingObject flyingObject)
+        public ChangePositionCommand(FlyingObject source)
         {
-            this.flyingObject = flyingObject;
+            this.source = source;
         }
 
         public void ShiftPostion(Point2D shift)
         {
-            positionShift = shift;
-            flyingObject.Position += shift;
+            deltaPosition = shift;
+            source.Position += deltaPosition;
         }
 
         public void Undo()
         {
-            flyingObject.Position -= positionShift;
+            source.Position -= deltaPosition;
         }
     }
 }

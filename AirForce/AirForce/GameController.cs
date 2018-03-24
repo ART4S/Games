@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AirForce
@@ -6,7 +7,7 @@ namespace AirForce
     public class GameController
     {
         private readonly Game game;
-        private readonly Coooldown playerShootingCoooldown = new Coooldown(currentValue: 10, maxValue: 10);
+        private readonly Coooldown playerShootingCoooldown = new Coooldown(maxValue: 20, isCollapsed: true);
         private readonly Timer updatingTimer = new Timer();
 
         private const int MaxSpeed = 9;
@@ -30,7 +31,11 @@ namespace AirForce
         {
             game = new Game(display.Size);
 
-            display.Paint += (s, e) => game.Paint(e.Graphics);
+            display.Paint += (s, e) =>
+            {
+                game.Paint(e.Graphics);
+                PaintGameSpeed(e.Graphics, new Point(0, 40));
+            };
 
             updatingTimer.Interval = 15;
             updatingTimer.Tick += (s, e) =>
@@ -58,17 +63,17 @@ namespace AirForce
             if (pressedKeys.ContainsKey(pressedKey))
                 pressedKeys[pressedKey] = true;
 
-            if (pressedKeys[Keys.Q] && gameSpeed < MaxSpeed)
-                gameSpeed++;
-
-            if (pressedKeys[Keys.E] && gameSpeed > MinSpeed)
-                gameSpeed--;
-
             if (pressedKeys[Keys.Enter])
                 game.Restart();
 
             if (pressedKeys[Keys.ShiftKey])
                 game.BeginRewind();
+
+            if (pressedKeys[Keys.Q] && game.State is RewindGameState && gameSpeed < MaxSpeed)
+                gameSpeed++;
+
+            if (pressedKeys[Keys.E] && game.State is RewindGameState && gameSpeed > MinSpeed)
+                gameSpeed--;
         }
 
         public void KeyUp(Keys unpressedKey)
@@ -82,16 +87,14 @@ namespace AirForce
 
         private void Update()
         {
-            MovePlayer();
             PlayerFire();
+            game.Update(GetPlayerMoveSpeedModifer());
 
-            game.Update();
-
-            if (game.GameState is WaitingGameState)
+            if (game.State is RewindGameState == false)
                 gameSpeed = MinSpeed;
         }
 
-        private void MovePlayer()
+        private Point2D GetPlayerMoveSpeedModifer()
         {
             Point2D playerMovespeedModifer = new Point2D();
 
@@ -107,19 +110,36 @@ namespace AirForce
             if (pressedKeys[Keys.D])
                 playerMovespeedModifer += new Point2D(1, 0);
 
-            game.MovePlayer(playerMovespeedModifer);
+            return playerMovespeedModifer;
         }
 
         private void PlayerFire()
         {
             if (!pressedKeys[Keys.Space])
             {
-                playerShootingCoooldown.SetOnTick();
+                playerShootingCoooldown.SetOneTickToCollapse();
                 return;
             }
 
-            if (playerShootingCoooldown.Tick())
+            playerShootingCoooldown.Tick();
+
+            if (playerShootingCoooldown.IsCollapsed)
                 game.PlayerFire();
+        }
+
+        private void PaintGameSpeed(Graphics graphics, Point location)
+        {          
+            string text = $"X{gameSpeed}";
+            Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
+            Brush textBrush = Brushes.White;
+            Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            graphics.DrawString(text, textPen, textBrush, locationRectangle, stringFormat);
         }
     }
 }

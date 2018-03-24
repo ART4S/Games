@@ -4,33 +4,33 @@ namespace AirForce
 {
     public class ChangeStrengthCommand : IUndoCommand
     {
-        private readonly FlyingObject flyingObject;
-        private int strengthShift;
+        private readonly FlyingObject source;
+        private int deltaStrength;
 
-        public ChangeStrengthCommand(FlyingObject flyingObject)
+        public ChangeStrengthCommand(FlyingObject source)
         {
-            this.flyingObject = flyingObject;
+            this.source = source;
         }
 
         public void AddStrength(int strength)
         {
-            strengthShift = strength;
-            flyingObject.Strength += strength;
+            deltaStrength = strength;
+            source.Strength += deltaStrength;
         }
 
         public void SetStrength(int strength)
         {
-            strengthShift = Math.Abs(flyingObject.Strength - strength);
+            deltaStrength = Math.Abs(source.Strength - strength);
 
-            if (strength < flyingObject.Strength)
-                strengthShift = -strengthShift;
+            if (strength < source.Strength)
+                deltaStrength = -deltaStrength;
 
-            flyingObject.Strength = strength;
+            source.Strength += deltaStrength;
         }
 
         public void Undo()
         {
-            flyingObject.Strength -= strengthShift;
+            source.Strength -= deltaStrength;
         }
     }
 }

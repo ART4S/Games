@@ -9,43 +9,43 @@ namespace AirForce
         #region Fields
 
         public Ground Ground { get; }
-        public Field GameField { get; }
+        public Field Field { get; }
         public CollisionHandler CollisionHandler { get; }
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
         public List<FlyingObject> ObjectsOnField { get; } = new List<FlyingObject>();
-        public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
-
         public List<FlyingObject> DeadObjects { get; } = new List<FlyingObject>();
-        public List<List<FlyingObject>> ObjectsForReleaseOnField { get; } = new List<List<FlyingObject>>();
-
-        public List<UndoActionsMacroCommand> UndoActionsMacroCommands { get; } = new List<UndoActionsMacroCommand>();
-
-        public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(currentValue: 80, maxValue: 80);
+        public List<List<FlyingObject>> ObjectsPendingReleaseOnField { get; } = new List<List<FlyingObject>>();
 
         public FlyingObject Player
         {
             get
             {
                 if (ObjectsOnField.Count == 0 || ObjectsOnField.First().Type != FlyingObjectType.PlayerShip)
-                    ObjectsOnField.Insert(0, FlyingObjectsFactory.CreateDeadPlayer(GameField, Ground));
+                    ObjectsOnField.Insert(0, FlyingObjectsFactory.CreateDeadPlayer(Field, Ground));
 
                 return ObjectsOnField.First();
             }
             set
             {
                 if (ObjectsOnField.Any())
-                    ObjectsOnField[0] = value;
+                    ObjectsOnField.Insert(0, value);
                 else
                     ObjectsOnField.Add(value);
             }
         }
 
-        public IGameState GameState { get; set; }
+        public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
+
+        public List<RewindMacroCommand> RewindMacroCommands { get; } = new List<RewindMacroCommand>();
+
+        public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(maxValue: 80, isCollapsed: true);
+
+        public IGameState State { get; set; }
 
         #endregion
 
-        public Game(Size gameFieldSize)
+        public Game(Size fieldSize)
         {
             CollisionTable = new Dictionary<FlyingObjectType, FlyingObjectType[]>
             {
@@ -57,49 +57,43 @@ namespace AirForce
                 { FlyingObjectType.PlayerBullet, new []{ FlyingObjectType.BigShip, FlyingObjectType.ChaserShip, FlyingObjectType.Meteor } },
                 { FlyingObjectType.EnemyBullet, new []{ FlyingObjectType.Meteor, FlyingObjectType.Meteor } }
             };
-
             CollisionHandler = new CollisionHandler(this);
-            GameState = new PlayingGameState(this);
+            State = new PlayingGameState(this);
 
-            GameField = new Field(
+            Field = new Field(
                 position: new Point2D(),
-                size: gameFieldSize);
+                size: fieldSize);
 
             Ground = new Ground(
-                position: new Point2D(0, gameFieldSize.Height - 30),
-                size: gameFieldSize);
+                position: new Point2D(0, Field.Size.Height - 30),
+                size: Field.Size);
 
-            Player = FlyingObjectsFactory.CreatePlayerShip(GameField, Ground);
+            Player = FlyingObjectsFactory.CreatePlayerShip(Field, Ground);
         }
 
-        public void Update()
+        public void Update(Point2D playerMovespeedModifer)
         {
-            GameState.Update();
+            State.Update(playerMovespeedModifer);
         }
 
         public void Restart()
         {
-            GameState.Restart();
-        }
-
-        public void MovePlayer(Point2D movespeedModifer)
-        {
-            GameState.MovePlayer(movespeedModifer);
+            State.Restart();
         }
 
         public void PlayerFire()
         {
-            GameState.PlayerFire();
+            State.PlayerFire();
         }
 
         public void BeginRewind()
         {
-            GameState.BeginRewind();
+            State.BeginRewind();
         }
 
         public void EndRewind()
         {
-            GameState.EndRewind();
+            State.EndRewind();
         }
     }
 }

@@ -13,48 +13,41 @@ namespace AirForce
             this.game = game;
         }
 
-        public List<FlyingObject> GetNewEnemyBullets()
+        public List<FlyingObject> GetNewEnemyBullets(RewindMacroCommand rewindMacroCommand)
         {
             if (game.Player.Strength == 0)
                 return new List<FlyingObject>();
 
             return game.ObjectsOnField
                 .OfType<ShootingFlyingObject>()
-                .Where(o => o.CanShootToTarget(game.Player))
-                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.GameField, game.Ground, enemy: o))
+                .Where(o => o.CanShootToTarget(game.Player, rewindMacroCommand))
+                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.Field, game.Ground, o))
                 .ToList();
         }
 
-        public List<ChangeStrengthCommand> FindCollisionsAndGetChangeStrengthCommands()
+        public void FindCollisionsAndChangeStrengths(RewindMacroCommand rewindMacroCommand)
         {
-            var changeStrengthCommands = new List<ChangeStrengthCommand>();
-
             for (int i = 0; i < game.ObjectsOnField.Count - 1; i++)
                 for (int j = i + 1; j < game.ObjectsOnField.Count; j++)
                 {
                     var objA = game.ObjectsOnField[i];
                     var objB = game.ObjectsOnField[j];
 
-                    if (objA.Strength > 0 &&
-                        objB.Strength > 0 &&
-                        CanCollide(objA, objB) &&
-                        IsIntersects(objA, objB))
-                        changeStrengthCommands.AddRange(ChangeStrengths(objA, objB));
+                    if (objA.Strength > 0 && objB.Strength > 0 && CanCollide(objA, objB) && IsIntersects(objA, objB))
+                        ChangeStrengths(objA, objB, rewindMacroCommand);
                 }
 
-            foreach (FlyingObject obj in game.ObjectsOnField.Where(o => o.Strength > 0))
+            foreach (FlyingObject obj in game.ObjectsOnField)
             {
-                if (IsOutOfFieldLeftBorder(obj, game.GameField) ||
+                if (IsOutOfFieldLeftBorder(obj, game.Field) ||
                     IsIntersectGround(obj, game.Ground) ||
-                    obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, game.GameField))
+                    obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, game.Field))
                 {
-                    var command = new ChangeStrengthCommand(obj);
-                    command.SetStrength(0);
-                    changeStrengthCommands.Add(command);
+                    var setStrengthCommand = new ChangeStrengthCommand(obj);
+                    setStrengthCommand.SetStrength(0);
+                    rewindMacroCommand.AddCommand(setStrengthCommand);
                 }
             }
-
-            return changeStrengthCommands;
         }
 
         private bool CanCollide(FlyingObject objA, FlyingObject objB)
@@ -65,20 +58,17 @@ namespace AirForce
             return game.CollisionTable[objA.Type].Contains(objB.Type);
         }
 
-        private List<ChangeStrengthCommand> ChangeStrengths(FlyingObject objA, FlyingObject objB)
+        private void ChangeStrengths(FlyingObject objA, FlyingObject objB, RewindMacroCommand rewindMacroCommand)
         {
-            var changeStrengthCommands = new List<ChangeStrengthCommand>
-            {
-                new ChangeStrengthCommand(objA),
-                new ChangeStrengthCommand(objB)
-            };
-
             int minStrength = Math.Min(objA.Strength, objB.Strength);
 
-            foreach (var command in changeStrengthCommands)
-                command.AddStrength(-minStrength);
+            ChangeStrengthCommand objAaddStrengthCommand = new ChangeStrengthCommand(objA);
+            objAaddStrengthCommand.AddStrength(-minStrength);
+            rewindMacroCommand.AddCommand(objAaddStrengthCommand);
 
-            return changeStrengthCommands;
+            ChangeStrengthCommand objBaddStrengthCommand = new ChangeStrengthCommand(objB);
+            objBaddStrengthCommand.AddStrength(-minStrength);
+            rewindMacroCommand.AddCommand(objBaddStrengthCommand);
         }
     }
 }

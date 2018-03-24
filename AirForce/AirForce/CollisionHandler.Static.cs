@@ -10,11 +10,11 @@ namespace AirForce
             return IsIntersects(objA.Position, objA.Radius, objB.Position, objB.Radius);
         }
 
-        public static bool IsIntersects(Point2D firstPosition, int firstRadius, Point2D secondPosition, int secondRadius)
+        public static bool IsIntersects(Point2D positionA, int radiusA, Point2D positionB, int radiusB)
         {
-            return Math.Pow(firstPosition.X - secondPosition.X, 2) +
-                   Math.Pow(firstPosition.Y - secondPosition.Y, 2) <=
-                   Math.Pow(firstRadius + secondRadius, 2); // пересечение окружностей
+            return Math.Pow(positionA.X - positionB.X, 2) +
+                   Math.Pow(positionA.Y - positionB.Y, 2) <=
+                   Math.Pow(radiusA + radiusB, 2); // пересечение окружностей
         }
 
         public static bool IsInFront(FlyingObject self, FlyingObject other)
@@ -22,18 +22,18 @@ namespace AirForce
             return IsInFront(self.Position, self.Radius, other.Position, other.Radius);
         }
 
-        public static bool IsInFront(Point2D firstPosition, int firstRadius, Point2D secondPosition, int secondRadius)
+        public static bool IsInFront(Point2D positionA, int radiusA, Point2D positionB, int radiusB)
         {
-            int firstTopBorder = firstPosition.Y - firstRadius;
-            int firstBottomBorder = firstPosition.Y + firstRadius;
-            int firstRightBorder = firstPosition.X + firstRadius;
+            int aTopBorder = positionA.Y - radiusA;
+            int aBottomBorder = positionA.Y + radiusA;
+            int aRightBorder = positionA.X + radiusA;
 
-            int secondTopBorder = secondPosition.Y - secondRadius;
-            int secondBottomBorder = secondPosition.Y + secondRadius;
-            int secondLerftBorder = secondPosition.X - secondRadius;
+            int bTopBorder = positionB.Y - radiusB;
+            int bBottomBorder = positionB.Y + radiusB;
+            int bLerftBorder = positionB.X - radiusB;
 
-            bool isHaveMutualX = firstRightBorder <= secondLerftBorder;
-            bool isHaveMutualY = Math.Max(firstTopBorder, secondTopBorder) <= Math.Min(firstBottomBorder, secondBottomBorder);
+            bool isHaveMutualX = aRightBorder <= bLerftBorder;
+            bool isHaveMutualY = Math.Max(aTopBorder, bTopBorder) <= Math.Min(aBottomBorder, bBottomBorder);
 
             return isHaveMutualX && isHaveMutualY;
         }
@@ -45,7 +45,7 @@ namespace AirForce
 
         public static bool IsOutOfFieldLeftBorder(Point2D position, int radius, Field field)
         {
-            return position.X + radius < field.TopLeftPoint.X;
+            return position.X + radius <= field.TopLeftPoint.X;
         }
 
         public static bool IsOutOfFieldRightBorder(FlyingObject self, Field field)

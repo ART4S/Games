@@ -9,18 +9,18 @@ namespace AirForce
             PaintStrengthBar(
                 graphics: graphics,
                 strength: Player.Strength,
-                location: GameField.TopLeftPoint + new Point2D(4, 4));
+                location: Field.TopLeftPoint + new Point2D(4, 4));
 
             Ground.Paint(graphics);
 
             foreach (FlyingObject obj in ObjectsOnField.FindAll(o => o.Strength > 0))
                 obj.Paint(graphics);
 
-            if (GameState is WaitingGameState)
+            if (State is WaitingGameState)
                 PaintTextInCenterRectangle(
                     graphics: graphics,
                     text: "Press ENTER to start game",
-                    rectangle: GameField);
+                    rectangle: Field);
         }
 
         private void PaintStrengthBar(Graphics graphics, int strength, Point2D location)

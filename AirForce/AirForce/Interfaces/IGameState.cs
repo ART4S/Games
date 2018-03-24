@@ -2,9 +2,8 @@
 {
     public interface IGameState
     {
-        void MovePlayer(Point2D movespeedModifer);
+        void Update(Point2D playerMovespeedModifer);
         void Restart();
-        void Update();
         void PlayerFire();
         void BeginRewind();
         void EndRewind();

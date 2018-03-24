@@ -5,30 +5,29 @@ namespace AirForce
 {
     public class ChaoticMovingMover : IMover
     {
-        private readonly FlyingObject flyingObject;
+        private readonly FlyingObject source;
         private readonly Random random = new Random();
 
-        public ChaoticMovingMover(FlyingObject flyingObject)
+        public ChaoticMovingMover(FlyingObject source)
         {
-            this.flyingObject = flyingObject;
+            this.source = source;
         }
 
-        public ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField)
+        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
-            var changePositionCommand = new ChangePositionCommand(flyingObject);
+            var shiftPositionCommand = new ChangePositionCommand(source);
             Point2D shift;
 
             do
             {
                 shift = new Point2D(
-                    x: -flyingObject.Movespeed,
-                    y: +flyingObject.Movespeed * random.Next(-1, 2)); // random values: -1 0 1
+                    x: -source.Movespeed,
+                    y: +source.Movespeed * random.Next(-1, 2)); // random values: -1 0 1
             }
-            while (CollisionHandler.IsIntersectGround(flyingObject.Position + shift, flyingObject.Radius, ground));
+            while (CollisionHandler.IsIntersectGround(source.Position + shift, source.Radius, ground));
 
-            changePositionCommand.ShiftPostion(shift);
-
-            return changePositionCommand;
+            shiftPositionCommand.ShiftPostion(shift);
+            rewindMacroCommand.AddCommand(shiftPositionCommand);
         }
     }
 }

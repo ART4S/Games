@@ -5,73 +5,75 @@ namespace AirForce
 {
     public class DodgingMover : IMover
     {
-        private readonly FlyingObject flyingObject;
+        private readonly FlyingObject source;
 
-        public DodgingMover(FlyingObject flyingObject)
+        public DodgingMover(FlyingObject source)
         {
-            this.flyingObject = flyingObject;
+            this.source = source;
         }
 
-        public ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField)
+        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
-            var changePositionCommand = new ChangePositionCommand(flyingObject);
-
             List<FlyingObject> playerBullets = objectsOnField
                 .FindAll(f => f.Type == FlyingObjectType.PlayerBullet);
 
-            List<Point2D> minPathToFreeWay = GetMinPathToFreeWay(playerBullets, gameField, ground);
+            List<Point2D> minPathToFreeWay = GetMinPathToFreeWay(playerBullets, field, ground);
 
-            changePositionCommand.ShiftPostion(minPathToFreeWay.Any()
-                ? minPathToFreeWay.First()
-                : new Point2D(-flyingObject.Movespeed, 0));
+            Point2D shift = minPathToFreeWay.Any()
+                ? minPathToFreeWay.First() - source.Position
+                : new Point2D(-source.Movespeed, 0);
 
-            return changePositionCommand;
+            var shiftPositionCommand = new ChangePositionCommand(source);
+            shiftPositionCommand.ShiftPostion(shift);
+            rewindMacroCommand.AddCommand(shiftPositionCommand);
         }
 
-        private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Field gameField, Ground ground) // BFS algorithm
+        private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Field field, Ground ground) // BFS algorithm
         {
             List<FlyingObject> objectsInRadiusOfSight = dangerousObjects
-                .FindAll(o => CollisionHandler.IsIntersects(flyingObject.Position, flyingObject.RadiusOfSight, o.Position, o.Radius)); // поле зрения - окружность
+                .FindAll(o => CollisionHandler.IsIntersects(source.Position, source.RadiusOfSight, o.Position, o.Radius)); // поле зрения - окружность
 
-            var shiftsQueue = new Queue<Point2D>();
+            if (objectsInRadiusOfSight.Count == 0)
+                return new List<Point2D>();
+
+            var positionsQueue = new Queue<Point2D>();
             var savePaths = new Dictionary<Point2D, Point2D>();
 
-            savePaths[new Point2D()] = new Point2D();
-            shiftsQueue.Enqueue(new Point2D());
+            savePaths[source.Position] = source.Position;
+            positionsQueue.Enqueue(source.Position);
 
-            while (shiftsQueue.Any())
+            while (positionsQueue.Any())
             {
-                Point2D currentShift = shiftsQueue.Dequeue();
-                Point2D currentPosition = flyingObject.Position + currentShift;
+                Point2D currentPosition = positionsQueue.Dequeue();
 
                 bool isObjectsInFront = objectsInRadiusOfSight
-                    .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, flyingObject.Radius));
+                    .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, source.Radius));
 
                 bool isHaveCollision = objectsInRadiusOfSight
-                    .Any(o => CollisionHandler.IsIntersects(currentPosition, flyingObject.Radius, o.Position, o.Radius));
-
-                if (!isObjectsInFront ||
-                    CollisionHandler.IsOutOfFieldLeftBorder(currentPosition, flyingObject.Radius, gameField))
-                    return GetRestoredPath(savePaths, currentPosition);
+                    .Any(o => CollisionHandler.IsIntersects(currentPosition, source.Radius, o.Position, o.Radius));
 
                 if (isHaveCollision ||
-                    CollisionHandler.IsIntersectGround(currentPosition, flyingObject.Radius, ground) ||
-                    CollisionHandler.IsIntersectFieldTopBorder(currentPosition, flyingObject.Radius, gameField))
+                    CollisionHandler.IsIntersectGround(currentPosition, source.Radius, ground) ||
+                    CollisionHandler.IsIntersectFieldTopBorder(currentPosition, source.Radius, field))
                     continue;
 
-                Point2D moveUpShift = new Point2D(-flyingObject.Movespeed, -flyingObject.Movespeed); // сдвиг по диагонали вверх
-                Point2D moveDownShift = new Point2D(-flyingObject.Movespeed, flyingObject.Movespeed); // сдвиг по дагонали вниз
-                 
-                if (!savePaths.ContainsKey(moveUpShift))
+                if (!isObjectsInFront ||
+                    CollisionHandler.IsOutOfFieldLeftBorder(currentPosition, source.Radius, field))
+                    return GetRestoredPath(savePaths, currentPosition);
+
+                Point2D moveUpPosition = currentPosition + new Point2D(-source.Movespeed, -source.Movespeed); // сдвиг по диагонали вверх
+                Point2D moveDownPosition = currentPosition + new Point2D(-source.Movespeed, source.Movespeed); // сдвиг по дагонали вниз
+
+                if (!savePaths.ContainsKey(moveUpPosition))
                 {
-                    savePaths[moveUpShift] = currentShift;
-                    shiftsQueue.Enqueue(moveUpShift);
+                    savePaths[moveUpPosition] = currentPosition;
+                    positionsQueue.Enqueue(moveUpPosition);
                 }
 
-                if (!savePaths.ContainsKey(moveDownShift))
+                if (!savePaths.ContainsKey(moveDownPosition))
                 {
-                    savePaths[moveDownShift] = currentShift;
-                    shiftsQueue.Enqueue(moveDownShift);
+                    savePaths[moveDownPosition] = currentPosition;
+                    positionsQueue.Enqueue(moveDownPosition);
                 }
             }
 
@@ -83,13 +85,10 @@ namespace AirForce
             List<Point2D> path = new List<Point2D>();
             Point2D currentPoint = endPoint;
 
-            if (savePaths.ContainsKey(currentPoint))
+            while (savePaths.ContainsKey(currentPoint) && savePaths[currentPoint] != currentPoint)
             {
-                while (savePaths[currentPoint] != currentPoint)
-                {
-                    path.Add(currentPoint);
-                    currentPoint = savePaths[currentPoint];
-                }
+                path.Add(currentPoint);
+                currentPoint = savePaths[currentPoint];
             }
 
             path.Reverse();

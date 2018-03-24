@@ -13,28 +13,28 @@ namespace AirForce
         }
 
         public void Restart() { }
-        public void MovePlayer(Point2D movespeedModifer) { }
         public void PlayerFire() { }
         public void BeginRewind() { }
 
-        public void Update()
+        public void Update(Point2D playerMovespeedModifer)
         {
-            if (game.UndoActionsMacroCommands.Count == 0)
+            if (game.RewindMacroCommands.Count == 0)
+            {
+                game.State = new WaitingGameState(game);
                 return;
+            }
 
-            UndoActionsMacroCommand undoActionsMacroCommand = game.UndoActionsMacroCommands.Last();
-            game.UndoActionsMacroCommands.Remove(undoActionsMacroCommand);
-
-            undoActionsMacroCommand.UndoActions();
+            RewindMacroCommand rewindMacroCommand = game.RewindMacroCommands.Last();
+            rewindMacroCommand.UndoActions();
+            game.RewindMacroCommands.Remove(rewindMacroCommand);
 
             List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
 
             game.ObjectsOnField.AddRange(risenObjects);
+            game.DeadObjects.RemoveAll(o => risenObjects.Contains(o));
 
-            foreach (FlyingObject obj in risenObjects)
-                game.DeadObjects.Remove(obj);
-
-            List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField.FindAll(o => o.Position == o.StartPosition);
+            List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField
+                .FindAll(o => o.Position == o.StartPosition && o.Type != FlyingObjectType.PlayerShip);
 
             if (objectsOnStartPositions.Count == 0)
                 return;
@@ -46,19 +46,15 @@ namespace AirForce
                 .Except(bulletsOnStartPositions)
                 .ToList();
 
-            foreach (FlyingObject obj in objectsOnStartPositions)
-                game.ObjectsOnField.Remove(obj);
+            game.ObjectsOnField.RemoveAll(o => objectsOnStartPositions.Contains(o));
 
             if (newObjectsForReleaseOnField.Any())
-                game.ObjectsForReleaseOnField.Add(newObjectsForReleaseOnField);
-
-            if (game.ObjectsOnField.All(o => o.Position == o.StartPosition))
-                game.GameState = new WaitingGameState(game);
+                game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
         }
 
         public void EndRewind()
         {
-            game.GameState = new PlayingGameState(game);
+            game.State = new PlayingGameState(game);
         }
     }
 }

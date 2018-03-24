@@ -4,6 +4,6 @@ namespace AirForce
 {
     public interface IMover
     {
-        ChangePositionCommand Move(Field gameField, Ground ground, List<FlyingObject> objectsOnField);
+        void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand);
     }
 }

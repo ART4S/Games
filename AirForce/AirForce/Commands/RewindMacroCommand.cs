@@ -2,7 +2,7 @@
 
 namespace AirForce
 {
-    public class UndoActionsMacroCommand
+    public class RewindMacroCommand
     {
         private readonly List<IUndoCommand> commands = new List<IUndoCommand>();
 

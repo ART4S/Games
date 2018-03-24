@@ -2,31 +2,39 @@
 {
     public class Coooldown
     {
-        private readonly int maxValue;
-        private int currentValue;
+        public int MaxValue { get; }
+        public int CurrentValue { get; set; }
+        public bool IsCollapsed { get; private set; }
 
-        public Coooldown(int currentValue, int maxValue)
+        public Coooldown(int maxValue, bool isCollapsed)
         {
-            this.maxValue = maxValue;
-            this.currentValue = currentValue;
+            MaxValue = maxValue;
+            IsCollapsed = isCollapsed;
         }
 
-        public bool Tick()
+        public void Tick(RewindMacroCommand rewindMacroCommand = null)
         {
-            currentValue++;
+            var increaseCoooldownCommand = new ChangeCoooldownCommand(this);
+            increaseCoooldownCommand.IncreaseValue();
+            rewindMacroCommand?.AddCommand(increaseCoooldownCommand);
 
-            if (currentValue > maxValue)
+            if (CurrentValue > MaxValue)
             {
-                currentValue = 0;
-                return true;
+                var setValueCoooldownCommand = new ChangeCoooldownCommand(this);
+                setValueCoooldownCommand.SetValue(0);
+                rewindMacroCommand?.AddCommand(setValueCoooldownCommand);
             }
 
-            return false;
+            IsCollapsed = CurrentValue == MaxValue;
         }
 
-        public void SetOnTick()
+        public void SetOneTickToCollapse(RewindMacroCommand rewindMacroCommand = null)
         {
-            currentValue = maxValue;
+            IsCollapsed = false;
+
+            var setValueCoooldownCommand = new ChangeCoooldownCommand(this);
+            setValueCoooldownCommand.SetValue(MaxValue - 1);
+            rewindMacroCommand?.AddCommand(setValueCoooldownCommand);
         }
     }
 }
