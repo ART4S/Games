@@ -70,11 +70,9 @@ namespace AirForce
             List<FlyingObject> bullets = objects
                 .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
 
-            List<FlyingObject> newObjectsForReleaseOnField = objects
+            return objects
                 .Except(bullets)
                 .ToList();
-
-            return newObjectsForReleaseOnField;
         }
 
         public void EndRewind()

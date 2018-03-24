@@ -10,6 +10,9 @@
         {
             MaxValue = maxValue;
             IsCollapsed = isCollapsed;
+
+            if (isCollapsed)
+                SetOneTickToCollapse();
         }
 
         public void Tick(RewindMacroCommand rewindMacroCommand = null)
