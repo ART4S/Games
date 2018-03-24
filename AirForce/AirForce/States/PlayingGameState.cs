@@ -20,30 +20,23 @@ namespace AirForce
             var rewindMacroCommand = new RewindMacroCommand();
 
             game.ObjectsOnField.AddRange(game.CollisionHandler.GetNewEnemyBullets(rewindMacroCommand));
+            MoveObjects(playerMovespeedModifer, rewindMacroCommand);
+            game.CollisionHandler.FindCollisionsAndChangeStrengths(rewindMacroCommand);
+            RemoveDeadObjectsFromField();
+            AddEnemyOnField(rewindMacroCommand);
 
+            if (IsGameOver())
+                game.State = new WaitingGameState(game);
+
+            game.RewindMacroCommands.Add(rewindMacroCommand);
+        }
+
+        private void MoveObjects(Point2D playerMovespeedModifer, RewindMacroCommand rewindMacroCommand)
+        {
             foreach (FlyingObject obj in game.ObjectsOnField)
                 obj.Move(game.Field, game.Ground, game.ObjectsOnField, rewindMacroCommand);
 
             game.Player.MoveManyally(playerMovespeedModifer, game.Field, game.Ground, rewindMacroCommand);
-
-            game.CollisionHandler.FindCollisionsAndChangeStrengths(rewindMacroCommand);
-
-            List<FlyingObject> deadObjects = game
-                .ObjectsOnField
-                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
-
-            foreach (FlyingObject obj in deadObjects)
-            {
-                game.DeadObjects.Add(obj);
-                game.ObjectsOnField.Remove(obj);
-            }
-
-            AddEnemyOnField(rewindMacroCommand);
-
-            game.RewindMacroCommands.Add(rewindMacroCommand);
-
-            if (game.Player.Strength <= 0)
-                game.State = new WaitingGameState(game);
         }
 
         private void AddEnemyOnField(RewindMacroCommand rewindMacroCommand)
@@ -60,6 +53,24 @@ namespace AirForce
             }
             else
                 game.ObjectsOnField.Add(game.FlyingObjectsFactory.CreateRandomEnemy(game.Field, game.Ground));
+        }
+
+        private void RemoveDeadObjectsFromField()
+        {
+            List<FlyingObject> deadObjects = game
+                .ObjectsOnField
+                .FindAll(o => o.Type != FlyingObjectType.PlayerShip && o.Strength <= 0);
+
+            foreach (FlyingObject obj in deadObjects)
+            {
+                game.DeadObjects.Add(obj);
+                game.ObjectsOnField.Remove(obj);
+            }
+        }
+
+        private bool IsGameOver()
+        {
+            return game.Player.Strength <= 0;
         }
 
         public void PlayerFire()

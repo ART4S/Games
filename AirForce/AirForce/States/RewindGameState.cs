@@ -24,20 +24,39 @@ namespace AirForce
                 return;
             }
 
-            RewindMacroCommand rewindMacroCommand = game.RewindMacroCommands.Last();
-            rewindMacroCommand.UndoActions();
-            game.RewindMacroCommands.Remove(rewindMacroCommand);
-
-            List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
-
-            game.ObjectsOnField.AddRange(risenObjects);
-            game.DeadObjects.RemoveAll(o => risenObjects.Contains(o));
+            UndoActions();
+            AddRisenObjectsOnFieldAndRemoveFromDead();
 
             List<FlyingObject> objectsOnStartPositions = game.ObjectsOnField
                 .FindAll(o => o.Position == o.StartPosition && o.Type != FlyingObjectType.PlayerShip);
 
+            List<FlyingObject> newObjectsForReleaseOnField = GetNewObjectsForReleaseOnField(objectsOnStartPositions);
+
+            game.ObjectsOnField.RemoveAll(objectsOnStartPositions.Contains);
+
+            if (newObjectsForReleaseOnField.Any())
+                game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
+        }
+
+        private void UndoActions()
+        {
+            RewindMacroCommand rewindMacroCommand = game.RewindMacroCommands.Last();
+            rewindMacroCommand.UndoActions();
+            game.RewindMacroCommands.Remove(rewindMacroCommand);
+        }
+
+        private void AddRisenObjectsOnFieldAndRemoveFromDead()
+        {
+            List<FlyingObject> risenObjects = game.DeadObjects.FindAll(o => o.Strength > 0);
+
+            game.ObjectsOnField.AddRange(risenObjects);
+            game.DeadObjects.RemoveAll(risenObjects.Contains);
+        }
+
+        private List<FlyingObject> GetNewObjectsForReleaseOnField(List<FlyingObject> objectsOnStartPositions)
+        {
             if (objectsOnStartPositions.Count == 0)
-                return;
+                return new List<FlyingObject>();
 
             List<FlyingObject> bulletsOnStartPositions = objectsOnStartPositions
                 .FindAll(o => o.Type == FlyingObjectType.PlayerBullet || o.Type == FlyingObjectType.EnemyBullet);
@@ -46,10 +65,7 @@ namespace AirForce
                 .Except(bulletsOnStartPositions)
                 .ToList();
 
-            game.ObjectsOnField.RemoveAll(o => objectsOnStartPositions.Contains(o));
-
-            if (newObjectsForReleaseOnField.Any())
-                game.ObjectsPendingReleaseOnField.Add(newObjectsForReleaseOnField);
+            return newObjectsForReleaseOnField;
         }
 
         public void EndRewind()
