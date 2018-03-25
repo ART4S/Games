@@ -9,7 +9,7 @@
             this.source = source;
         }
 
-        public void MoveManually(Point2D movespeedModifer, Field field, Ground ground, RewindMacroCommand rewindMacroCommand)
+        public void MoveManually(Point2D movespeedModifer, Rectangle2D field, Rectangle2D ground, RewindMacroCommand rewindMacroCommand)
         {
             Point2D shift = new Point2D(
                 x: source.Movespeed * movespeedModifer.X,

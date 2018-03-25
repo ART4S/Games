@@ -6,11 +6,11 @@ namespace AirForce
     {
         private readonly Random random = new Random();
 
-        public FlyingObject CreatePlayerShip(Field field, Ground ground)
+        public FlyingObject CreatePlayerShip(Rectangle2D field, Rectangle2D ground)
         {
             var playerShip = new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(field.TopLeftPoint.X + 150, ground.Location.Y / 2),
+                position: new Point2D(field.Location.X + 150, ground.Location.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 100,
@@ -22,7 +22,7 @@ namespace AirForce
             return playerShip;
         }
 
-        public FlyingObject CreateBigShip(Field field, Ground ground)
+        public FlyingObject CreateBigShip(Rectangle2D field, Rectangle2D ground)
         {
             var bigShip = new FlyingObject(
                 type: FlyingObjectType.BigShip,
@@ -38,7 +38,7 @@ namespace AirForce
             return bigShip;
         }
 
-        public FlyingObject CreateChaserShip(Field field, Ground ground)
+        public FlyingObject CreateChaserShip(Rectangle2D field, Rectangle2D ground)
         {
             var chaserShip = new ShootingFlyingObject(
                 type: FlyingObjectType.ChaserShip,
@@ -54,7 +54,7 @@ namespace AirForce
             return chaserShip;
         }
 
-        public FlyingObject CreateFlyingSaucer(Field field, Ground ground)
+        public FlyingObject CreateFlyingSaucer(Rectangle2D field, Rectangle2D ground)
         {
             var flyingSaucer = new FlyingObject(
                 type: FlyingObjectType.FlyingSaucer,
@@ -70,7 +70,7 @@ namespace AirForce
             return flyingSaucer;
         }
 
-        public FlyingObject CreateEnemyBullet(Field field, Ground ground, FlyingObject source)
+        public FlyingObject CreateEnemyBullet(Rectangle2D field, Rectangle2D ground, FlyingObject source)
         {
             var enemyBullet = new FlyingObject(
                 type: FlyingObjectType.EnemyBullet,
@@ -86,7 +86,7 @@ namespace AirForce
             return enemyBullet;
         }
 
-        public FlyingObject CreatePlayerBullet(Field field, Ground ground, FlyingObject player)
+        public FlyingObject CreatePlayerBullet(Rectangle2D field, Rectangle2D ground, FlyingObject player)
         {
             var playerBullet = new FlyingObject(
                 type: FlyingObjectType.PlayerBullet,
@@ -102,7 +102,7 @@ namespace AirForce
             return playerBullet;
         }
 
-        public FlyingObject CreateMeteor(Field field, Ground ground)
+        public FlyingObject CreateMeteor(Rectangle2D field, Rectangle2D ground)
         {
             var meteor = new FlyingObject(
                 type: FlyingObjectType.Meteor,
@@ -118,11 +118,11 @@ namespace AirForce
             return meteor;
         }
 
-        public FlyingObject CreateDeadPlayer(Field field, Ground ground)
+        public FlyingObject CreateDeadPlayer(Rectangle2D field, Rectangle2D ground)
         {
             return new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(field.TopLeftPoint.X + 150, ground.Location.Y / 2),
+                position: new Point2D(field.Location.X + 150, ground.Location.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 0,
@@ -130,7 +130,7 @@ namespace AirForce
                 image: Properties.Resources.player_ship);
         }
 
-        public FlyingObject CreateRandomEnemy(Field field, Ground ground)
+        public FlyingObject CreateRandomEnemy(Rectangle2D field, Rectangle2D ground)
         {
             switch (random.Next(0, 4))
             {

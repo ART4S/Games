@@ -2,6 +2,6 @@
 {
     public interface IManualMover
     {
-        void MoveManually(Point2D movespeedModifer, Field field, Ground ground, RewindMacroCommand rewindMacroCommand);
+        void MoveManually(Point2D movespeedModifer, Rectangle2D field, Rectangle2D ground, RewindMacroCommand rewindMacroCommand);
     }
 }

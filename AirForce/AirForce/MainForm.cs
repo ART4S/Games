@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace AirForce
@@ -26,7 +25,7 @@ namespace AirForce
         {
             InitializeComponent();
 
-            game = new Game(GameFieldPictureBox.Size);
+            game = new Game(new Size2D(GameFieldPictureBox.Size));
 
             GameFieldPictureBox.Paint += (s, e) => game.Paint(e.Graphics);
 
@@ -41,6 +40,20 @@ namespace AirForce
             game.Update();
             game.MovePlayer(GetPlayerMoveSpeedModifer());
             GameFieldPictureBox.Refresh();
+        }
+
+        private void PlayerFire()
+        {
+            if (!pressedKeys[Keys.Space])
+            {
+                playerShootingCoooldown.SetOneTickToCollapse(new RewindMacroCommand());
+                return;
+            }
+
+            playerShootingCoooldown.Tick(new RewindMacroCommand());
+
+            if (playerShootingCoooldown.IsCollapsed)
+                game.PlayerFire();
         }
 
         private Point2D GetPlayerMoveSpeedModifer()
@@ -60,20 +73,6 @@ namespace AirForce
                 playerMovespeedModifer += new Point2D(1, 0);
 
             return playerMovespeedModifer;
-        }
-
-        private void PlayerFire()
-        {
-            if (!pressedKeys[Keys.Space])
-            {
-                playerShootingCoooldown.SetOneTickToCollapse(new RewindMacroCommand());
-                return;
-            }
-
-            playerShootingCoooldown.Tick(new RewindMacroCommand());
-
-            if (playerShootingCoooldown.IsCollapsed)
-                game.PlayerFire();
         }
 
         //private void PaintGameSpeed(Graphics graphics, Point location)

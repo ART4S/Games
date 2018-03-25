@@ -9,9 +9,9 @@ namespace AirForce
             PaintStrengthBar(
                 graphics: graphics,
                 strength: Player.Strength,
-                location: Field.TopLeftPoint + new Point2D(4, 4));
+                location: Field.Location + new Point2D(4, 4));
 
-            Ground.Paint(graphics);
+            Ground.Paint(graphics, Brushes.Green);
 
             foreach (FlyingObject obj in ObjectsOnField)
                 obj.Paint(graphics);
@@ -28,13 +28,17 @@ namespace AirForce
         {
             // frame
             Pen framePen = new Pen(Color.White, 3);
-            Rectangle frameRectangle = new Rectangle(location: location, size: new Size(303, 33));
+            Rectangle2D frameRectangle = new Rectangle2D(
+                location: location,
+                size: new Size2D(303, 33));
 
             graphics.DrawRectangle(framePen, frameRectangle);
 
             // redLine
             Brush redLineBrush = Brushes.Red;
-            Rectangle redLineRectangle = new Rectangle(location: location + new Point2D(2, 2), size: new Size(3 * strength, 30));
+            Rectangle2D redLineRectangle = new Rectangle2D(
+                location: location + new Point2D(2, 2),
+                size: new Size2D(3 * strength, 30));
 
             graphics.FillRectangle(redLineBrush, redLineRectangle);
 
@@ -51,7 +55,7 @@ namespace AirForce
             graphics.DrawString(text, textPen, textBrush, frameRectangle, stringFormat);
         }
 
-        private void PaintTextInCenterRectangle(Graphics graphics, string text, int fontSize, Rectangle rectangle)
+        private void PaintTextInCenterRectangle(Graphics graphics, string text, int fontSize, Rectangle2D rectangle)
         {
             var font = new Font("Segoe UI", fontSize, FontStyle.Bold);
             var brush = Brushes.White;

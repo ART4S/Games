@@ -12,7 +12,7 @@ namespace AirForce
             this.source = source;
         }
 
-        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
+        public void Move(Rectangle2D field, Rectangle2D ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
             List<FlyingObject> playerBullets = objectsOnField
                 .FindAll(f => f.Type == FlyingObjectType.PlayerBullet);
@@ -26,7 +26,7 @@ namespace AirForce
             rewindMacroCommand.AddAndExecute(new ShiftPositionCommand(source, shift));
         }
 
-        private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Field field, Ground ground) // BFS algorithm
+        private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Rectangle2D field, Rectangle2D ground) // BFS algorithm
         {
             List<FlyingObject> objectsInRadiusOfSight = dangerousObjects
                 .FindAll(o => CollisionHandler.IsIntersects(source.Position, source.RadiusOfSight, o.Position, o.Radius)); // поле зрения - окружность

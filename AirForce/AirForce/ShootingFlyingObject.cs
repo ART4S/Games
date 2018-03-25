@@ -13,7 +13,7 @@ namespace AirForce
 
         public bool CanShootToTarget(FlyingObject target, RewindMacroCommand rewindMacroCommand)
         {
-            if (!CollisionHandler.IsInFront(self: target, other: this))
+            if (!CollisionHandler.IsInFront(source: target, other: this))
             {
                 shootingCooldown.SetOneTickToCollapse(rewindMacroCommand);
                 return false;

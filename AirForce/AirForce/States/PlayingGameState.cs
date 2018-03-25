@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AirForce.Commands;
 
 namespace AirForce
 {
@@ -35,7 +34,7 @@ namespace AirForce
             List<FlyingObject> newEnemyBullets = game.CollisionHandler.GetNewEnemyBullets(rewindMacroCommand);
 
             foreach (FlyingObject bullet in newEnemyBullets)
-                rewindMacroCommand.AddAndExecute(new AddItemToListCommand(bullet, game.ObjectsOnField));
+                rewindMacroCommand.AddAndExecute(new AddObjectToGameCommand(bullet, game));
         }
 
         private void MoveObjects(RewindMacroCommand rewindMacroCommand)
@@ -51,7 +50,7 @@ namespace AirForce
             List<FlyingObject> deadObjects = game.ObjectsOnField.FindAll(o => o.Strength <= 0);
 
             foreach (FlyingObject obj in deadObjects)
-                rewindMacroCommand.AddAndExecute(new RemoveItemFromListCommand(obj, game.ObjectsOnField));
+                rewindMacroCommand.AddAndExecute(new RemoveObjectFromGameCommand(obj, game));
         }
 
         private void AddEnemy(RewindMacroCommand rewindMacroCommand)
@@ -63,7 +62,7 @@ namespace AirForce
 
             FlyingObject enemy = game.FlyingObjectsFactory.CreateRandomEnemy(game.Field, game.Ground);
 
-            rewindMacroCommand.AddAndExecute(new AddItemToListCommand(enemy, game.ObjectsOnField));
+            rewindMacroCommand.AddAndExecute(new AddObjectToGameCommand(enemy, game));
         }
 
         public void MovePlayer(Point2D movespeedModifer)
@@ -78,7 +77,7 @@ namespace AirForce
             RewindMacroCommand rewindMacroCommand = GetLastRewindMacroCommand();
             FlyingObject playerBullet = game.FlyingObjectsFactory.CreatePlayerBullet(game.Field, game.Ground, game.Player);
 
-            rewindMacroCommand.AddAndExecute(new AddItemToListCommand(playerBullet, game.ObjectsOnField));
+            rewindMacroCommand.AddAndExecute(new AddObjectToGameCommand(playerBullet, game));
         }
 
         public RewindMacroCommand GetLastRewindMacroCommand()

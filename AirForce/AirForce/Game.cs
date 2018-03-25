@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AirForce
 {
@@ -8,8 +6,8 @@ namespace AirForce
     {
         #region Fields
 
-        public Ground Ground { get; }
-        public Field Field { get; }
+        public Rectangle2D Ground { get; }
+        public Rectangle2D Field { get; }
         public CollisionHandler CollisionHandler { get; }
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
@@ -37,7 +35,7 @@ namespace AirForce
 
         #endregion
 
-        public Game(Size fieldSize)
+        public Game(Size2D fieldSize)
         {
             CollisionTable = new Dictionary<FlyingObjectType, FlyingObjectType[]>
             {
@@ -52,11 +50,11 @@ namespace AirForce
             CollisionHandler = new CollisionHandler(this);
             State = new PlayingGameState(this);
 
-            Field = new Field(
-                position: new Point2D(),
+            Field = new Rectangle2D(
+                location: new Point2D(),
                 size: fieldSize);
 
-            Ground = new Ground(
+            Ground = new Rectangle2D(
                 location: new Point2D(0, Field.Size.Height - 30),
                 size: Field.Size);
 
@@ -65,20 +63,17 @@ namespace AirForce
 
         public void Update()
         {
-            for (int i = 0; i < speed; i++)
-                State.Update();
+            State.Update();
         }
 
         public void PlayerFire()
         {
-            for (int i = 0; i < speed; i++)
-                State.PlayerFire();
+            State.PlayerFire();
         }
 
         public void MovePlayer(Point2D movespeedModifer)
         {
-            for (int i = 0; i < speed; i++)
-                State.MovePlayer(movespeedModifer);
+            State.MovePlayer(movespeedModifer);
         }
 
         public void BeginRewind()

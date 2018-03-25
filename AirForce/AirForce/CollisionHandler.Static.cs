@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace AirForce
 {
@@ -17,9 +16,9 @@ namespace AirForce
                    Math.Pow(radiusA + radiusB, 2); // пересечение окружностей
         }
 
-        public static bool IsInFront(FlyingObject self, FlyingObject other)
+        public static bool IsInFront(FlyingObject source, FlyingObject other)
         {
-            return IsInFront(self.Position, self.Radius, other.Position, other.Radius);
+            return IsInFront(source.Position, source.Radius, other.Position, other.Radius);
         }
 
         public static bool IsInFront(Point2D positionA, int radiusA, Point2D positionB, int radiusB)
@@ -38,70 +37,51 @@ namespace AirForce
             return isHaveMutualX && isHaveMutualY;
         }
 
-        public static bool IsOutOfFieldLeftBorder(FlyingObject self, Field field)
+        public static bool IsOutOfFieldLeftBorder(Point2D position, int radius, Rectangle2D field)
         {
-            return IsOutOfFieldLeftBorder(self.Position, self.Radius, field);
+            return position.X + radius <= field.Location.X;
         }
 
-        public static bool IsOutOfFieldLeftBorder(Point2D position, int radius, Field field)
+        public static bool IsIntersectFieldTopBorder(Point2D position, int radius, Rectangle2D field)
         {
-            return position.X + radius <= field.TopLeftPoint.X;
+            return position.Y - radius < field.Location.Y;
         }
 
-        public static bool IsOutOfFieldRightBorder(FlyingObject self, Field field)
+        public static bool IsIntersectGround(FlyingObject source, Rectangle2D ground)
         {
-            return IsOutOfFieldRightBorder(self.Position, self.Radius, field);
+            return IsIntersectGround(source.Position, source.Radius, ground);
         }
 
-        public static bool IsOutOfFieldRightBorder(Point2D position, int radius, Field field)
+        public static bool IsIntersectGround(Point2D position, int radius, Rectangle2D ground)
         {
-            return position.X - radius >= field.TopRightPoint.X;
+            Rectangle2D objRectangle = new Rectangle2D(
+                location: position - new Point2D(radius, radius),
+                size: new Size2D(2 * radius, 2 * radius));
+
+            return objRectangle.IntersectsWith(ground);
         }
 
-        public static bool IsIntersectFieldTopBorder(Point2D position, int radius, Field field)
+        public static bool IsOutOfField(FlyingObject source, Rectangle2D field)
         {
-            return position.Y - radius < field.TopLeftPoint.Y;
+            return IsOutOfField(source.Position, source.Radius, field);
         }
 
-        public static bool IsIntersectGround(FlyingObject self, Ground ground)
+        public static bool IsOutOfField(Point2D position, int radius, Rectangle2D field)
         {
-            return IsIntersectGround(self.Position, self.Radius, ground);
-        }
-
-        public static bool IsIntersectGround(Point2D position, int radius, Ground ground)
-        {
-            Rectangle objRectangle = new Rectangle(
-                position - new Point2D(radius, radius),
-                new Size(2 * radius, 2 * radius));
-
-            Rectangle groundRectangle = new Rectangle(ground.Location, ground.Size);
-
-            return objRectangle.IntersectsWith(groundRectangle);
-        }
-
-        public static bool IsOutOfField(FlyingObject self, Field field)
-        {
-            return IsOutOfField(self.Position, self.Radius, field);
-        }
-
-        public static bool IsOutOfField(Point2D position, int radius, Field field)
-        {
-            Rectangle objRectangle = new Rectangle(
-                position - new Point2D(radius, radius),
-                new Size(2 * radius, 2 * radius));
+            Rectangle2D objRectangle = new Rectangle2D(
+                location: position - new Point2D(radius, radius),
+                size: new Size2D(2 * radius, 2 * radius));
 
             return !objRectangle.IntersectsWith(field);
         }
 
-        public static bool IsEntirelyOnField(Point2D position, int radius, Field field)
+        public static bool IsEntirelyOnField(Point2D position, int radius, Rectangle2D field)
         {
-            Rectangle objRectangle = new Rectangle(
-                position - new Point2D(radius, radius),
-                new Size(2 * radius, 2 * radius));
+            Rectangle2D objRectangle = new Rectangle2D(
+                location: position - new Point2D(radius, radius),
+                size: new Size2D(2 * radius, 2 * radius));
 
-            Rectangle fieldRectangle = field;
-
-            return fieldRectangle.Contains(objRectangle);
+            return field.Contains(objRectangle);
         }
     }
 }

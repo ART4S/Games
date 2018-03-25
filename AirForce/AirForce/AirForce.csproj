@@ -63,8 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddItemToListCommand.cs" />
-    <Compile Include="Commands\RemoveItemFromListCommand.cs" />
+    <Compile Include="Commands\AddObjectToGameCommand.cs" />
+    <Compile Include="Commands\RemoveObjectFromGameCommand.cs" />
     <Compile Include="Commands\SubtractStrengthCommand.cs" />
     <Compile Include="Commands\CooldownIncreaseValueCommand.cs" />
     <Compile Include="Commands\CooldownSetValueCommand.cs" />
@@ -73,6 +73,8 @@
     <Compile Include="Helpers\Coooldown.cs" />
     <Compile Include="Game.Paint.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Helpers\Rectangle2D.cs" />
+    <Compile Include="Helpers\Size2D.cs" />
     <Compile Include="Movers\ChaoticMovingMover.cs" />
     <Compile Include="Movers\ShiftOnDirrectionMover.cs" />
     <Compile Include="States\IGameState.cs" />
@@ -81,11 +83,9 @@
     <Compile Include="Movers\IMover.cs" />
     <Compile Include="FlyingObject.cs" />
     <Compile Include="CollisionHandler.cs" />
-    <Compile Include="Field.cs" />
     <Compile Include="FlyingObjectsFactory.cs" />
     <Compile Include="Enums\FlyingObjectType.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Ground.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

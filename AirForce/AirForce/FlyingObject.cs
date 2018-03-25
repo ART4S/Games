@@ -29,12 +29,12 @@ namespace AirForce
             this.image = image;
         }
 
-        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
+        public void Move(Rectangle2D field, Rectangle2D ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
             Mover?.Move(field, ground, objectsOnField, rewindMacroCommand);
         }
 
-        public void MoveManyally(Point2D movespeedModifer, Field field, Ground ground, RewindMacroCommand rewindMacroCommand)
+        public void MoveManyally(Point2D movespeedModifer, Rectangle2D field, Rectangle2D ground, RewindMacroCommand rewindMacroCommand)
         {
             ManualMover?.MoveManually(movespeedModifer, field, ground, rewindMacroCommand);
         }

@@ -13,7 +13,7 @@ namespace AirForce
             this.shiftVector = shiftVector;
         }
 
-        public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
+        public void Move(Rectangle2D field, Rectangle2D ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
             Point2D shift = new Point2D(
                 x: source.Movespeed * shiftVector.X,
