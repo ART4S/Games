@@ -72,7 +72,6 @@
     <Compile Include="CollisionHandler.Static.cs" />
     <Compile Include="Helpers\Coooldown.cs" />
     <Compile Include="Game.Paint.cs" />
-    <Compile Include="GameController.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Movers\ChaoticMovingMover.cs" />
     <Compile Include="Movers\ShiftOnDirrectionMover.cs" />
