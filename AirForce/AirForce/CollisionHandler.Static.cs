@@ -74,9 +74,14 @@ namespace AirForce
                 position - new Point2D(radius, radius),
                 new Size(2 * radius, 2 * radius));
 
-            Rectangle groundRectangle = new Rectangle(ground.Position, ground.Size);
+            Rectangle groundRectangle = new Rectangle(ground.Location, ground.Size);
 
             return objRectangle.IntersectsWith(groundRectangle);
+        }
+
+        public static bool IsOutOfField(FlyingObject self, Field field)
+        {
+            return IsOutOfField(self.Position, self.Radius, field);
         }
 
         public static bool IsOutOfField(Point2D position, int radius, Field field)

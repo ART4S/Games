@@ -4,17 +4,18 @@ namespace AirForce
 {
     public class RewindMacroCommand
     {
-        private readonly List<IUndoCommand> commands = new List<IUndoCommand>();
-
-        public void AddCommand(IUndoCommand command)
-        {
-            commands.Add(command);
-        }
+        private readonly List<ICommand> commands = new List<ICommand>();
 
         public void Undo()
         {
-            foreach (IUndoCommand command in commands)
+            foreach (ICommand command in commands)
                 command.Undo();
+        }
+
+        public void AddAndExecute(ICommand command)
+        {
+            command.Execute();
+            commands.Add(command);
         }
     }
 }

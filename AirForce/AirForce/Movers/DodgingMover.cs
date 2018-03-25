@@ -23,9 +23,7 @@ namespace AirForce
                 ? minPathToFreeWay.First() - source.Position
                 : new Point2D(-source.Movespeed, 0);
 
-            var shiftPositionCommand = new ChangePositionCommand(source);
-            shiftPositionCommand.ShiftPostion(shift);
-            rewindMacroCommand.AddCommand(shiftPositionCommand);
+            rewindMacroCommand.AddAndExecute(new ShiftPositionCommand(source, shift));
         }
 
         private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Field field, Ground ground) // BFS algorithm

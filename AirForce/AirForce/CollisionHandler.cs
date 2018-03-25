@@ -39,13 +39,9 @@ namespace AirForce
 
             foreach (FlyingObject obj in game.ObjectsOnField)
             {
-                if (IsOutOfFieldLeftBorder(obj, game.Field) ||
-                    IsIntersectGround(obj, game.Ground) ||
-                    obj.Type == FlyingObjectType.PlayerBullet && IsOutOfFieldRightBorder(obj, game.Field))
+                if (IsOutOfField(obj, game.Field) || IsIntersectGround(obj, game.Ground))
                 {
-                    var setStrengthCommand = new ChangeStrengthCommand(obj);
-                    setStrengthCommand.SetStrength(0);
-                    rewindMacroCommand.AddCommand(setStrengthCommand);
+                    rewindMacroCommand.AddAndExecute(new SubtractStrengthCommand(obj, obj.Strength)); // устанавливаем силу 0
                 }
             }
         }
@@ -62,13 +58,8 @@ namespace AirForce
         {
             int minStrength = Math.Min(objA.Strength, objB.Strength);
 
-            ChangeStrengthCommand objAaddStrengthCommand = new ChangeStrengthCommand(objA);
-            objAaddStrengthCommand.AddStrength(-minStrength);
-            rewindMacroCommand.AddCommand(objAaddStrengthCommand);
-
-            ChangeStrengthCommand objBaddStrengthCommand = new ChangeStrengthCommand(objB);
-            objBaddStrengthCommand.AddStrength(-minStrength);
-            rewindMacroCommand.AddCommand(objBaddStrengthCommand);
+            rewindMacroCommand.AddAndExecute(new SubtractStrengthCommand(objA, minStrength));
+            rewindMacroCommand.AddAndExecute(new SubtractStrengthCommand(objB, minStrength));
         }
     }
 }

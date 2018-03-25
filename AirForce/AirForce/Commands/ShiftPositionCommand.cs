@@ -1,18 +1,18 @@
 ﻿namespace AirForce
 {
-    public class ChangePositionCommand : IUndoCommand
+    public class ShiftPositionCommand : ICommand
     {
         private readonly FlyingObject source;
-        private Point2D deltaPosition;
+        private readonly Point2D deltaPosition;
 
-        public ChangePositionCommand(FlyingObject source)
+        public ShiftPositionCommand(FlyingObject source, Point2D deltaPosition)
         {
             this.source = source;
+            this.deltaPosition = deltaPosition;
         }
 
-        public void ShiftPostion(Point2D shift)
+        public void Execute()
         {
-            deltaPosition = shift;
             source.Position += deltaPosition;
         }
 

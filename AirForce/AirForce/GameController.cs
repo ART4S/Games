@@ -9,6 +9,7 @@ namespace AirForce
         private readonly Game game;
         private readonly Coooldown playerShootingCoooldown = new Coooldown(maxValue: 20, isCollapsed: true);
         private readonly Timer updatingTimer = new Timer();
+        private readonly Control display;
 
         private const int MaxSpeed = 9;
         private const int MinSpeed = 1;
@@ -23,12 +24,12 @@ namespace AirForce
             {Keys.Q, false},
             {Keys.E, false},
             {Keys.Space, false},
-            {Keys.Enter, false},
             {Keys.ShiftKey, false},
         };
 
         public GameController(Control display)
         {
+            this.display = display;
             game = new Game(display.Size);
 
             display.Paint += (s, e) =>
@@ -41,10 +42,7 @@ namespace AirForce
             updatingTimer.Tick += (s, e) =>
             {
                 for (int i = 0; i < gameSpeed; i++)
-                {
                     Update();
-                    display.Refresh();
-                }
             };
         }
 
@@ -62,9 +60,6 @@ namespace AirForce
         {
             if (pressedKeys.ContainsKey(pressedKey))
                 pressedKeys[pressedKey] = true;
-
-            if (pressedKeys[Keys.Enter])
-                game.Restart();
 
             if (pressedKeys[Keys.ShiftKey])
                 game.BeginRewind();
@@ -88,7 +83,9 @@ namespace AirForce
         private void Update()
         {
             PlayerFire();
-            game.Update(GetPlayerMoveSpeedModifer());
+            game.Update();
+            game.MovePlayer(GetPlayerMoveSpeedModifer());
+            display.Refresh();
 
             if (game.State is RewindGameState == false)
                 gameSpeed = MinSpeed;
@@ -117,11 +114,11 @@ namespace AirForce
         {
             if (!pressedKeys[Keys.Space])
             {
-                playerShootingCoooldown.SetOneTickToCollapse();
+                playerShootingCoooldown.SetOneTickToCollapse(new RewindMacroCommand());
                 return;
             }
 
-            playerShootingCoooldown.Tick();
+            playerShootingCoooldown.Tick(new RewindMacroCommand());
 
             if (playerShootingCoooldown.IsCollapsed)
                 game.PlayerFire();

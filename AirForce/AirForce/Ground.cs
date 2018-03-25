@@ -4,18 +4,18 @@ namespace AirForce
 {
     public class Ground
     {
-        public Point2D Position { get; }
+        public Point2D Location { get; }
         public Size Size { get; }
 
-        public Ground(Point2D position, Size size)
+        public Ground(Point2D location, Size size)
         {
-            Position = position;
+            Location = location;
             Size = size;
         }
 
         public void Paint(Graphics graphics)
         {
-            graphics.FillRectangle(Brushes.Green, new Rectangle(Position, Size));
+            graphics.FillRectangle(Brushes.Green, new Rectangle(Location, Size));
         }
     }
 }

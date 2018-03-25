@@ -19,9 +19,7 @@ namespace AirForce
                 x: source.Movespeed * shiftVector.X,
                 y: source.Movespeed * shiftVector.Y);
 
-            var shiftPositionCommand = new ChangePositionCommand(source);
-            shiftPositionCommand.ShiftPostion(shift);
-            rewindMacroCommand.AddCommand(shiftPositionCommand);
+            rewindMacroCommand.AddAndExecute(new ShiftPositionCommand(source, shift));
         }
     }
 }

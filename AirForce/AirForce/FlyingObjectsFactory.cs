@@ -10,7 +10,7 @@ namespace AirForce
         {
             var playerShip = new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(field.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                position: new Point2D(field.TopLeftPoint.X + 150, ground.Location.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 100,
@@ -26,7 +26,7 @@ namespace AirForce
         {
             var bigShip = new FlyingObject(
                 type: FlyingObjectType.BigShip,
-                position: new Point2D(x: field.Size.Width + 50, y: random.Next(50, ground.Position.Y - 50)),
+                position: new Point2D(x: field.Size.Width + 50, y: random.Next(50, ground.Location.Y - 50)),
                 radius: 50,
                 movespeed: 8,
                 strength: 3,
@@ -42,7 +42,7 @@ namespace AirForce
         {
             var chaserShip = new ShootingFlyingObject(
                 type: FlyingObjectType.ChaserShip,
-                position: new Point2D(x: field.Size.Width + 30, y: random.Next(30, ground.Position.Y - 30)),
+                position: new Point2D(x: field.Size.Width + 30, y: random.Next(30, ground.Location.Y - 30)),
                 radius: 30,
                 movespeed: 3,
                 strength: 1,
@@ -58,7 +58,7 @@ namespace AirForce
         {
             var flyingSaucer = new FlyingObject(
                 type: FlyingObjectType.FlyingSaucer,
-                position: new Point2D(x: field.Size.Width + 25, y: random.Next(ground.Position.Y - 5 * 25, ground.Position.Y - 25)),
+                position: new Point2D(x: field.Size.Width + 25, y: random.Next(ground.Location.Y - 5 * 25, ground.Location.Y - 25)),
                 radius: 25,
                 movespeed: 2,
                 strength: 1,
@@ -122,7 +122,7 @@ namespace AirForce
         {
             return new FlyingObject(
                 type: FlyingObjectType.PlayerShip,
-                position: new Point2D(field.TopLeftPoint.X + 150, ground.Position.Y / 2),
+                position: new Point2D(field.TopLeftPoint.X + 150, ground.Location.Y / 2),
                 radius: 30,
                 movespeed: 4,
                 strength: 0,

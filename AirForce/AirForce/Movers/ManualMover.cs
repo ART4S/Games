@@ -15,12 +15,8 @@
                 x: source.Movespeed * movespeedModifer.X,
                 y: source.Movespeed * movespeedModifer.Y);
 
-            var shiftPositionCommand = new ChangePositionCommand(source);
-
             if (CollisionHandler.IsEntirelyOnField(source.Position + shift, source.Radius, field))
-                shiftPositionCommand.ShiftPostion(shift);
-
-            rewindMacroCommand.AddCommand(shiftPositionCommand);
+                rewindMacroCommand.AddAndExecute(new ShiftPositionCommand(source, shift));
         }
     }
 }

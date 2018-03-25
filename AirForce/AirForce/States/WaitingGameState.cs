@@ -9,20 +9,15 @@
             this.game = game;
         }
 
-        public void Update(Point2D playerMovespeedModifer) { }
+        public void Update() { }
+        public void MovePlayer(Point2D movespeedModifer) { }
         public void PlayerFire() { }
-        public void BeginRewind() { }
         public void EndRewind() { }
 
-        public void Restart()
+        public void BeginRewind()
         {
-            game.DeadObjects.Clear();
-            game.ObjectsPendingReleaseOnField.Clear();
-            game.ObjectsOnField.Clear();
-            game.RewindMacroCommands.Clear();
-
-            game.Player = game.FlyingObjectsFactory.CreatePlayerShip(game.Field, game.Ground);
-            game.State = new PlayingGameState(game);
+            if (game.IsOver())
+                game.State = new RewindGameState(game);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿namespace AirForce
 {
-    public interface IUndoCommand
+    public interface ICommand
     {
+        void Execute();
         void Undo();
     }
 }

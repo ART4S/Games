@@ -15,7 +15,6 @@ namespace AirForce
 
         public void Move(Field field, Ground ground, List<FlyingObject> objectsOnField, RewindMacroCommand rewindMacroCommand)
         {
-            var shiftPositionCommand = new ChangePositionCommand(source);
             Point2D shift;
 
             do
@@ -26,8 +25,7 @@ namespace AirForce
             }
             while (CollisionHandler.IsIntersectGround(source.Position + shift, source.Radius, ground));
 
-            shiftPositionCommand.ShiftPostion(shift);
-            rewindMacroCommand.AddCommand(shiftPositionCommand);
+            rewindMacroCommand.AddAndExecute(new ShiftPositionCommand(source, shift));
         }
     }
 }

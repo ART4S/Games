@@ -2,23 +2,19 @@
 
 namespace AirForce
 {
-    public class ChangeCoooldownCommand : IUndoCommand
+    public class CooldownSetValueCommand : ICommand
     {
         private readonly Coooldown coooldown;
+        private readonly int value;
         private int deltaValue;
 
-        public ChangeCoooldownCommand(Coooldown coooldown)
+        public CooldownSetValueCommand(Coooldown coooldown, int value)
         {
             this.coooldown = coooldown;
+            this.value = value;
         }
 
-        public void IncreaseValue()
-        {
-            deltaValue = 1;
-            coooldown.CurrentValue += deltaValue;
-        }
-
-        public void SetValue(int value)
+        public void Execute()
         {
             deltaValue = Math.Abs(coooldown.CurrentValue - value);
 

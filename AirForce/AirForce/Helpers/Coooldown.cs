@@ -12,32 +12,24 @@
             IsCollapsed = isCollapsed;
 
             if (isCollapsed)
-                SetOneTickToCollapse();
+                CurrentValue = MaxValue - 1;
         }
 
-        public void Tick(RewindMacroCommand rewindMacroCommand = null)
+        public void Tick(RewindMacroCommand rewindMacroCommand)
         {
-            var increaseCoooldownCommand = new ChangeCoooldownCommand(this);
-            increaseCoooldownCommand.IncreaseValue();
-            rewindMacroCommand?.AddCommand(increaseCoooldownCommand);
+            rewindMacroCommand.AddAndExecute(new CooldownIncreaseValueCommand(this));
 
             if (CurrentValue > MaxValue)
-            {
-                var setValueCoooldownCommand = new ChangeCoooldownCommand(this);
-                setValueCoooldownCommand.SetValue(0);
-                rewindMacroCommand?.AddCommand(setValueCoooldownCommand);
-            }
+                rewindMacroCommand.AddAndExecute(new CooldownSetValueCommand(this, 0));
 
             IsCollapsed = CurrentValue == MaxValue;
         }
 
-        public void SetOneTickToCollapse(RewindMacroCommand rewindMacroCommand = null)
+        public void SetOneTickToCollapse(RewindMacroCommand rewindMacroCommand)
         {
             IsCollapsed = false;
 
-            var setValueCoooldownCommand = new ChangeCoooldownCommand(this);
-            setValueCoooldownCommand.SetValue(MaxValue - 1);
-            rewindMacroCommand?.AddCommand(setValueCoooldownCommand);
+            rewindMacroCommand.AddAndExecute(new CooldownSetValueCommand(this, MaxValue - 1));
         }
     }
 }

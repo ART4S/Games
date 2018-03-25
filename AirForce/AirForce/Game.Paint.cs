@@ -13,13 +13,14 @@ namespace AirForce
 
             Ground.Paint(graphics);
 
-            foreach (FlyingObject obj in ObjectsOnField.FindAll(o => o.Strength > 0))
+            foreach (FlyingObject obj in ObjectsOnField)
                 obj.Paint(graphics);
 
             if (State is WaitingGameState)
                 PaintTextInCenterRectangle(
                     graphics: graphics,
-                    text: "Press ENTER to start game",
+                    text: "Press SHIFT",
+                    fontSize: 30,
                     rectangle: Field);
         }
 
@@ -50,9 +51,9 @@ namespace AirForce
             graphics.DrawString(text, textPen, textBrush, frameRectangle, stringFormat);
         }
 
-        private void PaintTextInCenterRectangle(Graphics graphics, string text, Rectangle rectangle)
+        private void PaintTextInCenterRectangle(Graphics graphics, string text, int fontSize, Rectangle rectangle)
         {
-            var font = new Font("Segoe UI", 20, FontStyle.Bold);
+            var font = new Font("Segoe UI", fontSize, FontStyle.Bold);
             var brush = Brushes.White;
             var stringFormat = new StringFormat
             {

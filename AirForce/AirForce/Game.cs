@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 
 namespace AirForce
@@ -14,30 +13,18 @@ namespace AirForce
         public Dictionary<FlyingObjectType, FlyingObjectType[]> CollisionTable { get; }
 
         public List<FlyingObject> ObjectsOnField { get; } = new List<FlyingObject>();
-        public List<FlyingObject> DeadObjects { get; } = new List<FlyingObject>();
-        public List<List<FlyingObject>> ObjectsPendingReleaseOnField { get; } = new List<List<FlyingObject>>();
+        public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
+        public List<RewindMacroCommand> RewindMacroCommands { get; } = new List<RewindMacroCommand>();
 
         public FlyingObject Player
         {
-            get
-            {
-                if (ObjectsOnField.Count == 0 || ObjectsOnField.First().Type != FlyingObjectType.PlayerShip)
-                    ObjectsOnField.Insert(0, FlyingObjectsFactory.CreateDeadPlayer(Field, Ground));
-
-                return ObjectsOnField.First();
-            }
+            get { return ObjectsOnField.Find(o => o.Type == FlyingObjectType.PlayerShip) ?? FlyingObjectsFactory.CreateDeadPlayer(Field, Ground); }
             set
             {
-                if (ObjectsOnField.Any())
-                    ObjectsOnField.Insert(0, value);
-                else
+                if (!ObjectsOnField.Exists(o => o.Type == FlyingObjectType.PlayerShip))
                     ObjectsOnField.Add(value);
             }
         }
-
-        public FlyingObjectsFactory FlyingObjectsFactory { get; } = new FlyingObjectsFactory();
-
-        public List<RewindMacroCommand> RewindMacroCommands { get; } = new List<RewindMacroCommand>();
 
         public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(maxValue: 80, isCollapsed: true);
 
@@ -65,25 +52,25 @@ namespace AirForce
                 size: fieldSize);
 
             Ground = new Ground(
-                position: new Point2D(0, Field.Size.Height - 30),
+                location: new Point2D(0, Field.Size.Height - 30),
                 size: Field.Size);
 
             Player = FlyingObjectsFactory.CreatePlayerShip(Field, Ground);
         }
 
-        public void Update(Point2D playerMovespeedModifer)
+        public void Update()
         {
-            State.Update(playerMovespeedModifer);
-        }
-
-        public void Restart()
-        {
-            State.Restart();
+            State.Update();
         }
 
         public void PlayerFire()
         {
             State.PlayerFire();
+        }
+
+        public void MovePlayer(Point2D movespeedModifer)
+        {
+            State.MovePlayer(movespeedModifer);
         }
 
         public void BeginRewind()
@@ -94,6 +81,11 @@ namespace AirForce
         public void EndRewind()
         {
             State.EndRewind();
+        }
+
+        public bool IsOver()
+        {
+            return Player.Strength <= 0;
         }
     }
 }
