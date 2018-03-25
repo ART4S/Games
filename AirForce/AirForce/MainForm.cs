@@ -10,10 +10,6 @@ namespace AirForce
         private readonly Coooldown playerShootingCoooldown = new Coooldown(maxValue: 20, isCollapsed: true);
         private readonly Timer updatingTimer = new Timer();
 
-        private const int MaxSpeed = 8;
-        private const int MinSpeed = 1;
-        private int gameSpeed = MinSpeed;
-
         private readonly Dictionary<Keys, bool> pressedKeys = new Dictionary<Keys, bool>
         {
             {Keys.W, false},
@@ -32,14 +28,10 @@ namespace AirForce
 
             game = new Game(GameFieldPictureBox.Size);
 
-            GameFieldPictureBox.Paint += (s, e) => PaintGame(e.Graphics);
+            GameFieldPictureBox.Paint += (s, e) => game.Paint(e.Graphics);
 
             updatingTimer.Interval = 15;
-            updatingTimer.Tick += (s, e) =>
-            {
-                for (int i = 0; i < gameSpeed; i++)
-                    UpdateGame();
-            };
+            updatingTimer.Tick += (s, e) => UpdateGame();
             updatingTimer.Start();
         }
 
@@ -48,10 +40,6 @@ namespace AirForce
             PlayerFire();
             game.Update();
             game.MovePlayer(GetPlayerMoveSpeedModifer());
-
-            if (game.State is RewindGameState == false)
-                gameSpeed = MinSpeed;
-
             GameFieldPictureBox.Refresh();
         }
 
@@ -88,28 +76,20 @@ namespace AirForce
                 game.PlayerFire();
         }
 
-        private void PaintGame(Graphics graphics)
-        {
-            game.Paint(graphics);
+        //private void PaintGameSpeed(Graphics graphics, Point location)
+        //{
+        //    string text = $"X{gameSpeed}";
+        //    Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
+        //    Brush textBrush = Brushes.White;
+        //    Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
+        //    StringFormat stringFormat = new StringFormat
+        //    {
+        //        Alignment = StringAlignment.Center,
+        //        LineAlignment = StringAlignment.Center
+        //    };
 
-            if (game.State is RewindGameState)
-                PaintGameSpeed(graphics, new Point(0, 40));
-        }
-
-        private void PaintGameSpeed(Graphics graphics, Point location)
-        {
-            string text = $"X{gameSpeed}";
-            Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
-            Brush textBrush = Brushes.White;
-            Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
-            StringFormat stringFormat = new StringFormat
-            {
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center
-            };
-
-            graphics.DrawString(text, textPen, textBrush, locationRectangle, stringFormat);
-        }
+        //    graphics.DrawString(text, textPen, textBrush, locationRectangle, stringFormat);
+        //}
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -121,11 +101,11 @@ namespace AirForce
             if (pressedKeys[Keys.ShiftKey])
                 game.BeginRewind();
 
-            if (pressedKeys[Keys.Q] && game.State is RewindGameState && gameSpeed < MaxSpeed)
-                gameSpeed++;
+            if (pressedKeys[Keys.Q])
+                game.IncreaseSpeed();
 
-            if (pressedKeys[Keys.E] && game.State is RewindGameState && gameSpeed > MinSpeed)
-                gameSpeed--;
+            if (pressedKeys[Keys.E])
+                game.DecreaseSpeed();
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)

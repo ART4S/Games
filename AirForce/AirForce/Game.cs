@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 
 namespace AirForce
@@ -30,6 +31,10 @@ namespace AirForce
 
         public IGameState State { get; set; }
 
+        public const int MinSpeed = 1;
+        public const int MaxSpeed = 8;
+        private int speed = MinSpeed;
+
         #endregion
 
         public Game(Size fieldSize)
@@ -60,17 +65,20 @@ namespace AirForce
 
         public void Update()
         {
-            State.Update();
+            for (int i = 0; i < speed; i++)
+                State.Update();
         }
 
         public void PlayerFire()
         {
-            State.PlayerFire();
+            for (int i = 0; i < speed; i++)
+                State.PlayerFire();
         }
 
         public void MovePlayer(Point2D movespeedModifer)
         {
-            State.MovePlayer(movespeedModifer);
+            for (int i = 0; i < speed; i++)
+                State.MovePlayer(movespeedModifer);
         }
 
         public void BeginRewind()
@@ -86,6 +94,18 @@ namespace AirForce
         public bool IsOver()
         {
             return Player.Strength <= 0;
+        }
+
+        public void IncreaseSpeed()
+        {
+            if (speed < MaxSpeed)
+                speed++;
+        }
+
+        public void DecreaseSpeed()
+        {
+            if (speed > MinSpeed)
+                speed--;
         }
     }
 }
