@@ -6,7 +6,7 @@ namespace AirForce
     public sealed partial class MainForm : Form
     {
         private readonly Game game;
-        private readonly Coooldown playerShootingCoooldown = new Coooldown(maxValue: 20, isCollapsed: true);
+        private readonly Coooldown playerShootingCoooldown = new Coooldown(maxValue: 20, isElapsed: true);
         private readonly Timer updatingTimer = new Timer();
 
         private readonly Dictionary<Keys, bool> pressedKeys = new Dictionary<Keys, bool>
@@ -46,13 +46,13 @@ namespace AirForce
         {
             if (!pressedKeys[Keys.Space])
             {
-                playerShootingCoooldown.SetOneTickToCollapse(new RewindMacroCommand());
+                playerShootingCoooldown.SetOneTickToElapse(new RewindMacroCommand());
                 return;
             }
 
             playerShootingCoooldown.Tick(new RewindMacroCommand());
 
-            if (playerShootingCoooldown.IsCollapsed)
+            if (playerShootingCoooldown.IsElapsed)
                 game.PlayerFire();
         }
 

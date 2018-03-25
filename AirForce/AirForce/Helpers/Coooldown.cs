@@ -4,14 +4,14 @@
     {
         public int MaxValue { get; }
         public int CurrentValue { get; set; }
-        public bool IsCollapsed { get; private set; }
+        public bool IsElapsed { get; private set; }
 
-        public Coooldown(int maxValue, bool isCollapsed)
+        public Coooldown(int maxValue, bool isElapsed)
         {
             MaxValue = maxValue;
-            IsCollapsed = isCollapsed;
+            IsElapsed = isElapsed;
 
-            if (isCollapsed)
+            if (isElapsed)
                 CurrentValue = MaxValue - 1;
         }
 
@@ -22,12 +22,12 @@
             if (CurrentValue > MaxValue)
                 rewindMacroCommand.AddAndExecute(new CooldownSetValueCommand(this, 0));
 
-            IsCollapsed = CurrentValue == MaxValue;
+            IsElapsed = CurrentValue == MaxValue;
         }
 
-        public void SetOneTickToCollapse(RewindMacroCommand rewindMacroCommand)
+        public void SetOneTickToElapse(RewindMacroCommand rewindMacroCommand)
         {
-            IsCollapsed = false;
+            IsElapsed = false;
 
             rewindMacroCommand.AddAndExecute(new CooldownSetValueCommand(this, MaxValue - 1));
         }

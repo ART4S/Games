@@ -4,7 +4,7 @@ namespace AirForce
 {
     public class ShootingFlyingObject : FlyingObject
     {
-        private readonly Coooldown shootingCooldown = new Coooldown(maxValue: 80, isCollapsed: true);
+        private readonly Coooldown shootingCooldown = new Coooldown(maxValue: 80, isElapsed: true);
 
         public ShootingFlyingObject(FlyingObjectType type, Point2D position, int radius, int movespeed, int strength, int radiusOfSight, Image image)
             : base(type, position, radius, movespeed, strength, radiusOfSight, image)
@@ -17,12 +17,12 @@ namespace AirForce
 
             if (!thisCircle.IsCircleInBack(target))
             {
-                shootingCooldown.SetOneTickToCollapse(rewindMacroCommand);
+                shootingCooldown.SetOneTickToElapse(rewindMacroCommand);
                 return false;
             }
 
             shootingCooldown.Tick(rewindMacroCommand);
-            return shootingCooldown.IsCollapsed;
+            return shootingCooldown.IsElapsed;
         }        
     }
 }

@@ -73,7 +73,7 @@ namespace AirForce
         {
             game.EnemiesCreatingCooldown.Tick(rewindMacroCommand);
 
-            if (!game.EnemiesCreatingCooldown.IsCollapsed)
+            if (!game.EnemiesCreatingCooldown.IsElapsed)
                 return;
 
             FlyingObject enemy = game.FlyingObjectsFactory.CreateRandomEnemy(game.Field, game.Ground);

@@ -18,11 +18,11 @@ namespace AirForce
 
         public void Update()
         {
-            if (game.RewindMacroCommands.Count == 0)
-                return;
-
             for (int i = 0; i < game.Speed; i++)
-                UndoLastMacroCommand();
+            {
+                if (game.RewindMacroCommands.Any())
+                    UndoLastMacroCommand();
+            }
         }
 
         private void UndoLastMacroCommand()
@@ -40,15 +40,15 @@ namespace AirForce
 
         public void Paint(Graphics graphics)
         {
-            PaintGameSpeed(graphics, new Point(0, 50));
+            PaintGameSpeed(graphics);
         }
 
-        private void PaintGameSpeed(Graphics graphics, Point location)
+        private void PaintGameSpeed(Graphics graphics)
         {
             string text = $"X{game.Speed}";
             Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
             Brush textBrush = Brushes.White;
-            Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
+            Rectangle locationRectangle = new Rectangle(location: new Point(0, 50), size: new Size(50, 50));
             StringFormat stringFormat = new StringFormat
             {
                 Alignment = StringAlignment.Center,

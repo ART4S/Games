@@ -25,7 +25,7 @@ namespace AirForce
             }
         }
 
-        public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(maxValue: 80, isCollapsed: true);
+        public Coooldown EnemiesCreatingCooldown { get; } = new Coooldown(maxValue: 80, isElapsed: true);
 
         public IGameState State { get; set; }
 
