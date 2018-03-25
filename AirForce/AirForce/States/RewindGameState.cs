@@ -18,8 +18,10 @@ namespace AirForce
 
         public void Update()
         {
+            if (game.RewindMacroCommands.Count == 0)
+                return;
+
             for (int i = 0; i < game.Speed; i++)
-            if (game.RewindMacroCommands.Any())
                 UndoLastMacroCommand();
         }
 

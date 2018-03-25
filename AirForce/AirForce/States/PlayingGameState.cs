@@ -35,10 +35,22 @@ namespace AirForce
 
         private void AddEnemyBullets(RewindMacroCommand rewindMacroCommand)
         {
-            List<FlyingObject> newEnemyBullets = game.CollisionHandler.GetNewEnemyBullets(rewindMacroCommand);
+            List<FlyingObject> newEnemyBullets = GetNewEnemyBullets(rewindMacroCommand);
 
             foreach (FlyingObject bullet in newEnemyBullets)
                 rewindMacroCommand.AddAndExecute(new AddObjectToGameCommand(bullet, game));
+        }
+
+        private List<FlyingObject> GetNewEnemyBullets(RewindMacroCommand rewindMacroCommand)
+        {
+            if (game.Player.Strength == 0)
+                return new List<FlyingObject>();
+
+            return game.ObjectsOnField
+                .OfType<ShootingFlyingObject>()
+                .Where(o => o.CanShootToTarget(game.Player, rewindMacroCommand))
+                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.Field, game.Ground, o))
+                .ToList();
         }
 
         private void MoveObjects(RewindMacroCommand rewindMacroCommand)

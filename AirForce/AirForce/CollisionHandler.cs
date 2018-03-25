@@ -13,18 +13,6 @@ namespace AirForce
             this.game = game;
         }
 
-        public List<FlyingObject> GetNewEnemyBullets(RewindMacroCommand rewindMacroCommand)
-        {
-            if (game.Player.Strength == 0)
-                return new List<FlyingObject>();
-
-            return game.ObjectsOnField
-                .OfType<ShootingFlyingObject>()
-                .Where(o => o.CanShootToTarget(game.Player, rewindMacroCommand))
-                .Select(o => game.FlyingObjectsFactory.CreateEnemyBullet(game.Field, game.Ground, o))
-                .ToList();
-        }
-
         public void FindCollisionsAndChangeStrengths(RewindMacroCommand rewindMacroCommand)
         {
             for (int i = 0; i < game.ObjectsOnField.Count - 1; i++)
