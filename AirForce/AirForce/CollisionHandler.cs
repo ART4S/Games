@@ -21,13 +21,13 @@ namespace AirForce
                     var objA = game.ObjectsOnField[i];
                     var objB = game.ObjectsOnField[j];
 
-                    if (objA.Strength > 0 && objB.Strength > 0 && CanCollide(objA, objB) && ((Circle2D)objA).IsIntersect(objB))
+                    if (objA.Strength > 0 && objB.Strength > 0 && CanCollide(objA, objB) && objA.ToCircle2D().IsIntersect(objB.ToCircle2D()))
                         ChangeStrengths(objA, objB, rewindMacroCommand);
                 }
 
             foreach (FlyingObject obj in game.ObjectsOnField)
             {
-                Circle2D objCircle = obj;
+                Circle2D objCircle = obj.ToCircle2D();
 
                 if (!objCircle.IsIntersect(game.Field) || objCircle.IsIntersect(game.Ground))
                     rewindMacroCommand.AddAndExecute(new SubtractStrengthCommand(obj, obj.Strength)); // устанавливаем силу 0

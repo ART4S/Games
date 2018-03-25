@@ -48,9 +48,9 @@ namespace AirForce
             graphics.DrawImage(image, imageRectangle);
         }
 
-        public static implicit operator Circle2D(FlyingObject obj)
+        public Circle2D ToCircle2D()
         {
-            return new Circle2D(obj.Position, obj.Radius);
+            return new Circle2D(Position, Radius);
         }
     }
 }

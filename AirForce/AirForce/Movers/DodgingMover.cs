@@ -30,7 +30,10 @@ namespace AirForce
         {
             Circle2D fieldOfSight = new Circle2D(source.Position, source.RadiusOfSight);
 
-            List<FlyingObject> objectsInFieldOfSight = dangerousObjects.FindAll(o => fieldOfSight.IsIntersect(o));
+            List<Circle2D> objectsInFieldOfSight = dangerousObjects
+                .Select(o => o.ToCircle2D())
+                .Where(o => o.IsIntersect(fieldOfSight))
+                .ToList();
 
             if (objectsInFieldOfSight.Count == 0)
                 return new List<Point2D>();
@@ -46,8 +49,8 @@ namespace AirForce
                 Point2D sourceCurrentPosition = positionsQueue.Dequeue();
                 Circle2D sourceCurrentCircle = new Circle2D(sourceCurrentPosition, source.Radius);
 
-                bool isObjectsInBack = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsCircleInBack(o));
-                bool isHaveCollision = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsIntersect(o));
+                bool isObjectsInBack = objectsInFieldOfSight.Any(o => o.IsIntersect(sourceCurrentCircle));
+                bool isHaveCollision = objectsInFieldOfSight.Any(o => o.IsIntersect(sourceCurrentCircle));
 
                 if (isHaveCollision || sourceCurrentCircle.IsIntersect(ground) || !field.IsContains(sourceCurrentCircle))
                     continue;

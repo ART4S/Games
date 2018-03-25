@@ -13,9 +13,10 @@ namespace AirForce
 
         public bool CanShootToTarget(FlyingObject target, RewindMacroCommand rewindMacroCommand)
         {
-            Circle2D thisCircle = this;
+            Circle2D thisCircle = ToCircle2D();
+            Circle2D targetCircle = target.ToCircle2D();
 
-            if (!thisCircle.IsCircleInBack(target))
+            if (!thisCircle.IsCircleInBack(targetCircle))
             {
                 shootingCooldown.SetOneTickToElapse(rewindMacroCommand);
                 return false;
