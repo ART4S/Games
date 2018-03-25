@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace AirForce
@@ -13,6 +14,9 @@ namespace AirForce
         }
 
         public void EndRewind() { }
+        public void Paint(Graphics graphics) { }
+        public void IncreaseSpeed() { }
+        public void DecreaseSpeed() { }
 
         public void Update()
         {

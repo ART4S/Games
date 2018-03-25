@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Drawing;
+using System.Linq;
 
 namespace AirForce
 {
@@ -30,7 +31,40 @@ namespace AirForce
 
         public void EndRewind()
         {
+            game.Speed = Game.MinSpeed;
             game.State = new PlayingGameState(game);
+        }
+
+        public void Paint(Graphics graphics)
+        {
+            PaintGameSpeed(graphics, new Point(0, 50));
+        }
+
+        private void PaintGameSpeed(Graphics graphics, Point location)
+        {
+            string text = $"X{game.Speed}";
+            Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
+            Brush textBrush = Brushes.White;
+            Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            graphics.DrawString(text, textPen, textBrush, locationRectangle, stringFormat);
+        }
+
+        public void IncreaseSpeed()
+        {
+            if (game.Speed < Game.MaxSpeed)
+                game.Speed++;
+        }
+
+        public void DecreaseSpeed()
+        {
+            if (game.Speed > Game.MinSpeed)
+                game.Speed--;
         }
     }
 }

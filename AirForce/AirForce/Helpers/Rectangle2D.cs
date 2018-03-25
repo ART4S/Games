@@ -18,18 +18,27 @@ namespace AirForce
             graphics.FillRectangle(brush, this);
         }
 
-        public bool IntersectsWith(Rectangle2D rectangle)
+        public bool IsIntersect(Rectangle2D rectangle)
         {
             Rectangle thisRectangle = this;
 
             return thisRectangle.IntersectsWith(rectangle);
         }
 
-        public bool Contains(Rectangle2D rectangle)
+        public bool IsContains(Rectangle2D rectangle)
         {
             Rectangle thisRectangle = this;
 
             return thisRectangle.Contains(rectangle);
+        }
+
+        public bool IsContains(Circle2D circle)
+        {
+            Rectangle2D circleToRectangle = new Rectangle2D(
+                location: circle.Center - new Point2D(circle.Radius, circle.Radius),
+                size: new Size2D(2 * circle.Radius, 2 * circle.Radius));
+
+            return IsContains(circleToRectangle);
         }
 
         public static implicit operator Rectangle(Rectangle2D rectangle)

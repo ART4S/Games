@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AirForce
 {
-    public partial class CollisionHandler
+    public class CollisionHandler
     {
         private readonly Game game;
 
@@ -33,16 +33,16 @@ namespace AirForce
                     var objA = game.ObjectsOnField[i];
                     var objB = game.ObjectsOnField[j];
 
-                    if (objA.Strength > 0 && objB.Strength > 0 && CanCollide(objA, objB) && IsIntersects(objA, objB))
+                    if (objA.Strength > 0 && objB.Strength > 0 && CanCollide(objA, objB) && ((Circle2D)objA).IsIntersect(objB))
                         ChangeStrengths(objA, objB, rewindMacroCommand);
                 }
 
             foreach (FlyingObject obj in game.ObjectsOnField)
             {
-                if (IsOutOfField(obj, game.Field) || IsIntersectGround(obj, game.Ground))
-                {
+                Circle2D objCircle = obj;
+
+                if (!objCircle.IsIntersect(game.Field) || objCircle.IsIntersect(game.Ground))
                     rewindMacroCommand.AddAndExecute(new SubtractStrengthCommand(obj, obj.Strength)); // устанавливаем силу 0
-                }
             }
         }
 

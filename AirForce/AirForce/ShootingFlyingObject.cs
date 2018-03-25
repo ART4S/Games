@@ -13,7 +13,9 @@ namespace AirForce
 
         public bool CanShootToTarget(FlyingObject target, RewindMacroCommand rewindMacroCommand)
         {
-            if (!CollisionHandler.IsInFront(source: target, other: this))
+            Circle2D thisCircle = this;
+
+            if (!thisCircle.IsCircleInBack(target))
             {
                 shootingCooldown.SetOneTickToCollapse(rewindMacroCommand);
                 return false;

@@ -28,10 +28,11 @@ namespace AirForce
 
         private List<Point2D> GetMinPathToFreeWay(List<FlyingObject> dangerousObjects, Rectangle2D field, Rectangle2D ground) // BFS algorithm
         {
-            List<FlyingObject> objectsInRadiusOfSight = dangerousObjects
-                .FindAll(o => CollisionHandler.IsIntersects(source.Position, source.RadiusOfSight, o.Position, o.Radius)); // поле зрения - окружность
+            Circle2D fieldOfSight = new Circle2D(source.Position, source.RadiusOfSight);
 
-            if (objectsInRadiusOfSight.Count == 0)
+            List<FlyingObject> objectsInFieldOfSight = dangerousObjects.FindAll(o => fieldOfSight.IsIntersect(o));
+
+            if (objectsInFieldOfSight.Count == 0)
                 return new List<Point2D>();
 
             var positionsQueue = new Queue<Point2D>();
@@ -42,35 +43,30 @@ namespace AirForce
 
             while (positionsQueue.Any())
             {
-                Point2D currentPosition = positionsQueue.Dequeue();
+                Point2D sourceCurrentPosition = positionsQueue.Dequeue();
+                Circle2D sourceCurrentCircle = new Circle2D(sourceCurrentPosition, source.Radius);
 
-                bool isObjectsInFront = objectsInRadiusOfSight
-                    .Any(o => CollisionHandler.IsInFront(o.Position, o.Radius, currentPosition, source.Radius));
+                bool isObjectsInBack = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsCircleInBack(o));
+                bool isHaveCollision = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsIntersect(o));
 
-                bool isHaveCollision = objectsInRadiusOfSight
-                    .Any(o => CollisionHandler.IsIntersects(currentPosition, source.Radius, o.Position, o.Radius));
-
-                if (isHaveCollision ||
-                    CollisionHandler.IsIntersectGround(currentPosition, source.Radius, ground) ||
-                    CollisionHandler.IsIntersectFieldTopBorder(currentPosition, source.Radius, field))
+                if (isHaveCollision || sourceCurrentCircle.IsIntersect(ground) || !field.IsContains(sourceCurrentCircle))
                     continue;
 
-                if (!isObjectsInFront ||
-                    CollisionHandler.IsOutOfFieldLeftBorder(currentPosition, source.Radius, field))
-                    return GetRestoredPath(savePaths, currentPosition);
+                if (!isObjectsInBack)
+                    return GetRestoredPath(savePaths, sourceCurrentPosition);
 
-                Point2D moveUpPosition = currentPosition + new Point2D(-source.Movespeed, -source.Movespeed); // сдвиг по диагонали вверх
-                Point2D moveDownPosition = currentPosition + new Point2D(-source.Movespeed, source.Movespeed); // сдвиг по дагонали вниз
+                Point2D moveUpPosition = sourceCurrentPosition + new Point2D(-source.Movespeed, -source.Movespeed); // сдвиг по диагонали вверх
+                Point2D moveDownPosition = sourceCurrentPosition + new Point2D(-source.Movespeed, source.Movespeed); // сдвиг по дагонали вниз
 
                 if (!savePaths.ContainsKey(moveUpPosition))
                 {
-                    savePaths[moveUpPosition] = currentPosition;
+                    savePaths[moveUpPosition] = sourceCurrentPosition;
                     positionsQueue.Enqueue(moveUpPosition);
                 }
 
                 if (!savePaths.ContainsKey(moveDownPosition))
                 {
-                    savePaths[moveDownPosition] = currentPosition;
+                    savePaths[moveDownPosition] = sourceCurrentPosition;
                     positionsQueue.Enqueue(moveDownPosition);
                 }
             }

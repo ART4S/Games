@@ -1,4 +1,6 @@
-﻿namespace AirForce
+﻿using System.Drawing;
+
+namespace AirForce
 {
     public interface IGameState
     {
@@ -7,5 +9,8 @@
         void PlayerFire();
         void BeginRewind();
         void EndRewind();
+        void Paint(Graphics graphics);
+        void IncreaseSpeed();
+        void DecreaseSpeed();
     }
 }

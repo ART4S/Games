@@ -31,7 +31,7 @@ namespace AirForce
 
         public const int MinSpeed = 1;
         public const int MaxSpeed = 8;
-        private int speed = MinSpeed;
+        public int Speed { get; set; } = MinSpeed;
 
         #endregion
 
@@ -93,14 +93,12 @@ namespace AirForce
 
         public void IncreaseSpeed()
         {
-            if (speed < MaxSpeed)
-                speed++;
+            State.IncreaseSpeed();
         }
 
         public void DecreaseSpeed()
         {
-            if (speed > MinSpeed)
-                speed--;
+            State.DecreaseSpeed();
         }
     }
 }

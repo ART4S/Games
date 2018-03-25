@@ -16,12 +16,7 @@ namespace AirForce
             foreach (FlyingObject obj in ObjectsOnField)
                 obj.Paint(graphics);
 
-            if (State is WaitingGameState)
-                PaintTextInCenterRectangle(
-                    graphics: graphics,
-                    text: "Press SHIFT",
-                    fontSize: 30,
-                    rectangle: Field);
+            State.Paint(graphics);
         }
 
         private void PaintStrengthBar(Graphics graphics, int strength, Point2D location)
@@ -53,19 +48,6 @@ namespace AirForce
             };
 
             graphics.DrawString(text, textPen, textBrush, frameRectangle, stringFormat);
-        }
-
-        private void PaintTextInCenterRectangle(Graphics graphics, string text, int fontSize, Rectangle2D rectangle)
-        {
-            var font = new Font("Segoe UI", fontSize, FontStyle.Bold);
-            var brush = Brushes.White;
-            var stringFormat = new StringFormat
-            {
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center
-            };
-
-            graphics.DrawString(text, font, brush, rectangle, stringFormat);
         }
     }
 }

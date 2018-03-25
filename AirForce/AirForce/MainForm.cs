@@ -75,21 +75,6 @@ namespace AirForce
             return playerMovespeedModifer;
         }
 
-        //private void PaintGameSpeed(Graphics graphics, Point location)
-        //{
-        //    string text = $"X{gameSpeed}";
-        //    Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
-        //    Brush textBrush = Brushes.White;
-        //    Rectangle locationRectangle = new Rectangle(location: location, size: new Size(50, 50));
-        //    StringFormat stringFormat = new StringFormat
-        //    {
-        //        Alignment = StringAlignment.Center,
-        //        LineAlignment = StringAlignment.Center
-        //    };
-
-        //    graphics.DrawString(text, textPen, textBrush, locationRectangle, stringFormat);
-        //}
-
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             Keys pressedKey = e.KeyCode;

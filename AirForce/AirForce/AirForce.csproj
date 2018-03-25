@@ -69,7 +69,7 @@
     <Compile Include="Commands\CooldownIncreaseValueCommand.cs" />
     <Compile Include="Commands\CooldownSetValueCommand.cs" />
     <Compile Include="Commands\ShiftPositionCommand.cs" />
-    <Compile Include="CollisionHandler.Static.cs" />
+    <Compile Include="Helpers\Circle2D.cs" />
     <Compile Include="Helpers\Coooldown.cs" />
     <Compile Include="Game.Paint.cs" />
     <Compile Include="Commands\ICommand.cs" />
