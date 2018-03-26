@@ -6,6 +6,7 @@ namespace AirForce
     public class RewindGameState : IGameState
     {
         private readonly Game game;
+        private int speed = Game.MinSpeed;
 
         public RewindGameState(Game game)
         {
@@ -18,7 +19,7 @@ namespace AirForce
 
         public void Update()
         {
-            for (int i = 0; i < game.Speed; i++)
+            for (int i = 0; i < speed; i++)
             {
                 if (game.RewindMacroCommands.Any())
                     UndoLastMacroCommand();
@@ -34,7 +35,6 @@ namespace AirForce
 
         public void EndRewind()
         {
-            game.Speed = Game.MinSpeed;
             game.State = new PlayingGameState(game);
         }
 
@@ -45,7 +45,7 @@ namespace AirForce
 
         private void PaintGameSpeed(Graphics graphics)
         {
-            string text = $"X{game.Speed}";
+            string text = $"X{speed}";
             Font textPen = new Font("Segoe UI", 20, FontStyle.Bold);
             Brush textBrush = Brushes.White;
             Rectangle locationRectangle = new Rectangle(location: new Point(0, 50), size: new Size(50, 50));
@@ -60,14 +60,14 @@ namespace AirForce
 
         public void IncreaseSpeed()
         {
-            if (game.Speed < Game.MaxSpeed)
-                game.Speed++;
+            if (speed < Game.MaxSpeed)
+                speed++;
         }
 
         public void DecreaseSpeed()
         {
-            if (game.Speed > Game.MinSpeed)
-                game.Speed--;
+            if (speed > Game.MinSpeed)
+                speed--;
         }
     }
 }

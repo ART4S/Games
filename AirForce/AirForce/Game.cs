@@ -31,7 +31,6 @@ namespace AirForce
 
         public const int MinSpeed = 1;
         public const int MaxSpeed = 8;
-        public int Speed { get; set; } = MinSpeed;
 
         #endregion
 

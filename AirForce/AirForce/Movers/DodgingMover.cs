@@ -49,8 +49,8 @@ namespace AirForce
                 Point2D sourceCurrentPosition = positionsQueue.Dequeue();
                 Circle2D sourceCurrentCircle = new Circle2D(sourceCurrentPosition, source.Radius);
 
-                bool isObjectsInBack = objectsInFieldOfSight.Any(o => o.IsIntersect(sourceCurrentCircle));
-                bool isHaveCollision = objectsInFieldOfSight.Any(o => o.IsIntersect(sourceCurrentCircle));
+                bool isObjectsInBack = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsCircleInBack(o));
+                bool isHaveCollision = objectsInFieldOfSight.Any(o => sourceCurrentCircle.IsIntersect(o));
 
                 if (isHaveCollision || sourceCurrentCircle.IsIntersect(ground) || !field.IsContains(sourceCurrentCircle))
                     continue;
