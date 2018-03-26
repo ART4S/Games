@@ -11,7 +11,7 @@ namespace AirForce
                 strength: Player.Strength,
                 location: Field.Location + new Point2D(4, 4));
 
-            Ground.Paint(graphics, Brushes.Green);
+            graphics.FillRectangle(Brushes.Green, Ground);
 
             foreach (FlyingObject obj in ObjectsOnField)
                 obj.Paint(graphics);

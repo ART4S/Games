@@ -13,11 +13,6 @@ namespace AirForce
             Size = size;
         }
 
-        public void Paint(Graphics graphics, Brush brush)
-        {
-            graphics.FillRectangle(brush, this);
-        }
-
         public bool IsIntersect(Rectangle2D rectangle)
         {
             Rectangle thisRectangle = this;
